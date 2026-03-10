@@ -113,7 +113,6 @@ export function EmailPreview() {
               </div>
             </div>
 
-            {/* Footer */}
             <div className="border-t border-border px-5 py-3">
               <p className="font-mono text-xs text-muted-foreground text-center">
                 Sent via{" "}

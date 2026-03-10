@@ -46,7 +46,7 @@ export function StepEventDetails({
         </Label>
         <Input
           id="event-name"
-          placeholder="Rahul's Birthday Party"
+          placeholder="Shambavi's Birthday Party"
           value={state.name}
           onChange={(e) => setField("name", e.target.value)}
           className="font-mono text-sm h-9"

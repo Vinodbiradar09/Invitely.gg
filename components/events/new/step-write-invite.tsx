@@ -85,7 +85,7 @@ export function StepWriteInvite({
           </Label>
           <Input
             id="email-subject"
-            placeholder="You're invited to Rahul's Birthday Party 🎉"
+            placeholder="You're invited to Shambavi's Birthday Party 🎉"
             value={state.emailSubject}
             onChange={(e) => setField("emailSubject", e.target.value)}
             className="font-mono text-sm h-9"
