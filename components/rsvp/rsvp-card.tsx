@@ -109,7 +109,7 @@ export function RSVPCard({
       <div className="border-t border-border px-5 py-3">
         <p className="font-mono text-xs text-muted-foreground text-center">
           Powered by{" "}
-          <span className="text-foreground font-semibold">Invitel</span>
+          <span className="text-foreground font-semibold">Invitely.gg</span>
         </p>
       </div>
     </div>

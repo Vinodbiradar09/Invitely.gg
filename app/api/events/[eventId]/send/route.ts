@@ -101,7 +101,7 @@ export async function POST(
 
     // build resend batch
     const batchPayload = createdInvitations.map((inv) => ({
-      from: "Invitely.gg <noreply@invitely.gg>",
+      from: "Invitely.gg <noreply@rohanrv.tech>",
       to: inv.email,
       subject: event.emailSubject,
       react: InviteEmail({

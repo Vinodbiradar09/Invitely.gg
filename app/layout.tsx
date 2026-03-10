@@ -21,7 +21,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Invitely.gg | Send Invites at Scale",
   description:
-    "create and send beautiful event invitations to everyone in one go",
+    "Create and send beautiful event invitations to everyone in one go.",
+  icons: {
+    icon: [
+      {
+        url: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23ffffff'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='monospace' font-weight='bold' font-size='20' fill='%23000000'>I</text></svg>",
+        type: "image/svg+xml",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

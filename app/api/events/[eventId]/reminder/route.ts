@@ -79,7 +79,7 @@ export async function POST(
 
     // build reminder emails
     const batchPayload = pendingInvitations.map((inv) => ({
-      from: "Invitely.gg <noreply@invitely.gg>",
+      from: "Invitely.gg <noreply@rohanrv.tech>",
       to: inv.email,
       subject: `Reminder: ${event.emailSubject}`, // prefix subject with reminder
       react: InviteEmail({
