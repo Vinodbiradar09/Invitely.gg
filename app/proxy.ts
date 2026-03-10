@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 
 const protectedRoutes = ["/workspace", "/events"];
@@ -9,7 +8,7 @@ export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   const session = await auth.api.getSession({
-    headers: await headers(),
+    headers: request.headers,
   });
 
   const isProtected = protectedRoutes.some((route) =>

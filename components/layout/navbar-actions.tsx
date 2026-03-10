@@ -35,16 +35,15 @@ export function NavbarActions({ user }: NavbarActionsProps) {
 
   return (
     <div className="flex items-center gap-3">
-      <span className="font-mono text-xs text-muted-foreground hidden sm:block">
+      <span className="font-mono text-xs text-muted-foreground hidden sm:block truncate max-w-40">
         {user.email}
       </span>
-
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="outline"
             size="sm"
-            className="font-mono text-xs h-7 px-3"
+            className="font-mono text-xs h-7 px-3 shrink-0"
           >
             {user.name?.split(" ")[0] ?? "Account"}
           </Button>

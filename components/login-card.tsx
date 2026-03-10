@@ -1,8 +1,6 @@
 "use client";
-
 import { useState } from "react";
 import { signIn } from "@/lib/client";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,6 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
+import { toast } from "sonner";
 
 export function LoginCard() {
   const [isLoading, setIsLoading] = useState(false);
@@ -23,9 +23,8 @@ export function LoginCard() {
         provider: "google",
         callbackURL: "/workspace",
       });
-    } catch (e) {
-      console.error(e);
-      toast.error("failed to sign in , try later");
+    } catch {
+      toast.error("failed to sign in. please try again.");
       setIsLoading(false);
     }
   }
@@ -57,7 +56,7 @@ export function LoginCard() {
           onClick={handleGoogleSignIn}
           disabled={isLoading}
           variant="outline"
-          className="w-full cursor-pointer gap-3 border-border font-mono text-sm"
+          className="w-full gap-3 border-border font-mono text-sm"
         >
           {isLoading ? (
             <>
@@ -73,17 +72,31 @@ export function LoginCard() {
         </Button>
 
         <Separator className="bg-border" />
-
-        <p className="text-center font-mono text-xs text-muted-foreground">
-          By signing in you agree to our{" "}
-          <span className="underline underline-offset-4 cursor-pointer hover:text-foreground transition-colors">
-            terms
-          </span>{" "}
+        <p className="text-center font-mono text-xs text-muted-foreground leading-relaxed">
+          By signing in, you agree to our{" "}
+          <Link
+            href="/terms"
+            className="underline underline-offset-4 hover:text-foreground transition-colors"
+          >
+            Terms of Service
+          </Link>{" "}
           and{" "}
-          <span className="underline underline-offset-4 cursor-pointer hover:text-foreground transition-colors">
-            privacy policy
-          </span>
+          <Link
+            href="/privacy"
+            className="underline underline-offset-4 hover:text-foreground transition-colors"
+          >
+            Privacy Policy
+          </Link>
         </p>
+
+        <div className="text-center">
+          <Link
+            href="/"
+            className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            ← Back to home
+          </Link>
+        </div>
       </CardContent>
     </Card>
   );

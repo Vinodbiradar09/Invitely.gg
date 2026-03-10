@@ -12,6 +12,8 @@
     "@phosphor-icons/react": "^2.1.10",
     "@prisma/adapter-pg": "^7.4.2",
     "@prisma/client": "^7.4.2",
+    "@react-email/components": "^1.0.8",
+    "@react-email/render": "^2.0.4",
     "better-auth": "^1.5.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
