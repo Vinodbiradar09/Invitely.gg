@@ -116,16 +116,18 @@ export default function PrivacyPage() {
         </p>
 
         <div className="flex flex-col gap-8">
-          {sections.map(({ title, content }) => (
-            <div key={title} className="flex flex-col gap-2">
-              <h2 className="font-mono text-sm font-semibold text-foreground">
-                {title}
-              </h2>
-              <p className="font-mono text-xs text-muted-foreground leading-relaxed">
-                {content}
-              </p>
-            </div>
-          ))}
+          {sections.map(
+            ({ title, content }: { title: string; content: string }) => (
+              <div key={title} className="flex flex-col gap-2">
+                <h2 className="font-mono text-sm font-semibold text-foreground">
+                  {title}
+                </h2>
+                <p className="font-mono text-xs text-muted-foreground leading-relaxed">
+                  {content}
+                </p>
+              </div>
+            ),
+          )}
         </div>
 
         <Separator className="bg-border mt-12 mb-8" />

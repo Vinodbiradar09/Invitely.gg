@@ -114,16 +114,26 @@ export function EventCard({ event }: EventCardProps) {
                 value: event.summary.pending,
                 color: "text-muted-foreground",
               },
-            ].map(({ label, value, color }) => (
-              <div key={label} className="flex flex-col gap-0.5">
-                <span className={`font-mono text-sm font-semibold ${color}`}>
-                  {value}
-                </span>
-                <span className="font-mono text-xs text-muted-foreground">
-                  {label}
-                </span>
-              </div>
-            ))}
+            ].map(
+              ({
+                label,
+                value,
+                color,
+              }: {
+                label: string;
+                value: number;
+                color: string;
+              }) => (
+                <div key={label} className="flex flex-col gap-0.5">
+                  <span className={`font-mono text-sm font-semibold ${color}`}>
+                    {value}
+                  </span>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {label}
+                  </span>
+                </div>
+              ),
+            )}
           </div>
         )}
       </CardContent>

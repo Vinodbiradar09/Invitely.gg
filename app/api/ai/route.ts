@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
       console.error("gemini response shape wrong:", parsed);
       return NextResponse.json(
         {
-          message: "AI returned an unexpected format. Please try again.",
+          message: "ai returned an unexpected format. please try again.",
           success: false,
         },
         { status: 502 },
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
-        message: "email polished successfully",
+        message: "email optimized successfully",
         success: true,
         subject: validated.data.subject,
         body: validated.data.body,
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
     if (e instanceof Error && e.message === "gemini response error") {
       return NextResponse.json(
         {
-          message: "AI took too long to respond. Please try again.",
+          message: "ai took too long to respond. please try again.",
           success: false,
         },
         { status: 504 },

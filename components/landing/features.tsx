@@ -1,7 +1,14 @@
+import { LucideIcon } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Users, Sparkles, Send, BarChart3, Bell, Shield } from "lucide-react";
 
-const features = [
+interface Feature {
+  icon: LucideIcon;
+  title: string;
+  desc: string;
+}
+
+const features: Feature[] = [
   {
     icon: Users,
     title: "Contact Workspaces",

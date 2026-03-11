@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { ArrowLeft, Calendar, MapPin } from "lucide-react";
 import type { Metadata } from "next";
+import { Invitation } from "@/lib/types";
 
 interface PageProps {
   params: Promise<{ eventId: string }>;
@@ -60,10 +61,13 @@ export default async function EventDashboardPage({ params }: PageProps) {
 
   const summary = {
     total: invitations.length,
-    attending: invitations.filter((i) => i.status === "attending").length,
-    maybe: invitations.filter((i) => i.status === "maybe").length,
-    declined: invitations.filter((i) => i.status === "declined").length,
-    pending: invitations.filter((i) => i.status === "pending").length,
+    attending: invitations.filter((i: Invitation) => i.status === "attending")
+      .length,
+    maybe: invitations.filter((i: Invitation) => i.status === "maybe").length,
+    declined: invitations.filter((i: Invitation) => i.status === "declined")
+      .length,
+    pending: invitations.filter((i: Invitation) => i.status === "pending")
+      .length,
   };
 
   const isPast = new Date(event.eventAt) < new Date();

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { EventCard } from "@/components/events/event-card";
 import { Plus } from "lucide-react";
+import { PastEvent } from "@/lib/types";
 
 interface EventListProps {
   events: {
@@ -69,7 +70,7 @@ export function EventList({ events }: EventListProps) {
             Past — {past.length}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {past.map((event) => (
+            {past.map((event: PastEvent) => (
               <EventCard key={event.id} event={event} />
             ))}
           </div>

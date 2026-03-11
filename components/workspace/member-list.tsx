@@ -25,7 +25,7 @@ export function MemberList({ members, workspaceId }: MemberListProps) {
 
   return (
     <div className="flex flex-col divide-y divide-border">
-      {members.map((member) => (
+      {members.map((member: Member) => (
         <div
           key={member.id}
           className="flex items-center justify-between py-2.5 px-1 group"

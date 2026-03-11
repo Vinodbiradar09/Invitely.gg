@@ -97,7 +97,7 @@ export function GuestTable({ invitations }: GuestTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sorted.map((inv) => {
+          {sorted.map((inv: Invitation) => {
             const config = statusConfig[inv.status];
             return (
               <TableRow

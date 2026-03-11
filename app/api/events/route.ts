@@ -2,7 +2,7 @@ import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { eventZ } from "@/lib/types";
+import { eventZ, RawEvent } from "@/lib/types";
 
 export async function POST(req: NextRequest) {
   try {
@@ -88,15 +88,21 @@ export async function GET() {
       },
     });
 
-    const shaped = events.map((event) => {
+    const shaped = events.map((event: RawEvent) => {
       const summary = {
         total: event.invitations.length,
-        attending: event.invitations.filter((i) => i.status === "attending")
-          .length,
-        maybe: event.invitations.filter((i) => i.status === "maybe").length,
-        declined: event.invitations.filter((i) => i.status === "declined")
-          .length,
-        pending: event.invitations.filter((i) => i.status === "pending").length,
+        attending: event.invitations.filter(
+          (i: { status: string }) => i.status === "attending",
+        ).length,
+        maybe: event.invitations.filter(
+          (i: { status: string }) => i.status === "maybe",
+        ).length,
+        declined: event.invitations.filter(
+          (i: { status: string }) => i.status === "declined",
+        ).length,
+        pending: event.invitations.filter(
+          (i: { status: string }) => i.status === "pending",
+        ).length,
       };
 
       const { invitations, _count, ...rest } = event;

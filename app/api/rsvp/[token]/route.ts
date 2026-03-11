@@ -159,7 +159,7 @@ export async function PATCH(
     if (invitation.status === data.status) {
       return NextResponse.json(
         {
-          message: `uou already responded as ${data.status}`,
+          message: `you already responded as ${data.status}`,
           success: true,
           status: data.status,
         },

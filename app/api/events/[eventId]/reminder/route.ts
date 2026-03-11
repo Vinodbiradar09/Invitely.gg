@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { resend } from "@/lib/resend";
 import { InviteEmail } from "@/components/email-template";
+import { EmailData, pendingInvitation, ResendResult } from "@/lib/types";
 
 const BATCH_SIZE = 25;
 
@@ -78,8 +79,8 @@ export async function POST(
     });
 
     // build reminder emails
-    const batchPayload = pendingInvitations.map((inv) => ({
-      from: "Invitely.gg <noreply@rohanrv.tech>",
+    const batchPayload = pendingInvitations.map((inv: pendingInvitation) => ({
+      from: process.env.FROM!,
       to: inv.email,
       subject: `Reminder: ${event.emailSubject}`, // prefix subject with reminder
       react: InviteEmail({
@@ -99,10 +100,12 @@ export async function POST(
     }
 
     const batchResults = await Promise.allSettled(
-      batches.map((batch) => resend.batch.send(batch)),
+      batches.map((batch: EmailData[]) => resend.batch.send(batch)),
     );
 
-    const failedBatches = batchResults.filter((r) => r.status === "rejected");
+    const failedBatches = batchResults.filter(
+      (r: ResendResult): r is PromiseRejectedResult => r.status === "rejected",
+    );
 
     if (failedBatches.length > 0) {
       console.error("some reminder batches failed:", failedBatches);

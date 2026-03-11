@@ -85,11 +85,13 @@ export function StepSelectRecipients({
         </div>
       ) : (
         <div className="flex flex-col border border-border divide-y divide-border">
-          {workspaces.map((workspace) => {
-            const members: RecipientEntry[] = workspace.members.map((m) => ({
-              email: m.email,
-              name: m.name,
-            }));
+          {workspaces.map((workspace: Workspace) => {
+            const members: RecipientEntry[] = workspace.members.map(
+              (m: Member) => ({
+                email: m.email,
+                name: m.name,
+              }),
+            );
             const selectionState = getWorkspaceSelectionState(members);
             const isExpanded = expandedWorkspaces.has(workspace.id);
 

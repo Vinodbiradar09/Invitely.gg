@@ -55,15 +55,22 @@ export async function GET(
 
     const summary = {
       total: invitations.length,
-      attending: invitations.filter((i) => i.status === "attending").length,
-      maybe: invitations.filter((i) => i.status === "maybe").length,
-      declined: invitations.filter((i) => i.status === "declined").length,
-      pending: invitations.filter((i) => i.status === "pending").length,
+      attending: invitations.filter(
+        (i: { status: string }) => i.status === "attending",
+      ).length,
+      maybe: invitations.filter((i: { status: string }) => i.status === "maybe")
+        .length,
+      declined: invitations.filter(
+        (i: { status: string }) => i.status === "declined",
+      ).length,
+      pending: invitations.filter(
+        (i: { status: string }) => i.status === "pending",
+      ).length,
     };
 
     return NextResponse.json(
       {
-        message: "Invitations fetched successfully",
+        message: "invitations got successfully",
         success: true,
         invitations,
         summary,
@@ -73,7 +80,7 @@ export async function GET(
   } catch (e) {
     console.error(e);
     return NextResponse.json(
-      { message: "Internal server error", success: false },
+      { message: "internal server error", success: false },
       { status: 500 },
     );
   }

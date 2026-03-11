@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Plus, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
+import { WorkspaceWithMembers } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "Workspaces | Invitely.gg",
@@ -27,7 +28,10 @@ export default async function WorkspacePage() {
     orderBy: { createdAt: "asc" },
   });
 
-  const totalMembers = workspaces.reduce((acc, w) => acc + w.members.length, 0);
+  const totalMembers = workspaces.reduce(
+    (acc: number, w: WorkspaceWithMembers) => acc + w.members.length,
+    0,
+  );
 
   return (
     <div className="flex flex-col gap-6">

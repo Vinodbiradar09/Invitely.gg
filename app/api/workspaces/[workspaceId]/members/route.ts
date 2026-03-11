@@ -77,12 +77,14 @@ export async function POST(
       });
 
       if (existingMembers.length > 0) {
-        const duplicates = existingMembers.map((m) => m.email).join(", ");
+        const duplicates = existingMembers
+          .map((m: { email: string }) => m.email)
+          .join(", ");
         throw new Error(`duplicate_emails:${duplicates}`);
       }
 
       return tx.workSpaceMember.createManyAndReturn({
-        data: data.map((mem) => ({
+        data: data.map((mem: { email: string; name?: string | undefined }) => ({
           workspaceId,
           name: mem.name ?? null,
           email: mem.email,

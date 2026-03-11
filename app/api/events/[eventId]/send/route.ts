@@ -2,7 +2,12 @@ import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { sendInvitationsZ } from "@/lib/types";
+import {
+  EmailData,
+  InvitationItem,
+  ResendResult,
+  sendInvitationsZ,
+} from "@/lib/types";
 import { resend } from "@/lib/resend";
 import { InviteEmail } from "@/components/email-template";
 import { randomBytes } from "crypto";
@@ -54,7 +59,9 @@ export async function POST(
     }
 
     // check for already invited emails
-    const incomingEmails = data.recipients.map((r) => r.email);
+    const incomingEmails = data.recipients.map(
+      (r: { email: string; name?: string | null | undefined }) => r.email,
+    );
     const alreadyInvited = await db.invitation.findMany({
       where: {
         eventId,
@@ -64,7 +71,9 @@ export async function POST(
     });
 
     if (alreadyInvited.length > 0) {
-      const duplicates = alreadyInvited.map((i) => i.email).join(", ");
+      const duplicates = alreadyInvited
+        .map((i: { email: string }) => i.email)
+        .join(", ");
       return NextResponse.json(
         {
           message: `these emails were already invited: ${duplicates}`,
@@ -75,12 +84,14 @@ export async function POST(
     }
 
     // build invitation records with secure tokens
-    const invitationData = data.recipients.map((recipient) => ({
-      eventId,
-      email: recipient.email,
-      name: recipient.name ?? null,
-      token: randomBytes(32).toString("hex"),
-    }));
+    const invitationData = data.recipients.map(
+      (recipient: { email: string; name?: string | null | undefined }) => ({
+        eventId,
+        email: recipient.email,
+        name: recipient.name ?? null,
+        token: randomBytes(32).toString("hex"),
+      }),
+    );
 
     // save all invitations in one transaction
     const createdInvitations = await db.$transaction(async (tx) => {
@@ -100,8 +111,8 @@ export async function POST(
     });
 
     // build resend batch
-    const batchPayload = createdInvitations.map((inv) => ({
-      from: "Invitely.gg <noreply@rohanrv.tech>",
+    const batchPayload = createdInvitations.map((inv: InvitationItem) => ({
+      from: process.env.FROM!,
       to: inv.email,
       subject: event.emailSubject,
       react: InviteEmail({
@@ -122,10 +133,12 @@ export async function POST(
     }
 
     const batchResults = await Promise.allSettled(
-      batches.map((batch) => resend.batch.send(batch)),
+      batches.map((batch: EmailData[]) => resend.batch.send(batch)),
     );
 
-    const failedBatches = batchResults.filter((r) => r.status === "rejected");
+    const failedBatches = batchResults.filter(
+      (r: ResendResult): r is PromiseRejectedResult => r.status === "rejected",
+    );
     if (failedBatches.length > 0) {
       // invitations are in db emails partially failed
       // organizer can use reminder to retry

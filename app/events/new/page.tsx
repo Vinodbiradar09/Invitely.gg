@@ -8,6 +8,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import type { Metadata } from "next";
+import { WorkspaceWithMembers } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "New Event | Invitely.gg",
@@ -27,7 +28,10 @@ export default async function NewEventPage() {
   });
 
   // if no workspaces or no members at all, redirect to workspace first
-  const totalMembers = workspaces.reduce((acc, w) => acc + w.members.length, 0);
+  const totalMembers = workspaces.reduce(
+    (acc: number, w: WorkspaceWithMembers) => acc + w.members.length,
+    0,
+  );
 
   return (
     <div className="flex flex-col gap-6 max-w-2xl mx-auto">

@@ -46,18 +46,30 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-      {cards.map(({ label, value, color, border }) => (
-        <Card key={label} className={`border bg-card ${border}`}>
-          <CardContent className="px-4 py-3 flex flex-col gap-1">
-            <span className={`font-mono text-2xl font-semibold ${color}`}>
-              {value}
-            </span>
-            <span className="font-mono text-xs text-muted-foreground">
-              {label}
-            </span>
-          </CardContent>
-        </Card>
-      ))}
+      {cards.map(
+        ({
+          label,
+          value,
+          color,
+          border,
+        }: {
+          label: string;
+          value: number;
+          color: string;
+          border: string;
+        }) => (
+          <Card key={label} className={`border bg-card ${border}`}>
+            <CardContent className="px-4 py-3 flex flex-col gap-1">
+              <span className={`font-mono text-2xl font-semibold ${color}`}>
+                {value}
+              </span>
+              <span className="font-mono text-xs text-muted-foreground">
+                {label}
+              </span>
+            </CardContent>
+          </Card>
+        ),
+      )}
     </div>
   );
 }

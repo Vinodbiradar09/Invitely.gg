@@ -89,7 +89,7 @@ export function MemberAddDialog({
       return;
     }
 
-    const members = validRows.map((r) => ({
+    const members = validRows.map((r: MemberRow) => ({
       email: r.email.trim().toLowerCase(),
       name: r.name.trim() || undefined,
     }));
@@ -142,7 +142,7 @@ export function MemberAddDialog({
           </div>
 
           <div className="flex flex-col gap-2 max-h-64 overflow-y-auto">
-            {rows.map((row) => (
+            {rows.map((row: MemberRow) => (
               <div
                 key={row.id}
                 className="grid grid-cols-[1fr_1fr_24px] gap-2 items-center"

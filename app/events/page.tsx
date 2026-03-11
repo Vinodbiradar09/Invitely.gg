@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import type { Metadata } from "next";
+import { EventWithStatus } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "Events | Invitely.gg",
@@ -28,14 +29,21 @@ export default async function EventsPage() {
     },
   });
 
-  const events = rawEvents.map((event) => {
+  const events = rawEvents.map((event: EventWithStatus) => {
     const summary = {
       total: event.invitations.length,
-      attending: event.invitations.filter((i) => i.status === "attending")
-        .length,
-      maybe: event.invitations.filter((i) => i.status === "maybe").length,
-      declined: event.invitations.filter((i) => i.status === "declined").length,
-      pending: event.invitations.filter((i) => i.status === "pending").length,
+      attending: event.invitations.filter(
+        (i: { status: string }) => i.status === "attending",
+      ).length,
+      maybe: event.invitations.filter(
+        (i: { status: string }) => i.status === "maybe",
+      ).length,
+      declined: event.invitations.filter(
+        (i: { status: string }) => i.status === "declined",
+      ).length,
+      pending: event.invitations.filter(
+        (i: { status: string }) => i.status === "pending",
+      ).length,
     };
     const { invitations, ...rest } = event;
     return { ...rest, summary };

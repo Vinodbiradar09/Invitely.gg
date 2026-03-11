@@ -37,7 +37,7 @@ export function WorkspaceList({ workspaces }: WorkspaceListProps) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-      {workspaces.map((workspace) => (
+      {workspaces.map((workspace: Workspace) => (
         <WorkspaceCard key={workspace.id} workspace={workspace} />
       ))}
     </div>
