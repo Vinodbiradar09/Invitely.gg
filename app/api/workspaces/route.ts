@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { workspaceZ } from "@/lib/types";
+type TxClient = Parameters<Parameters<typeof db.$transaction>[0]>[0];
 
 export async function POST(req: NextRequest) {
   try {
@@ -46,7 +47,7 @@ export async function POST(req: NextRequest) {
       );
     }
     // only 5 workspaces are allowed
-    const workspace = await db.$transaction(async (tx) => {
+    const workspace = await db.$transaction(async (tx: TxClient) => {
       const count = await tx.workSpace.count({
         where: {
           userId: session.user.id,

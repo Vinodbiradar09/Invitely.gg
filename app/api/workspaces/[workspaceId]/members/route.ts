@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { workspaceMembersZ } from "@/lib/types";
 
 const MAX_MEMBERS = 25;
-
+type TxClient = Parameters<Parameters<typeof db.$transaction>[0]>[0];
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ workspaceId: string }> },
@@ -52,7 +52,7 @@ export async function POST(
       );
     }
 
-    const members = await db.$transaction(async (tx) => {
+    const members = await db.$transaction(async (tx: TxClient) => {
       // count workspace members
       const memberCount = await tx.workSpaceMember.count({
         where: { workspaceId },
