@@ -11,9 +11,8 @@ import {
 import { resend } from "@/lib/resend";
 import { InviteEmail } from "@/components/email-template";
 import { randomBytes } from "crypto";
-import type { PrismaClient } from "@prisma/client";
 
-type TxClient = Parameters<Parameters<PrismaClient["$transaction"]>[0]>[0];
+type TxClient = Parameters<Parameters<typeof db.$transaction>[0]>[0];
 
 export async function POST(
   req: NextRequest,
