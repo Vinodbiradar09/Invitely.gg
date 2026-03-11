@@ -11,7 +11,9 @@ import {
 import { resend } from "@/lib/resend";
 import { InviteEmail } from "@/components/email-template";
 import { randomBytes } from "crypto";
-import { Prisma } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
+
+type TxClient = Parameters<Parameters<PrismaClient["$transaction"]>[0]>[0];
 
 export async function POST(
   req: NextRequest,
@@ -95,13 +97,11 @@ export async function POST(
     );
 
     // save all invitations in one transaction
-    const createdInvitations = await db.$transaction(
-      async (tx: Prisma.TransactionClient) => {
-        return tx.invitation.createManyAndReturn({
-          data: invitationData,
-        });
-      },
-    );
+    const createdInvitations = await db.$transaction(async (tx: TxClient) => {
+      return tx.invitation.createManyAndReturn({
+        data: invitationData,
+      });
+    });
 
     // format date for email
     const eventDate = new Date(event.eventAt).toLocaleDateString("en-US", {
@@ -143,8 +143,6 @@ export async function POST(
       (r: ResendResult): r is PromiseRejectedResult => r.status === "rejected",
     );
     if (failedBatches.length > 0) {
-      // invitations are in db emails partially failed
-      // organizer can use reminder to retry
       console.error("some batches failed:", failedBatches);
       return NextResponse.json(
         {
