@@ -9,8 +9,8 @@ export const auth = betterAuth({
     window: 60,
     max: 10,
   },
-  // baseURL: process.env.BETTER_AUTH_URL,
-  // secret: process.env.BETTER_AUTH_SECRET,
+  baseURL: process.env.BETTER_AUTH_URL,
+  secret: process.env.BETTER_AUTH_SECRET,
   database: prismaAdapter(db, {
     provider: "postgresql",
   }),

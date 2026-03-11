@@ -23,7 +23,8 @@ export function LoginCard() {
         provider: "google",
         callbackURL: "/workspace",
       });
-    } catch {
+    } catch (e) {
+      console.log("errir", e);
       toast.error("failed to sign in. please try again.");
       setIsLoading(false);
     }
