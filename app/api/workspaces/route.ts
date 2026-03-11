@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { workspaceZ } from "@/lib/types";
-import { Prisma } from "@prisma/client";
 
 export async function POST(req: NextRequest) {
   try {
@@ -47,21 +46,19 @@ export async function POST(req: NextRequest) {
       );
     }
     // only 5 workspaces are allowed
-    const workspace = await db.$transaction(
-      async (tx: Prisma.TransactionClient) => {
-        const count = await tx.workSpace.count({
-          where: {
-            userId: session.user.id,
-          },
-        });
-        if (count >= 5) {
-          throw new Error("only 5 workspaces are allowed");
-        }
-        return tx.workSpace.create({
-          data: { name: data.name, userId: session.user.id },
-        });
-      },
-    );
+    const workspace = await db.$transaction(async (tx) => {
+      const count = await tx.workSpace.count({
+        where: {
+          userId: session.user.id,
+        },
+      });
+      if (count >= 5) {
+        throw new Error("only 5 workspaces are allowed");
+      }
+      return tx.workSpace.create({
+        data: { name: data.name, userId: session.user.id },
+      });
+    });
     return NextResponse.json(
       {
         message: "workspace created successfully",

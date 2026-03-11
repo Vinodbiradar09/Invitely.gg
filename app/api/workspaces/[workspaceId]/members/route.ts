@@ -3,7 +3,6 @@ import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { workspaceMembersZ } from "@/lib/types";
-import { Prisma } from "@prisma/client";
 
 const MAX_MEMBERS = 25;
 
@@ -53,49 +52,45 @@ export async function POST(
       );
     }
 
-    const members = await db.$transaction(
-      async (tx: Prisma.TransactionClient) => {
-        // count workspace members
-        const memberCount = await tx.workSpaceMember.count({
-          where: { workspaceId },
-        });
+    const members = await db.$transaction(async (tx) => {
+      // count workspace members
+      const memberCount = await tx.workSpaceMember.count({
+        where: { workspaceId },
+      });
 
-        const remainingSlots = MAX_MEMBERS - memberCount;
+      const remainingSlots = MAX_MEMBERS - memberCount;
 
-        if (data.length > remainingSlots) {
-          throw new Error(
-            `slot_exceeded:you can only add ${remainingSlots} more member${remainingSlots === 1 ? "" : "s"} (limit: ${MAX_MEMBERS})`,
-          );
-        }
+      if (data.length > remainingSlots) {
+        throw new Error(
+          `slot_exceeded:you can only add ${remainingSlots} more member${remainingSlots === 1 ? "" : "s"} (limit: ${MAX_MEMBERS})`,
+        );
+      }
 
-        const incomingEmails = data.map((m) => m.email);
-        // check existing members email address
-        const existingMembers = await tx.workSpaceMember.findMany({
-          where: {
-            workspaceId,
-            email: { in: incomingEmails },
-          },
-          select: { email: true },
-        });
+      const incomingEmails = data.map((m) => m.email);
+      // check existing members email address
+      const existingMembers = await tx.workSpaceMember.findMany({
+        where: {
+          workspaceId,
+          email: { in: incomingEmails },
+        },
+        select: { email: true },
+      });
 
-        if (existingMembers.length > 0) {
-          const duplicates = existingMembers
-            .map((m: { email: string }) => m.email)
-            .join(", ");
-          throw new Error(`duplicate_emails:${duplicates}`);
-        }
+      if (existingMembers.length > 0) {
+        const duplicates = existingMembers
+          .map((m: { email: string }) => m.email)
+          .join(", ");
+        throw new Error(`duplicate_emails:${duplicates}`);
+      }
 
-        return tx.workSpaceMember.createManyAndReturn({
-          data: data.map(
-            (mem: { email: string; name?: string | undefined }) => ({
-              workspaceId,
-              name: mem.name ?? null,
-              email: mem.email,
-            }),
-          ),
-        });
-      },
-    );
+      return tx.workSpaceMember.createManyAndReturn({
+        data: data.map((mem: { email: string; name?: string | undefined }) => ({
+          workspaceId,
+          name: mem.name ?? null,
+          email: mem.email,
+        })),
+      });
+    });
 
     return NextResponse.json(
       {
