@@ -41,7 +41,7 @@ export function StepPreviewSend({
               From
             </span>
             <span className="font-mono text-xs text-foreground">
-              Invitely.gg {"<noreply@invitel.gg>"}
+              Invitely.gg {"<noreply@invitely.gg>"}
             </span>
             <span className="font-mono text-xs text-muted-foreground">
               Subject

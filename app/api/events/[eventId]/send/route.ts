@@ -11,6 +11,7 @@ import {
 import { resend } from "@/lib/resend";
 import { InviteEmail } from "@/components/email-template";
 import { randomBytes } from "crypto";
+import { Prisma } from "@prisma/client";
 
 export async function POST(
   req: NextRequest,
@@ -94,11 +95,13 @@ export async function POST(
     );
 
     // save all invitations in one transaction
-    const createdInvitations = await db.$transaction(async (tx) => {
-      return tx.invitation.createManyAndReturn({
-        data: invitationData,
-      });
-    });
+    const createdInvitations = await db.$transaction(
+      async (tx: Prisma.TransactionClient) => {
+        return tx.invitation.createManyAndReturn({
+          data: invitationData,
+        });
+      },
+    );
 
     // format date for email
     const eventDate = new Date(event.eventAt).toLocaleDateString("en-US", {
