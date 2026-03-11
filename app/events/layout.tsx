@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { Navbar } from "@/components/layout/navbar";
 
-export default async function WorkspaceLayout({
+export default async function EventsLayout({
   children,
 }: {
   children: React.ReactNode;

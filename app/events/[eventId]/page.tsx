@@ -1,6 +1,5 @@
-import { headers } from "next/headers";
+import { cache } from "react";
 import { redirect, notFound } from "next/navigation";
-import { auth } from "@/lib/auth";
 import { db } from "@/lib/prisma";
 import { SummaryCards } from "@/components/dashboard/summary-cards";
 import { GuestTable } from "@/components/dashboard/guest-table";
@@ -12,19 +11,22 @@ import Link from "next/link";
 import { ArrowLeft, Calendar, MapPin } from "lucide-react";
 import type { Metadata } from "next";
 import { Invitation } from "@/lib/types";
+import { getSession } from "@/lib/session";
 
 interface PageProps {
   params: Promise<{ eventId: string }>;
 }
 
+// cache the event fetch so generateMetadata and the page share one DB call
+const getEvent = cache(async (eventId: string) => {
+  return db.event.findUnique({ where: { id: eventId } });
+});
+
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { eventId } = await params;
-  const event = await db.event.findUnique({
-    where: { id: eventId },
-    select: { name: true },
-  });
+  const event = await getEvent(eventId);
   return {
     title: event ? `${event.name} | Invitely.gg` : "Event | Invitely.gg",
   };
@@ -33,31 +35,25 @@ export async function generateMetadata({
 export default async function EventDashboardPage({ params }: PageProps) {
   const { eventId } = await params;
 
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
+  const [session, event, invitations] = await Promise.all([
+    getSession(),
+    getEvent(eventId),
+    db.invitation.findMany({
+      where: { eventId },
+      orderBy: { sentAt: "asc" },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        status: true,
+        sentAt: true,
+        respondedAt: true,
+      },
+    }),
+  ]);
   if (!session) redirect("/login");
-
-  const event = await db.event.findUnique({
-    where: { id: eventId },
-  });
-
   if (!event) notFound();
   if (event.userId !== session.user.id) notFound();
-
-  const invitations = await db.invitation.findMany({
-    where: { eventId },
-    orderBy: { sentAt: "asc" },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      status: true,
-      sentAt: true,
-      respondedAt: true,
-    },
-  });
 
   const summary = {
     total: invitations.length,

@@ -1,6 +1,4 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
 import { db } from "@/lib/prisma";
 import { NewEventForm } from "@/components/events/new/new-event-form";
 import { Button } from "@/components/ui/button";
@@ -9,15 +7,14 @@ import { ArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import type { Metadata } from "next";
 import { WorkspaceWithMembers } from "@/lib/types";
+import { getSession } from "@/lib/session";
 
 export const metadata: Metadata = {
   title: "New Event | Invitely.gg",
 };
 
 export default async function NewEventPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   if (!session) redirect("/login");
 

@@ -1,6 +1,4 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
 import { db } from "@/lib/prisma";
 import { WorkspaceList } from "@/components/workspace/workspace-list";
 import { WorkspaceCreateDialog } from "@/components/workspace/workspace-create-dialog";
@@ -10,15 +8,14 @@ import Link from "next/link";
 import { Plus, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import { WorkspaceWithMembers } from "@/lib/types";
+import { getSession } from "@/lib/session";
 
 export const metadata: Metadata = {
   title: "Workspaces | Invitely.gg",
 };
 
 export default async function WorkspacePage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   if (!session) redirect("/login");
 
