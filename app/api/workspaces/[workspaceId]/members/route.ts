@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { workspaceMembersZ } from "@/lib/types";
+import { ZodWorkspaceMembers } from "@/lib/types";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/prisma";
@@ -25,7 +25,7 @@ export async function POST(
     const { workspaceId } = await params;
     const body = await req.json();
 
-    const { success, data } = workspaceMembersZ.safeParse(body);
+    const { success, data } = ZodWorkspaceMembers.safeParse(body);
     if (!success) {
       return NextResponse.json(
         { message: "invalid input for members", success: false },

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { workspaceZ } from "@/lib/types";
+import { ZodWorkspace } from "@/lib/types";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/prisma";
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
       );
     }
     const body = await req.json();
-    const { success, data } = workspaceZ.safeParse(body);
+    const { success, data } = ZodWorkspace.safeParse(body);
     if (!success) {
       return NextResponse.json(
         {

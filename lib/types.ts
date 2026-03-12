@@ -3,22 +3,22 @@ import { CreateBatchResponse, CreateBatchRequestOptions } from "resend";
 import React from "react";
 import { z } from "zod";
 
-export const workspaceZ = z.object({
+export const ZodWorkspace = z.object({
   name: z.string().min(3, "workspace name must be atleast 3 chars"),
 });
 
-export const workspaceIdZ = z.object({
+export const ZodWorkspaceId = z.object({
   workspaceId: z.string(),
 });
 
-export const workspaceMembersZ = z.array(
+export const ZodWorkspaceMembers = z.array(
   z.object({
     name: z.string().optional(),
     email: z.email(),
   }),
 );
 
-export const eventZ = z.object({
+export const ZodEvent = z.object({
   name: z.string().min(1, "Event name is required").max(100),
   desc: z.string().min(1, "Description is required").max(1000),
   eventAt: z.string().datetime(), // ISO string from frontend
@@ -27,7 +27,7 @@ export const eventZ = z.object({
   emailBody: z.string().min(1, "Email body is required").max(5000),
 });
 
-export const sendInvitationsZ = z.object({
+export const ZodSendInvitations = z.object({
   recipients: z
     .array(
       z.object({
@@ -39,7 +39,7 @@ export const sendInvitationsZ = z.object({
     .max(125, "Maximum 125 recipients allowed"),
 });
 
-export const rsvpStatusZ = z.object({
+export const ZodRsvpStatus = z.object({
   status: z.enum(["attending", "maybe", "declined"]),
 });
 
@@ -51,7 +51,7 @@ export interface GeminiResponse {
   }[];
 }
 
-export const polishZ = z.object({
+export const Zodpolish = z.object({
   casualText: z.string().min(1).max(1000),
   eventName: z.string().min(1).max(100),
   eventDate: z.string().min(1),
@@ -59,7 +59,7 @@ export const polishZ = z.object({
   eventDesc: z.string().max(1000).optional().default(""),
 });
 
-export const polishResponseZ = z.object({
+export const ZodPolishResponse = z.object({
   subject: z.string(),
   body: z.string(),
 });

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { polishResponseZ, polishZ } from "@/lib/types";
+import { Zodpolish, ZodPolishResponse } from "@/lib/types";
 import { buildPrompt } from "@/lib/prompt";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { success, data } = polishZ.safeParse(body);
+    const { success, data } = Zodpolish.safeParse(body);
 
     if (!success) {
       return NextResponse.json(
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const validated = polishResponseZ.safeParse(parsed);
+    const validated = ZodPolishResponse.safeParse(parsed);
     if (!validated.success) {
       console.error("gemini response shape wrong:", parsed);
       return NextResponse.json(

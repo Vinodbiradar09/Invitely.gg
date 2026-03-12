@@ -9,7 +9,7 @@ import {
   EmailData,
   InvitationItem,
   ResendResult,
-  sendInvitationsZ,
+  ZodSendInvitations,
 } from "@/lib/types";
 
 type TxClient = Parameters<Parameters<typeof db.$transaction>[0]>[0];
@@ -33,7 +33,7 @@ export async function POST(
     const { eventId } = await params;
     const body = await req.json();
 
-    const { success, data } = sendInvitationsZ.safeParse(body);
+    const { success, data } = ZodSendInvitations.safeParse(body);
     if (!success) {
       return NextResponse.json(
         { message: "invalid recipients data", success: false },

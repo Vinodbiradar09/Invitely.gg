@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eventZ, RawEvent } from "@/lib/types";
+import { ZodEvent, RawEvent } from "@/lib/types";
 import { headers } from "next/headers";
 import { db } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { success, data } = eventZ.safeParse(body);
+    const { success, data } = ZodEvent.safeParse(body);
 
     if (!success) {
       return NextResponse.json(

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { rsvpStatusZ } from "@/lib/types";
+import { ZodRsvpStatus } from "@/lib/types";
 import { db } from "@/lib/prisma";
 
 export async function GET(
@@ -99,7 +99,7 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const { success, data } = rsvpStatusZ.safeParse(body);
+    const { success, data } = ZodRsvpStatus.safeParse(body);
 
     if (!success) {
       return NextResponse.json(

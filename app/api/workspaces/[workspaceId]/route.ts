@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { workspaceIdZ } from "@/lib/types";
+import { ZodWorkspaceId } from "@/lib/types";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/prisma";
@@ -22,7 +22,7 @@ export async function DELETE(
       );
     }
     const { workspaceId } = await params;
-    const { success, data } = workspaceIdZ.safeParse(workspaceId);
+    const { success, data } = ZodWorkspaceId.safeParse({ workspaceId });
     if (!success) {
       return NextResponse.json(
         {
