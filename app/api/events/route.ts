@@ -1,8 +1,8 @@
-import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import { eventZ, RawEvent } from "@/lib/types";
+import { headers } from "next/headers";
+import { db } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {

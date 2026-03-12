@@ -1,7 +1,7 @@
-import { z } from "zod";
 import { Prisma, InvitationStatus, $Enums } from "@prisma/client";
-import React from "react";
 import { CreateBatchResponse, CreateBatchRequestOptions } from "resend";
+import React from "react";
+import { z } from "zod";
 
 export const workspaceZ = z.object({
   name: z.string().min(3, "workspace name must be atleast 3 chars"),

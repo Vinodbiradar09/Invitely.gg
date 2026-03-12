@@ -1,18 +1,18 @@
-import { Suspense } from "react";
-import { cache } from "react";
-import { redirect, notFound } from "next/navigation";
-import { db } from "@/lib/prisma";
+import { EventDeleteDialog } from "@/components/events/event-delete-dialog";
+import { ReminderButton } from "@/components/dashboard/reminder-button";
 import { SummaryCards } from "@/components/dashboard/summary-cards";
 import { GuestTable } from "@/components/dashboard/guest-table";
-import { ReminderButton } from "@/components/dashboard/reminder-button";
-import { EventDeleteDialog } from "@/components/events/event-delete-dialog";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 import { ArrowLeft, Calendar, MapPin } from "lucide-react";
-import type { Metadata } from "next";
-import { Invitation } from "@/lib/types";
+import { Separator } from "@/components/ui/separator";
+import { redirect, notFound } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
 import { getSession } from "@/lib/session";
+import { Invitation } from "@/lib/types";
+import type { Metadata } from "next";
+import { db } from "@/lib/prisma";
+import { Suspense } from "react";
+import { cache } from "react";
+import Link from "next/link";
 import {
   SummaryCardsSkeleton,
   GuestTableSkeleton,

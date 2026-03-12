@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export function CTASection() {
   return (

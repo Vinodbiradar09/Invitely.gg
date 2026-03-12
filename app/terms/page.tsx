@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
-import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Terms of Service | Invitely.gg",

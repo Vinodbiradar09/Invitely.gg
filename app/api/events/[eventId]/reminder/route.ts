@@ -1,10 +1,10 @@
-import { db } from "@/lib/prisma";
+import { EmailData, pendingInvitation, ResendResult } from "@/lib/types";
+import { InviteEmail } from "@/components/email-template";
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { resend } from "@/lib/resend";
-import { InviteEmail } from "@/components/email-template";
-import { EmailData, pendingInvitation, ResendResult } from "@/lib/types";
+import { db } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
 
 const BATCH_SIZE = 25;
 

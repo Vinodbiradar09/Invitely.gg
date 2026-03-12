@@ -1,10 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { Calendar, MapPin, Send, Users } from "lucide-react";
 import { EventCreationState } from "@/app/hooks/use-event-creation";
+import { Calendar, MapPin, Send, Users } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 interface StepPreviewSendProps {
   state: EventCreationState;

@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { NavbarActions } from "@/components/layout/navbar-actions";
 import { NavbarLinks } from "@/components/layout/navbar-links";
 import type { User } from "@/lib/auth";
+import Link from "next/link";
 
 interface NavbarProps {
   user: User;

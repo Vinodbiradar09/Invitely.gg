@@ -1,7 +1,9 @@
 "use client";
-import { useState } from "react";
-import { signIn } from "@/lib/client";
+
+import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { signIn } from "@/lib/client";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,9 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
 import { toast } from "sonner";
+import Link from "next/link";
 
 export function LoginCard() {
   const [isLoading, setIsLoading] = useState(false);

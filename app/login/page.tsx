@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { LoginCard } from "@/components/login-card";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Sign In | Invitely.gg",

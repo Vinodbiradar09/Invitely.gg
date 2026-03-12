@@ -1,8 +1,8 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { EventCard } from "@/components/events/event-card";
-import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { PastEvent } from "@/lib/types";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 
 interface EventListProps {
   events: {

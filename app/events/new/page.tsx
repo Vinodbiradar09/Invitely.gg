@@ -1,15 +1,15 @@
-import { Suspense } from "react";
-import { redirect } from "next/navigation";
-import { db } from "@/lib/prisma";
 import { NewEventForm } from "@/components/events/new/new-event-form";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import type { Metadata } from "next";
-import { WorkspaceWithMembers } from "@/lib/types";
-import { getSession } from "@/lib/session";
 import { NewEventFormSkeleton } from "@/components/skeletons";
+import { Separator } from "@/components/ui/separator";
+import { WorkspaceWithMembers } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import { getSession } from "@/lib/session";
+import { redirect } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+import { db } from "@/lib/prisma";
+import { Suspense } from "react";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "New Event | Invitely.gg",

@@ -1,16 +1,16 @@
-import { Suspense } from "react";
-import { redirect } from "next/navigation";
-import { db } from "@/lib/prisma";
-import { WorkspaceList } from "@/components/workspace/workspace-list";
 import { WorkspaceCreateDialog } from "@/components/workspace/workspace-create-dialog";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Plus, ArrowRight } from "lucide-react";
-import type { Metadata } from "next";
-import { WorkspaceWithMembers } from "@/lib/types";
-import { getSession } from "@/lib/session";
+import { WorkspaceList } from "@/components/workspace/workspace-list";
 import { WorkspaceListSkeleton } from "@/components/skeletons";
+import { Separator } from "@/components/ui/separator";
+import { WorkspaceWithMembers } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import { Plus, ArrowRight } from "lucide-react";
+import { getSession } from "@/lib/session";
+import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+import { Suspense } from "react";
+import { db } from "@/lib/prisma";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Workspaces | Invitely.gg",

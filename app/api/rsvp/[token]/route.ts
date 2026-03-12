@@ -1,6 +1,6 @@
-import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { rsvpStatusZ } from "@/lib/types";
+import { db } from "@/lib/prisma";
 
 export async function GET(
   req: NextRequest,

@@ -1,6 +1,6 @@
-import { LucideIcon } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Users, Sparkles, Send, BarChart3, Bell, Shield } from "lucide-react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { LucideIcon } from "lucide-react";
 
 interface Feature {
   icon: LucideIcon;

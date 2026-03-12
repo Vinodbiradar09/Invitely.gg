@@ -1,14 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { EventStepper } from "@/components/events/new/event-stepper";
+import { StepSelectRecipients } from "@/components/events/new/step-select-recipients";
 import { StepEventDetails } from "@/components/events/new/step-event-details";
 import { StepWriteInvite } from "@/components/events/new/step-write-invite";
-import { StepSelectRecipients } from "@/components/events/new/step-select-recipients";
 import { StepPreviewSend } from "@/components/events/new/step-preview-send";
+import { EventStepper } from "@/components/events/new/event-stepper";
 import { useEventCreation } from "@/app/hooks/use-event-creation";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 interface Member {
   id: string;

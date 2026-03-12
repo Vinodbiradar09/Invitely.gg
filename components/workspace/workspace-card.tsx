@@ -1,8 +1,8 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { WorkspaceDeleteDialog } from "@/components/workspace/workspace-delete-dialog";
 import { MemberAddDialog } from "@/components/workspace/member-add-dialog";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { MemberList } from "@/components/workspace/member-list";
+import { Badge } from "@/components/ui/badge";
 
 interface Member {
   id: string;

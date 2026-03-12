@@ -1,7 +1,9 @@
 "use client";
-import { useState } from "react";
 import { useCreateWorkspace } from "@/app/hooks/use-workspaces";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Plus } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -11,9 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
+import { useState } from "react";
 
 interface WorkspaceCreateDialogProps {
   currentCount: number;

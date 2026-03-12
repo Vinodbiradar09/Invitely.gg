@@ -1,7 +1,7 @@
-import Link from "next/link";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Sparkles } from "lucide-react";
+import Link from "next/link";
 
 function GitHubIcon() {
   return (

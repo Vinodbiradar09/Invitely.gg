@@ -1,6 +1,6 @@
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, MapPin, User } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export function EmailPreview() {
   return (

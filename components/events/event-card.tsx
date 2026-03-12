@@ -1,9 +1,9 @@
-import Link from "next/link";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { EventDeleteDialog } from "@/components/events/event-delete-dialog";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Calendar, MapPin, Users } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 interface EventSummary {
   total: number;

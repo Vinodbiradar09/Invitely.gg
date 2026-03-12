@@ -1,7 +1,7 @@
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import { RSVPButtons } from "@/components/rsvp/rsvp-buttons";
+import { Separator } from "@/components/ui/separator";
 import { Calendar, MapPin, User } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 type RSVPStatus = "attending" | "maybe" | "declined" | "pending";
 

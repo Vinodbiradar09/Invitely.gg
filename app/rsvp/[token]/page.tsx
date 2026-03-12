@@ -1,7 +1,7 @@
-import { notFound } from "next/navigation";
-import { db } from "@/lib/prisma";
 import { RSVPCard } from "@/components/rsvp/rsvp-card";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { db } from "@/lib/prisma";
 
 interface PageProps {
   params: Promise<{ token: string }>;

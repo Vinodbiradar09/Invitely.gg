@@ -1,15 +1,15 @@
-import { Suspense } from "react";
-import { redirect } from "next/navigation";
-import { db } from "@/lib/prisma";
 import { EventList } from "@/components/events/event-list";
 import { EventListSkeleton } from "@/components/skeletons";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Plus, ArrowLeft } from "lucide-react";
-import type { Metadata } from "next";
 import { EventWithStatus } from "@/lib/types";
+import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
+import type { Metadata } from "next";
+import { db } from "@/lib/prisma";
+import { Suspense } from "react";
+import Link from "next/link";
 
 export const metadata: Metadata = { title: "Events | Invitely.gg" };
 function PageHeader() {
