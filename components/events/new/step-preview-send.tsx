@@ -9,6 +9,7 @@ import { EventCreationState } from "@/app/hooks/use-event-creation";
 interface StepPreviewSendProps {
   state: EventCreationState;
   organizerName: string;
+  organizerEmail: string;
   onBack: () => void;
   onSend: () => Promise<void>;
 }
@@ -16,6 +17,7 @@ interface StepPreviewSendProps {
 export function StepPreviewSend({
   state,
   organizerName,
+  organizerEmail,
   onBack,
   onSend,
 }: StepPreviewSendProps) {
@@ -41,7 +43,7 @@ export function StepPreviewSend({
               From
             </span>
             <span className="font-mono text-xs text-foreground">
-              Invitely.gg {"<noreply@invitely.gg>"}
+              {organizerEmail || "Invitely.gg <noreply@invitely.gg>"}
             </span>
             <span className="font-mono text-xs text-muted-foreground">
               Subject

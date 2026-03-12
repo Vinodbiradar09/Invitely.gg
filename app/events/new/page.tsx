@@ -66,6 +66,7 @@ export default async function NewEventPage() {
         <NewEventForm
           workspaces={workspaces}
           organizerName={session.user.name ?? "Organizer"}
+          organizerEmail={session.user.email}
         />
       )}
     </div>

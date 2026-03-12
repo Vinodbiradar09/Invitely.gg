@@ -27,9 +27,7 @@ export function EmailPreview() {
             <div className="border-b border-border bg-muted/20 px-4 py-3">
               <div className="grid grid-cols-[56px_1fr] gap-1 font-mono text-xs">
                 <span className="text-muted-foreground">From</span>
-                <span className="text-foreground">
-                  Invitely.gg {"<noreply@invitely.gg>"}
-                </span>
+                <span className="text-foreground">teej@gmail.com</span>
                 <span className="text-muted-foreground">To</span>
                 <span className="text-foreground">vinod@gmail.com</span>
                 <span className="text-muted-foreground">Subject</span>

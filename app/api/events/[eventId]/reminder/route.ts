@@ -85,7 +85,9 @@ export async function POST(
       subject: `Reminder: ${event.emailSubject}`, // prefix subject with reminder
       react: InviteEmail({
         organizerName: session.user.name,
+        organizerEmail: session.user.email,
         recipientName: inv.name ?? inv.email,
+        recipientEmail: inv.email,
         eventName: event.name,
         eventDate,
         eventLocation: event.location,

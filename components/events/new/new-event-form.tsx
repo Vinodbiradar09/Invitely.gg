@@ -25,6 +25,7 @@ interface Workspace {
 interface NewEventFormProps {
   workspaces: Workspace[];
   organizerName: string;
+  organizerEmail: string;
 }
 
 const stepTitles: Record<number, string> = {
@@ -34,7 +35,11 @@ const stepTitles: Record<number, string> = {
   4: "Preview & send",
 };
 
-export function NewEventForm({ workspaces, organizerName }: NewEventFormProps) {
+export function NewEventForm({
+  workspaces,
+  organizerName,
+  organizerEmail,
+}: NewEventFormProps) {
   const router = useRouter();
   const {
     state,
@@ -99,6 +104,7 @@ export function NewEventForm({ workspaces, organizerName }: NewEventFormProps) {
         <StepPreviewSend
           state={state}
           organizerName={organizerName}
+          organizerEmail={organizerEmail}
           onBack={prevStep}
           onSend={submitEvent}
         />

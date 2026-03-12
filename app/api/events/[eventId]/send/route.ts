@@ -119,7 +119,9 @@ export async function POST(
       subject: event.emailSubject,
       react: InviteEmail({
         organizerName: session.user.name,
+        organizerEmail: session.user.email,
         recipientName: inv.name ?? inv.email,
+        recipientEmail: inv.email,
         eventName: event.name,
         eventDate,
         eventLocation: event.location,
