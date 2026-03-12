@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { cache } from "react";
 import { redirect, notFound } from "next/navigation";
 import { db } from "@/lib/prisma";
@@ -12,12 +13,15 @@ import { ArrowLeft, Calendar, MapPin } from "lucide-react";
 import type { Metadata } from "next";
 import { Invitation } from "@/lib/types";
 import { getSession } from "@/lib/session";
+import {
+  SummaryCardsSkeleton,
+  GuestTableSkeleton,
+} from "@/components/skeletons";
 
 interface PageProps {
   params: Promise<{ eventId: string }>;
 }
 
-// cache the event fetch so generateMetadata and the page share one DB call
 const getEvent = cache(async (eventId: string) => {
   return db.event.findUnique({ where: { id: eventId } });
 });
@@ -32,28 +36,19 @@ export async function generateMetadata({
   };
 }
 
-export default async function EventDashboardPage({ params }: PageProps) {
-  const { eventId } = await params;
-
-  const [session, event, invitations] = await Promise.all([
-    getSession(),
-    getEvent(eventId),
-    db.invitation.findMany({
-      where: { eventId },
-      orderBy: { sentAt: "asc" },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        status: true,
-        sentAt: true,
-        respondedAt: true,
-      },
-    }),
-  ]);
-  if (!session) redirect("/login");
-  if (!event) notFound();
-  if (event.userId !== session.user.id) notFound();
+async function GuestSection({ eventId }: { eventId: string }) {
+  const invitations = await db.invitation.findMany({
+    where: { eventId },
+    orderBy: { sentAt: "asc" },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      status: true,
+      sentAt: true,
+      respondedAt: true,
+    },
+  });
 
   const summary = {
     total: invitations.length,
@@ -66,15 +61,35 @@ export default async function EventDashboardPage({ params }: PageProps) {
       .length,
   };
 
-  const isPast = new Date(event.eventAt) < new Date();
+  return (
+    <>
+      <SummaryCards summary={summary} />
+      <Separator className="bg-border" />
+      <div className="flex flex-col gap-3">
+        <h2 className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
+          Guest list — {summary.total}
+        </h2>
+        <GuestTable invitations={invitations} />
+      </div>
+    </>
+  );
+}
 
+export default async function EventDashboardPage({ params }: PageProps) {
+  const { eventId } = await params;
+  const [session, event] = await Promise.all([getSession(), getEvent(eventId)]);
+
+  if (!session) redirect("/login");
+  if (!event) notFound();
+  if (event.userId !== session.user.id) notFound();
+
+  const isPast = new Date(event.eventAt) < new Date();
   const formattedDate = new Date(event.eventAt).toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric",
   });
-
   const formattedTime = new Date(event.eventAt).toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
@@ -123,23 +138,23 @@ export default async function EventDashboardPage({ params }: PageProps) {
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <ReminderButton eventId={event.id} pendingCount={summary.pending} />
+          <ReminderButton eventId={event.id} pendingCount={0} />
           <EventDeleteDialog eventId={event.id} eventName={event.name} />
         </div>
       </div>
 
       <Separator className="bg-border" />
-
-      <SummaryCards summary={summary} />
-
-      <Separator className="bg-border" />
-
-      <div className="flex flex-col gap-3">
-        <h2 className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
-          Guest list — {summary.total}
-        </h2>
-        <GuestTable invitations={invitations} />
-      </div>
+      <Suspense
+        fallback={
+          <>
+            <SummaryCardsSkeleton />
+            <Separator className="bg-border" />
+            <GuestTableSkeleton />
+          </>
+        }
+      >
+        <GuestSection eventId={eventId} />
+      </Suspense>
     </div>
   );
 }

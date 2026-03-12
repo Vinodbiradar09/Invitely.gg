@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/prisma";
 import { WorkspaceList } from "@/components/workspace/workspace-list";
@@ -9,14 +10,26 @@ import { Plus, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import { WorkspaceWithMembers } from "@/lib/types";
 import { getSession } from "@/lib/session";
+import { WorkspaceListSkeleton } from "@/components/skeletons";
 
 export const metadata: Metadata = {
   title: "Workspaces | Invitely.gg",
 };
 
-export default async function WorkspacePage() {
-  const session = await getSession();
+function PageHeader() {
+  return (
+    <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-1">
+        <h1 className="font-mono text-base font-semibold text-foreground">
+          Workspaces
+        </h1>
+      </div>
+    </div>
+  );
+}
 
+async function WorkspaceSection() {
+  const session = await getSession();
   if (!session) redirect("/login");
 
   const workspaces = await db.workSpace.findMany({
@@ -32,17 +45,12 @@ export default async function WorkspacePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <h1 className="font-mono text-base font-semibold text-foreground">
-            Workspaces
-          </h1>
-          <p className="font-mono text-xs text-muted-foreground">
-            {workspaces.length === 0
-              ? "Create a workspace to start organising your contacts."
-              : `${workspaces.length}/5 workspaces · ${totalMembers} total contacts`}
-          </p>
-        </div>
+      <div className="flex items-start justify-between gap-4 -mt-6">
+        <p className="font-mono text-xs text-muted-foreground">
+          {workspaces.length === 0
+            ? "Create a workspace to start organising your contacts."
+            : `${workspaces.length}/5 workspaces · ${totalMembers} total contacts`}
+        </p>
         <div className="flex items-center gap-2 shrink-0">
           {totalMembers > 0 && (
             <Link href="/events">
@@ -60,9 +68,8 @@ export default async function WorkspacePage() {
         </div>
       </div>
 
-      <Separator className="bg-border" />
-
       <WorkspaceList workspaces={workspaces} />
+
       {totalMembers > 0 && workspaces.length > 0 && (
         <div className="border border-dashed border-border px-5 py-4 flex items-center justify-between gap-4">
           <div className="flex flex-col gap-0.5">
@@ -82,6 +89,18 @@ export default async function WorkspacePage() {
           </Link>
         </div>
       )}
+    </div>
+  );
+}
+
+export default function WorkspacePage() {
+  return (
+    <div className="flex flex-col gap-6">
+      <PageHeader />
+      <Separator className="bg-border" />
+      <Suspense fallback={<WorkspaceListSkeleton />}>
+        <WorkspaceSection />
+      </Suspense>
     </div>
   );
 }
