@@ -1,55 +1,23 @@
-import * as React from "react";
-
-interface InviteEmailProps {
+interface CancelEmailProps {
   organizerName: string;
-  organizerEmail: string;
   recipientName: string;
   recipientEmail: string;
   eventName: string;
   eventDate: string;
   eventLocation: string;
-  emailBody: string;
-  token: string;
-  personalizedOpening?: string;
 }
 
-export function InviteEmail({
+export function CancelEmail({
   organizerName,
-  organizerEmail,
   recipientName,
   recipientEmail,
   eventName,
   eventDate,
   eventLocation,
-  emailBody,
-  token,
-  personalizedOpening,
-}: InviteEmailProps) {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL ??
-    (process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000");
-
-  const attendingUrl = `${baseUrl}/rsvp/${token}?status=attending`;
-  const maybeUrl = `${baseUrl}/rsvp/${token}?status=maybe`;
-  const declinedUrl = `${baseUrl}/rsvp/${token}?status=declined`;
-
+}: CancelEmailProps) {
   const mono = "'Courier New', Courier, monospace";
-
-  const fromValue = organizerEmail || "noreply@invitely.gg";
   const toValue = recipientEmail || recipientName || "You";
   const greetName = recipientName || recipientEmail || "there";
-
-  const labelStyle: React.CSSProperties = {
-    fontSize: "10px",
-    color: "#444444",
-    fontFamily: mono,
-    letterSpacing: "0.08em",
-    whiteSpace: "nowrap" as const,
-    paddingRight: "12px",
-    verticalAlign: "top" as const,
-  };
 
   return (
     <table
@@ -102,7 +70,7 @@ export function InviteEmail({
                               paddingBottom: "6px",
                             }}
                           >
-                            {fromValue}
+                            noreply@invitely.gg
                           </td>
                         </tr>
                         <tr>
@@ -149,13 +117,14 @@ export function InviteEmail({
                               fontWeight: "bold",
                             }}
                           >
-                            You&apos;re invited to {eventName}
+                            Cancelled: {eventName}
                           </td>
                         </tr>
                       </tbody>
                     </table>
                   </td>
                 </tr>
+
                 <tr>
                   <td style={{ padding: "24px 20px 28px 20px" }}>
                     <table width="100%" cellPadding="0" cellSpacing="0">
@@ -167,24 +136,19 @@ export function InviteEmail({
                                 <tr>
                                   <td
                                     style={{
-                                      borderLeft: "2px solid #2a2a2a",
+                                      borderLeft: "2px solid #7f1d1d",
                                       paddingLeft: "10px",
                                     }}
                                   >
                                     <span
                                       style={{
                                         fontSize: "11px",
-                                        color: "#555555",
+                                        color: "#f87171",
                                         fontFamily: mono,
+                                        fontWeight: "bold",
                                       }}
                                     >
-                                      <span style={{ color: "#444444" }}>
-                                        Invited By
-                                      </span>
-                                      &nbsp;&nbsp;
-                                      <strong style={{ color: "#cccccc" }}>
-                                        {organizerName}
-                                      </strong>
+                                      EVENT CANCELLED
                                     </span>
                                   </td>
                                 </tr>
@@ -192,25 +156,6 @@ export function InviteEmail({
                             </table>
                           </td>
                         </tr>
-
-                        {personalizedOpening && (
-                          <tr>
-                            <td style={{ paddingBottom: "16px" }}>
-                              <p
-                                style={{
-                                  margin: 0,
-                                  fontSize: "13px",
-                                  color: "#aaaaaa",
-                                  fontFamily: mono,
-                                  lineHeight: "1.6",
-                                  fontStyle: "italic",
-                                }}
-                              >
-                                {personalizedOpening}
-                              </p>
-                            </td>
-                          </tr>
-                        )}
 
                         <tr>
                           <td style={{ paddingBottom: "16px" }}>
@@ -252,8 +197,13 @@ export function InviteEmail({
                                         <tr>
                                           <td
                                             style={{
-                                              ...labelStyle,
+                                              fontSize: "10px",
+                                              color: "#444444",
+                                              fontFamily: mono,
+                                              paddingRight: "12px",
                                               paddingBottom: "8px",
+                                              verticalAlign: "top",
+                                              whiteSpace: "nowrap",
                                             }}
                                           >
                                             DATE
@@ -264,18 +214,31 @@ export function InviteEmail({
                                               color: "#888888",
                                               fontFamily: mono,
                                               paddingBottom: "8px",
+                                              textDecoration: "line-through",
                                             }}
                                           >
                                             {eventDate}
                                           </td>
                                         </tr>
                                         <tr>
-                                          <td style={labelStyle}>LOCATION</td>
+                                          <td
+                                            style={{
+                                              fontSize: "10px",
+                                              color: "#444444",
+                                              fontFamily: mono,
+                                              paddingRight: "12px",
+                                              verticalAlign: "top",
+                                              whiteSpace: "nowrap",
+                                            }}
+                                          >
+                                            LOCATION
+                                          </td>
                                           <td
                                             style={{
                                               fontSize: "12px",
                                               color: "#888888",
                                               fontFamily: mono,
+                                              textDecoration: "line-through",
                                             }}
                                           >
                                             {eventLocation}
@@ -301,150 +264,33 @@ export function InviteEmail({
 
                         <tr>
                           <td style={{ paddingBottom: "20px" }}>
-                            {emailBody.split("\n").map((line, i) =>
-                              line.trim() ? (
-                                <p
-                                  key={i}
-                                  style={{
-                                    margin: "0 0 10px 0",
-                                    fontSize: "13px",
-                                    color: "#aaaaaa",
-                                    fontFamily: mono,
-                                    lineHeight: "1.7",
-                                  }}
-                                >
-                                  {line}
-                                </p>
-                              ) : (
-                                <br key={i} />
-                              ),
-                            )}
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td
-                            style={{
-                              borderTop: "1px solid #1f1f1f",
-                              paddingBottom: "20px",
-                            }}
-                          />
-                        </tr>
-
-                        <tr>
-                          <td style={{ paddingBottom: "14px" }}>
                             <p
                               style={{
-                                margin: 0,
-                                fontSize: "12px",
-                                color: "#888888",
+                                margin: "0 0 10px 0",
+                                fontSize: "13px",
+                                color: "#aaaaaa",
                                 fontFamily: mono,
+                                lineHeight: "1.7",
                               }}
                             >
                               Hey{" "}
                               <strong style={{ color: "#ffffff" }}>
                                 {greetName}
                               </strong>
-                              , will you be attending?
+                              , unfortunately this event has been cancelled.
                             </p>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td style={{ paddingBottom: "14px" }}>
-                            <table cellPadding="0" cellSpacing="0">
-                              <tbody>
-                                <tr>
-                                  <td style={{ paddingRight: "8px" }}>
-                                    <a
-                                      href={attendingUrl}
-                                      style={{
-                                        display: "inline-block",
-                                        padding: "10px 18px",
-                                        backgroundColor: "#14532d",
-                                        border: "1px solid #166534",
-                                        color: "#4ade80",
-                                        fontSize: "11px",
-                                        fontFamily: mono,
-                                        fontWeight: "bold",
-                                        textDecoration: "none",
-                                        letterSpacing: "0.05em",
-                                      }}
-                                    >
-                                      Attending
-                                    </a>
-                                  </td>
-                                  <td style={{ paddingRight: "8px" }}>
-                                    <a
-                                      href={maybeUrl}
-                                      style={{
-                                        display: "inline-block",
-                                        padding: "10px 18px",
-                                        backgroundColor: "#422006",
-                                        border: "1px solid #78350f",
-                                        color: "#fbbf24",
-                                        fontSize: "11px",
-                                        fontFamily: mono,
-                                        fontWeight: "bold",
-                                        textDecoration: "none",
-                                        letterSpacing: "0.05em",
-                                      }}
-                                    >
-                                      Maybe
-                                    </a>
-                                  </td>
-                                  <td>
-                                    <a
-                                      href={declinedUrl}
-                                      style={{
-                                        display: "inline-block",
-                                        padding: "10px 18px",
-                                        backgroundColor: "#450a0a",
-                                        border: "1px solid #7f1d1d",
-                                        color: "#f87171",
-                                        fontSize: "11px",
-                                        fontFamily: mono,
-                                        fontWeight: "bold",
-                                        textDecoration: "none",
-                                        letterSpacing: "0.05em",
-                                      }}
-                                    >
-                                      Can&apos;t Make It
-                                    </a>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </td>
-                        </tr>
-
-                        {/* Change note */}
-                        <tr>
-                          <td>
                             <p
                               style={{
                                 margin: 0,
-                                fontSize: "10px",
-                                color: "#444444",
+                                fontSize: "13px",
+                                color: "#aaaaaa",
                                 fontFamily: mono,
+                                lineHeight: "1.7",
                               }}
                             >
-                              You can change your response anytime before the
-                              event.
+                              We&apos;re sorry for any inconvenience. You
+                              don&apos;t need to take any action.
                             </p>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={`${baseUrl}/api/track/${token}`}
-                              width="1"
-                              height="1"
-                              style={{ display: "block", border: 0 }}
-                              alt=""
-                            />
                           </td>
                         </tr>
                       </tbody>
@@ -452,7 +298,6 @@ export function InviteEmail({
                   </td>
                 </tr>
 
-                {/* Footer */}
                 <tr>
                   <td
                     style={{

@@ -116,8 +116,10 @@ export async function PATCH(
         respondedAt: true,
         event: {
           select: {
+            id: true,
             eventAt: true,
             name: true,
+            status: true,
           },
         },
       },
@@ -134,6 +136,16 @@ export async function PATCH(
       return NextResponse.json(
         {
           message: "this event has already passed. rsvp is closed.",
+          success: false,
+        },
+        { status: 410 },
+      );
+    }
+    // check if the event is canceled
+    if (invitation.event.status === "cancelled") {
+      return NextResponse.json(
+        {
+          message: "this event has been cancelled. rsvp is closed.",
           success: false,
         },
         { status: 410 },

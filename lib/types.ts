@@ -64,6 +64,64 @@ export const ZodPolishResponse = z.object({
   body: z.string(),
 });
 
+export const ZodUpdateEvent = z.object({
+  name: z.string().min(1).max(100).optional(),
+  desc: z.string().min(1).optional(),
+  eventAt: z.string().datetime().optional(),
+  location: z.string().min(1).optional(),
+  emailSubject: z.string().min(1).optional(),
+  emailBody: z.string().min(1).optional(),
+});
+
+export const ZodSchedule = z.object({
+  scheduledAt: z.string().datetime(),
+  recipients: z
+    .array(
+      z.object({
+        email: z.email(),
+        name: z.string().nullable().optional(),
+      }),
+    )
+    .min(1)
+    .max(125),
+});
+
+export const ZodResendLink = z.object({
+  email: z.email(),
+});
+
+export const ZodSmartSendTime = z.object({
+  eventName: z.string().min(1).max(100),
+  eventDate: z.string().min(1),
+  eventLocation: z.string().min(1).max(200),
+  eventDesc: z.string().max(1000).optional().default(""),
+});
+
+export const ZodSmartSendTimeResponse = z.object({
+  suggestedAt: z.string().datetime(),
+  dayLabel: z.string(),
+  timeLabel: z.string(),
+  reason: z.string(),
+});
+
+export const ZodInsights = z.object({
+  eventId: z.string().min(1),
+});
+
+export const ZodInsightsResponse = z.object({
+  summary: z.string(),
+  responseRate: z.number(),
+  topInsight: z.string(),
+  suggestion: z.string(),
+});
+
+export const ZodCreateTemplate = z.object({
+  name: z.string().min(1, "Template name is required").max(100),
+  emailSubject: z.string().min(1, "Subject is required").max(150),
+  emailBody: z.string().min(1, "Body is required").max(5000),
+  eventId: z.string().optional(),
+});
+
 export type RawEvent = Prisma.EventGetPayload<{
   include: {
     _count: { select: { invitations: true } };
@@ -111,6 +169,10 @@ export interface EventWithStatus {
   location: string;
   emailSubject: string;
   emailBody: string;
+  status: string;
+  cancelledAt: Date | null;
+  scheduledAt: Date | null;
+  sentAt: Date | null;
   invitations: {
     status: $Enums.InvitationStatus;
   }[];
@@ -123,6 +185,7 @@ export interface Invitation {
   id: string;
   respondedAt: Date | null;
   sentAt: Date;
+  openedAt: Date | null;
 }
 
 export interface WorkspaceMember {
@@ -147,6 +210,7 @@ export interface PastEvent {
   location: string;
   eventAt: Date;
   createdAt: Date;
+  status: string;
   summary: {
     total: number;
     attending: number;

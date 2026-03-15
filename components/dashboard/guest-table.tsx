@@ -1,4 +1,6 @@
+"use client";
 import { Badge } from "@/components/ui/badge";
+import { ResendLinkButton } from "@/components/dashboard/resend-link-button";
 import {
   Table,
   TableBody,
@@ -17,10 +19,12 @@ interface Invitation {
   status: InvitationStatus;
   sentAt: Date;
   respondedAt: Date | null;
+  openedAt: Date | null;
 }
 
 interface GuestTableProps {
   invitations: Invitation[];
+  eventId: string;
 }
 
 const statusConfig: Record<
@@ -55,7 +59,7 @@ function formatDate(date: Date | null): string {
   });
 }
 
-export function GuestTable({ invitations }: GuestTableProps) {
+export function GuestTable({ invitations, eventId }: GuestTableProps) {
   if (invitations.length === 0) {
     return (
       <div className="py-12 text-center">
@@ -66,7 +70,6 @@ export function GuestTable({ invitations }: GuestTableProps) {
     );
   }
 
-  // sort: attending first, then maybe, then pending, then declined
   const order: InvitationStatus[] = [
     "attending",
     "maybe",
@@ -91,8 +94,14 @@ export function GuestTable({ invitations }: GuestTableProps) {
             <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4">
               Status
             </TableHead>
-            <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4 text-right">
+            <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4">
+              Opened
+            </TableHead>
+            <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4">
               Responded
+            </TableHead>
+            <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4 text-right">
+              Actions
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -122,8 +131,28 @@ export function GuestTable({ invitations }: GuestTableProps) {
                     {config.label}
                   </Badge>
                 </TableCell>
-                <TableCell className="font-mono text-xs text-muted-foreground px-4 py-2.5 text-right">
+                <TableCell className="px-4 py-2.5">
+                  {inv.openedAt ? (
+                    <Badge
+                      variant="outline"
+                      className="font-mono text-xs px-1.5 py-0 h-4 bg-blue-500/10 text-blue-500 border-blue-500/20"
+                    >
+                      Opened
+                    </Badge>
+                  ) : (
+                    <Badge
+                      variant="outline"
+                      className="font-mono text-xs px-1.5 py-0 h-4 bg-muted text-muted-foreground border-border"
+                    >
+                      Not opened
+                    </Badge>
+                  )}
+                </TableCell>
+                <TableCell className="font-mono text-xs text-muted-foreground px-4 py-2.5">
                   {formatDate(inv.respondedAt)}
+                </TableCell>
+                <TableCell className="px-4 py-2.5 text-right">
+                  <ResendLinkButton eventId={eventId} email={inv.email} />
                 </TableCell>
               </TableRow>
             );

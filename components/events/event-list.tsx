@@ -11,6 +11,7 @@ interface EventListProps {
     location: string;
     eventAt: Date;
     createdAt: Date;
+    status: string;
     summary: {
       total: number;
       attending: number;

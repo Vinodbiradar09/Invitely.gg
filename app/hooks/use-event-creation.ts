@@ -208,6 +208,58 @@ export function useEventCreation() {
     }
   }
 
+  async function scheduleEvent(scheduledAt: string) {
+    if (state.selectedRecipients.size === 0) {
+      toast.error("select at least one recipient");
+      return;
+    }
+
+    try {
+      setState((prev) => ({ ...prev, isSending: true }));
+
+      const eventRes = await fetch("/api/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: state.name.trim(),
+          desc: state.desc.trim(),
+          eventAt: new Date(state.eventAt).toISOString(),
+          location: state.location.trim(),
+          emailSubject: state.emailSubject.trim(),
+          emailBody: state.emailBody.trim(),
+        }),
+      });
+
+      const eventData = await eventRes.json();
+      if (!eventData.success) {
+        toast.error(eventData.message);
+        return;
+      }
+
+      const eventId = eventData.event.id;
+      const recipients = Array.from(state.selectedRecipients.values());
+
+      const scheduleRes = await fetch(`/api/events/${eventId}/schedule`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ scheduledAt, recipients }),
+      });
+
+      const scheduleData = await scheduleRes.json();
+      if (!scheduleData.success) {
+        toast.error(scheduleData.message);
+        return;
+      }
+
+      toast.success(scheduleData.message);
+      router.push(`/events/${eventId}`);
+    } catch {
+      toast.error("something went wrong. please try again.");
+    } finally {
+      setState((prev) => ({ ...prev, isSending: false }));
+    }
+  }
+
   return {
     state,
     setField,
@@ -219,5 +271,6 @@ export function useEventCreation() {
     getWorkspaceSelectionState,
     polishWithAI,
     submitEvent,
+    scheduleEvent,
   };
 }

@@ -7,7 +7,7 @@ datasource db {
 }
 
 model User {
-  id            String      @id
+  id            String          @id
   name          String
   email         String
   emailVerified Boolean
@@ -18,6 +18,7 @@ model User {
   accounts      Account[]
   workSpaces    WorkSpace[]
   events        Event[]
+  templates     EventTemplate[]
 
   @@unique([email])
   @@map("user")
@@ -95,39 +96,69 @@ model WorkSpaceMember {
 }
 
 model Event {
-  id           String       @id @default(uuid())
+  id           String          @id @default(uuid())
   userId       String
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   name         String
   desc         String
   eventAt      DateTime
   location     String
   emailSubject String
   emailBody    String
-  createdAt    DateTime     @default(now())
+  status       EventStatus     @default(active)
+  cancelledAt  DateTime?
+  scheduledAt  DateTime?
+  sentAt       DateTime?
+  createdAt    DateTime        @default(now())
   invitations  Invitation[]
+  templates    EventTemplate[]
 
   @@index([userId])
+  @@index([userId, status])
+  @@index([status, scheduledAt])
   @@map("events")
 }
 
 model Invitation {
-  id          String           @id @default(uuid())
-  eventId     String
-  event       Event            @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  email       String
-  name        String?
-  token       String           @unique
-  status      InvitationStatus @default(pending)
-  respondedAt DateTime?
-  sentAt      DateTime         @default(now())
-  updatedAt   DateTime?        @updatedAt
+  id                  String           @id @default(uuid())
+  eventId             String
+  event               Event            @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  email               String
+  name                String?
+  token               String           @unique
+  status              InvitationStatus @default(pending)
+  personalizedOpening String?
+  openedAt            DateTime?
+  respondedAt         DateTime?
+  sentAt              DateTime         @default(now())
+  updatedAt           DateTime?        @updatedAt
 
   @@unique([eventId, email])
   @@index([eventId])
   @@index([token])
   @@index([eventId, status])
   @@map("invitations")
+}
+
+model EventTemplate {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventId      String?
+  event        Event?   @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  name         String
+  emailSubject String
+  emailBody    String
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+  @@map("event_templates")
+}
+
+enum EventStatus {
+  active
+  cancelled
+  scheduled
 }
 
 enum InvitationStatus {

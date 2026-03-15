@@ -1,30 +1,31 @@
 import * as React from "react";
 
-interface InviteEmailProps {
+interface UpdateEmailProps {
   organizerName: string;
-  organizerEmail: string;
   recipientName: string;
   recipientEmail: string;
   eventName: string;
   eventDate: string;
   eventLocation: string;
-  emailBody: string;
   token: string;
-  personalizedOpening?: string;
+  changes: {
+    locationChanged: boolean;
+    timeChanged: boolean;
+    oldLocation?: string;
+    oldDate?: string;
+  };
 }
 
-export function InviteEmail({
+export function UpdateEmail({
   organizerName,
-  organizerEmail,
   recipientName,
   recipientEmail,
   eventName,
   eventDate,
   eventLocation,
-  emailBody,
   token,
-  personalizedOpening,
-}: InviteEmailProps) {
+  changes,
+}: UpdateEmailProps) {
   const baseUrl =
     process.env.NEXT_PUBLIC_APP_URL ??
     (process.env.VERCEL_URL
@@ -36,8 +37,6 @@ export function InviteEmail({
   const declinedUrl = `${baseUrl}/rsvp/${token}?status=declined`;
 
   const mono = "'Courier New', Courier, monospace";
-
-  const fromValue = organizerEmail || "noreply@invitely.gg";
   const toValue = recipientEmail || recipientName || "You";
   const greetName = recipientName || recipientEmail || "there";
 
@@ -102,7 +101,7 @@ export function InviteEmail({
                               paddingBottom: "6px",
                             }}
                           >
-                            {fromValue}
+                            noreply@invitely.gg
                           </td>
                         </tr>
                         <tr>
@@ -149,13 +148,14 @@ export function InviteEmail({
                               fontWeight: "bold",
                             }}
                           >
-                            You&apos;re invited to {eventName}
+                            Event Update: {eventName}
                           </td>
                         </tr>
                       </tbody>
                     </table>
                   </td>
                 </tr>
+
                 <tr>
                   <td style={{ padding: "24px 20px 28px 20px" }}>
                     <table width="100%" cellPadding="0" cellSpacing="0">
@@ -167,24 +167,19 @@ export function InviteEmail({
                                 <tr>
                                   <td
                                     style={{
-                                      borderLeft: "2px solid #2a2a2a",
+                                      borderLeft: "2px solid #854d0e",
                                       paddingLeft: "10px",
                                     }}
                                   >
                                     <span
                                       style={{
                                         fontSize: "11px",
-                                        color: "#555555",
+                                        color: "#fbbf24",
                                         fontFamily: mono,
+                                        fontWeight: "bold",
                                       }}
                                     >
-                                      <span style={{ color: "#444444" }}>
-                                        Invited By
-                                      </span>
-                                      &nbsp;&nbsp;
-                                      <strong style={{ color: "#cccccc" }}>
-                                        {organizerName}
-                                      </strong>
+                                      EVENT UPDATED
                                     </span>
                                   </td>
                                 </tr>
@@ -192,25 +187,6 @@ export function InviteEmail({
                             </table>
                           </td>
                         </tr>
-
-                        {personalizedOpening && (
-                          <tr>
-                            <td style={{ paddingBottom: "16px" }}>
-                              <p
-                                style={{
-                                  margin: 0,
-                                  fontSize: "13px",
-                                  color: "#aaaaaa",
-                                  fontFamily: mono,
-                                  lineHeight: "1.6",
-                                  fontStyle: "italic",
-                                }}
-                              >
-                                {personalizedOpening}
-                              </p>
-                            </td>
-                          </tr>
-                        )}
 
                         <tr>
                           <td style={{ paddingBottom: "16px" }}>
@@ -261,12 +237,32 @@ export function InviteEmail({
                                           <td
                                             style={{
                                               fontSize: "12px",
-                                              color: "#888888",
                                               fontFamily: mono,
                                               paddingBottom: "8px",
                                             }}
                                           >
-                                            {eventDate}
+                                            {changes.timeChanged &&
+                                              changes.oldDate && (
+                                                <span
+                                                  style={{
+                                                    color: "#555555",
+                                                    textDecoration:
+                                                      "line-through",
+                                                    marginRight: "8px",
+                                                  }}
+                                                >
+                                                  {changes.oldDate}
+                                                </span>
+                                              )}
+                                            <span
+                                              style={{
+                                                color: changes.timeChanged
+                                                  ? "#fbbf24"
+                                                  : "#888888",
+                                              }}
+                                            >
+                                              {eventDate}
+                                            </span>
                                           </td>
                                         </tr>
                                         <tr>
@@ -274,11 +270,31 @@ export function InviteEmail({
                                           <td
                                             style={{
                                               fontSize: "12px",
-                                              color: "#888888",
                                               fontFamily: mono,
                                             }}
                                           >
-                                            {eventLocation}
+                                            {changes.locationChanged &&
+                                              changes.oldLocation && (
+                                                <span
+                                                  style={{
+                                                    color: "#555555",
+                                                    textDecoration:
+                                                      "line-through",
+                                                    marginRight: "8px",
+                                                  }}
+                                                >
+                                                  {changes.oldLocation}
+                                                </span>
+                                              )}
+                                            <span
+                                              style={{
+                                                color: changes.locationChanged
+                                                  ? "#fbbf24"
+                                                  : "#888888",
+                                              }}
+                                            >
+                                              {eventLocation}
+                                            </span>
                                           </td>
                                         </tr>
                                       </tbody>
@@ -301,24 +317,34 @@ export function InviteEmail({
 
                         <tr>
                           <td style={{ paddingBottom: "20px" }}>
-                            {emailBody.split("\n").map((line, i) =>
-                              line.trim() ? (
-                                <p
-                                  key={i}
-                                  style={{
-                                    margin: "0 0 10px 0",
-                                    fontSize: "13px",
-                                    color: "#aaaaaa",
-                                    fontFamily: mono,
-                                    lineHeight: "1.7",
-                                  }}
-                                >
-                                  {line}
-                                </p>
-                              ) : (
-                                <br key={i} />
-                              ),
-                            )}
+                            <p
+                              style={{
+                                margin: "0 0 10px 0",
+                                fontSize: "13px",
+                                color: "#aaaaaa",
+                                fontFamily: mono,
+                                lineHeight: "1.7",
+                              }}
+                            >
+                              Hey{" "}
+                              <strong style={{ color: "#ffffff" }}>
+                                {greetName}
+                              </strong>
+                              , the details for this event have been updated.
+                              Please review the changes above.
+                            </p>
+                            <p
+                              style={{
+                                margin: 0,
+                                fontSize: "13px",
+                                color: "#aaaaaa",
+                                fontFamily: mono,
+                                lineHeight: "1.7",
+                              }}
+                            >
+                              If your availability has changed, you can update
+                              your RSVP below.
+                            </p>
                           </td>
                         </tr>
 
@@ -341,11 +367,7 @@ export function InviteEmail({
                                 fontFamily: mono,
                               }}
                             >
-                              Hey{" "}
-                              <strong style={{ color: "#ffffff" }}>
-                                {greetName}
-                              </strong>
-                              , will you be attending?
+                              Will you still be attending?
                             </p>
                           </td>
                         </tr>
@@ -418,7 +440,6 @@ export function InviteEmail({
                           </td>
                         </tr>
 
-                        {/* Change note */}
                         <tr>
                           <td>
                             <p
@@ -434,25 +455,11 @@ export function InviteEmail({
                             </p>
                           </td>
                         </tr>
-
-                        <tr>
-                          <td>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={`${baseUrl}/api/track/${token}`}
-                              width="1"
-                              height="1"
-                              style={{ display: "block", border: 0 }}
-                              alt=""
-                            />
-                          </td>
-                        </tr>
                       </tbody>
                     </table>
                   </td>
                 </tr>
 
-                {/* Footer */}
                 <tr>
                   <td
                     style={{

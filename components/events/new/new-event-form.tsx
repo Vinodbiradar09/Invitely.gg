@@ -51,6 +51,7 @@ export function NewEventForm({
     getWorkspaceSelectionState,
     polishWithAI,
     submitEvent,
+    scheduleEvent,
   } = useEventCreation();
 
   return (
@@ -107,6 +108,7 @@ export function NewEventForm({
           organizerEmail={organizerEmail}
           onBack={prevStep}
           onSend={submitEvent}
+          onSchedule={scheduleEvent}
         />
       )}
     </div>

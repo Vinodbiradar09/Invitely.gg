@@ -1,0 +1,16 @@
+name: Scheduled Send Trigger
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping scheduled send endpoint
+        run: |
+          curl -X GET "${{ secrets.APP_URL }}/api/cron/send-scheduled" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            --fail

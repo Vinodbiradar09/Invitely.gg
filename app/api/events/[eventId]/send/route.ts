@@ -1,10 +1,13 @@
 import { InviteEmail } from "@/components/email-template";
+import { buildPersonalisationPrompt } from "@/lib/prompt";
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { resend } from "@/lib/resend";
-import { randomBytes } from "crypto";
 import { db } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { llm } from "@/lib/llm";
+
+import { randomBytes } from "crypto";
 import {
   EmailData,
   InvitationItem,
@@ -14,6 +17,8 @@ import {
 
 type TxClient = Parameters<Parameters<typeof db.$transaction>[0]>[0];
 
+const BATCH_SIZE = 25;
+
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ eventId: string }> },
@@ -22,7 +27,6 @@ export async function POST(
     const session = await auth.api.getSession({
       headers: await headers(),
     });
-
     if (!session || !session.user) {
       return NextResponse.json(
         { message: "unauthorized user", success: false },
@@ -41,10 +45,7 @@ export async function POST(
       );
     }
 
-    // ownership check
-    const event = await db.event.findUnique({
-      where: { id: eventId },
-    });
+    const event = await db.event.findUnique({ where: { id: eventId } });
 
     if (!event) {
       return NextResponse.json(
@@ -60,15 +61,21 @@ export async function POST(
       );
     }
 
-    // check for already invited emails
+    if (event.status === "cancelled") {
+      return NextResponse.json(
+        {
+          message: "cannot send invitations for a cancelled event",
+          success: false,
+        },
+        { status: 409 },
+      );
+    }
+
     const incomingEmails = data.recipients.map(
-      (r: { email: string; name?: string | null | undefined }) => r.email,
+      (r: { email: string; name?: string | null }) => r.email,
     );
     const alreadyInvited = await db.invitation.findMany({
-      where: {
-        eventId,
-        email: { in: incomingEmails },
-      },
+      where: { eventId, email: { in: incomingEmails } },
       select: { email: true },
     });
 
@@ -85,24 +92,6 @@ export async function POST(
       );
     }
 
-    // build invitation records with secure tokens
-    const invitationData = data.recipients.map(
-      (recipient: { email: string; name?: string | null | undefined }) => ({
-        eventId,
-        email: recipient.email,
-        name: recipient.name ?? null,
-        token: randomBytes(32).toString("hex"),
-      }),
-    );
-
-    // save all invitations in one transaction
-    const createdInvitations = await db.$transaction(async (tx: TxClient) => {
-      return tx.invitation.createManyAndReturn({
-        data: invitationData,
-      });
-    });
-
-    // format date for email
     const eventDate = new Date(event.eventAt).toLocaleDateString("en-US", {
       weekday: "long",
       year: "numeric",
@@ -112,7 +101,56 @@ export async function POST(
       minute: "2-digit",
     });
 
-    // build resend batch
+    // generate personalised openings in parallel if any fail we fall back to empty string
+    const openings = await Promise.allSettled(
+      data.recipients.map(
+        async (recipient: { email: string; name?: string | null }) => {
+          const raw = await llm(
+            buildPersonalisationPrompt({
+              recipientName: recipient.name || recipient.email.split("@")[0],
+              eventName: event.name,
+              eventDate,
+              eventLocation: event.location,
+              eventDesc: event.desc,
+            }),
+          );
+          const parsed = JSON.parse(raw);
+          return { email: recipient.email, opening: parsed.opening ?? "" };
+        },
+      ),
+    );
+
+    const openingMap = new Map<string, string>();
+    openings.forEach((result, i) => {
+      const email = data.recipients[i].email;
+      if (result.status === "fulfilled") {
+        openingMap.set(email, result.value.opening);
+      } else {
+        openingMap.set(email, "");
+      }
+    });
+
+    const invitationData = data.recipients.map(
+      (recipient: { email: string; name?: string | null }) => ({
+        eventId,
+        email: recipient.email,
+        name: recipient.name ?? null,
+        token: randomBytes(32).toString("hex"),
+        personalizedOpening: openingMap.get(recipient.email) ?? "",
+      }),
+    );
+
+    const createdInvitations = await db.$transaction(async (tx: TxClient) => {
+      const invitations = await tx.invitation.createManyAndReturn({
+        data: invitationData,
+      });
+      await tx.event.update({
+        where: { id: eventId },
+        data: { sentAt: new Date() },
+      });
+      return invitations;
+    });
+
     const batchPayload = createdInvitations.map((inv: InvitationItem) => ({
       from: process.env.FROM!,
       to: inv.email,
@@ -120,18 +158,18 @@ export async function POST(
       react: InviteEmail({
         organizerName: session.user.name,
         organizerEmail: session.user.email,
-        recipientName: inv.name ?? inv.email,
+        recipientName: inv.name ?? "",
         recipientEmail: inv.email,
         eventName: event.name,
         eventDate,
         eventLocation: event.location,
         emailBody: event.emailBody,
+        personalizedOpening: openingMap.get(inv.email) ?? "",
         token: inv.token,
       }),
     }));
 
-    const BATCH_SIZE = 25;
-    const batches = [];
+    const batches: EmailData[][] = [];
     for (let i = 0; i < batchPayload.length; i += BATCH_SIZE) {
       batches.push(batchPayload.slice(i, i + BATCH_SIZE));
     }
@@ -143,11 +181,13 @@ export async function POST(
     const failedBatches = batchResults.filter(
       (r: ResendResult): r is PromiseRejectedResult => r.status === "rejected",
     );
+
     if (failedBatches.length > 0) {
       console.error("some batches failed:", failedBatches);
       return NextResponse.json(
         {
-          message: `invitations saved but some emails failed to send. Use 'Send Reminder' to retry.`,
+          message:
+            "invitations saved but some emails failed to send. Use 'Send Reminder' to retry.",
           success: true,
           sent: createdInvitations.length,
           emailsFailed: failedBatches.length * BATCH_SIZE,
@@ -158,7 +198,7 @@ export async function POST(
 
     return NextResponse.json(
       {
-        message: `invitations sent successfully`,
+        message: "invitations sent successfully",
         success: true,
         sent: createdInvitations.length,
       },

@@ -6,6 +6,7 @@ import Link from "next/link";
 const links = [
   { href: "/workspace", label: "Workspaces" },
   { href: "/events", label: "Events" },
+  { href: "/templates", label: "Templates" },
 ];
 
 export function NavbarLinks() {
