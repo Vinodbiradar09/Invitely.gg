@@ -1,5 +1,6 @@
 import { EventCancelDialog } from "@/components/events/event-cancel-dialog";
 import { EventDeleteDialog } from "@/components/events/event-delete-dialog";
+import { UnscheduleButton } from "@/components/dashboard/unschedule-button";
 import { ReminderButton } from "@/components/dashboard/reminder-button";
 import { SummaryCards } from "@/components/dashboard/summary-cards";
 import { InsightsCard } from "@/components/dashboard/insights-card";
@@ -39,7 +40,13 @@ export async function generateMetadata({
   };
 }
 
-async function GuestSection({ eventId }: { eventId: string }) {
+async function GuestSection({
+  eventId,
+  isScheduled,
+}: {
+  eventId: string;
+  isScheduled: boolean;
+}) {
   const invitations = await db.invitation.findMany({
     where: { eventId },
     orderBy: { sentAt: "asc" },
@@ -74,9 +81,15 @@ async function GuestSection({ eventId }: { eventId: string }) {
           <h2 className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
             Guest list — {summary.total}
           </h2>
-          <ReminderButton eventId={eventId} pendingCount={summary.pending} />
+          {!isScheduled && (
+            <ReminderButton eventId={eventId} pendingCount={summary.pending} />
+          )}
         </div>
-        <GuestTable invitations={invitations} eventId={eventId} />
+        <GuestTable
+          invitations={invitations}
+          eventId={eventId}
+          isScheduled={isScheduled}
+        />
       </div>
     </>
   );
@@ -163,10 +176,28 @@ export default async function EventDashboardPage({ params }: PageProps) {
               </span>
             </div>
           </div>
+          {isScheduled && event.scheduledAt && (
+            <p className="font-mono text-xs text-blue-500">
+              Sends{" "}
+              {new Date(event.scheduledAt).toLocaleDateString("en-US", {
+                weekday: "short",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </p>
+          )}
         </div>
 
         <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
-          {!isCancelled && (
+          {isScheduled && event.scheduledAt && (
+            <UnscheduleButton
+              eventId={event.id}
+              scheduledAt={event.scheduledAt}
+            />
+          )}
+          {!isCancelled && !isScheduled && (
             <Link href={`/events/${eventId}/edit`}>
               <Button
                 variant="outline"
@@ -178,7 +209,7 @@ export default async function EventDashboardPage({ params }: PageProps) {
               </Button>
             </Link>
           )}
-          {!isCancelled && (
+          {!isCancelled && !isScheduled && (
             <EventCancelDialog
               eventId={event.id}
               eventName={event.name}
@@ -200,7 +231,7 @@ export default async function EventDashboardPage({ params }: PageProps) {
           </>
         }
       >
-        <GuestSection eventId={eventId} />
+        <GuestSection eventId={eventId} isScheduled={isScheduled} />
       </Suspense>
     </div>
   );

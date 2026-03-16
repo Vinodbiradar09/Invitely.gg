@@ -1,6 +1,12 @@
 "use client";
-import { Badge } from "@/components/ui/badge";
 import { ResendLinkButton } from "@/components/dashboard/resend-link-button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -25,6 +31,7 @@ interface Invitation {
 interface GuestTableProps {
   invitations: Invitation[];
   eventId: string;
+  isScheduled?: boolean;
 }
 
 const statusConfig: Record<
@@ -59,7 +66,11 @@ function formatDate(date: Date | null): string {
   });
 }
 
-export function GuestTable({ invitations, eventId }: GuestTableProps) {
+export function GuestTable({
+  invitations,
+  eventId,
+  isScheduled,
+}: GuestTableProps) {
   if (invitations.length === 0) {
     return (
       <div className="py-12 text-center">
@@ -81,84 +92,97 @@ export function GuestTable({ invitations, eventId }: GuestTableProps) {
   );
 
   return (
-    <div className="border border-border">
-      <Table>
-        <TableHeader>
-          <TableRow className="hover:bg-transparent border-border">
-            <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4">
-              Name
-            </TableHead>
-            <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4">
-              Email
-            </TableHead>
-            <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4">
-              Status
-            </TableHead>
-            <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4">
-              Opened
-            </TableHead>
-            <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4">
-              Responded
-            </TableHead>
-            <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4 text-right">
-              Actions
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {sorted.map((inv: Invitation) => {
-            const config = statusConfig[inv.status];
-            return (
-              <TableRow
-                key={inv.id}
-                className="border-border hover:bg-muted/30"
-              >
-                <TableCell className="font-mono text-xs text-foreground px-4 py-2.5">
-                  {inv.name ?? (
-                    <span className="text-muted-foreground italic">
-                      No name
-                    </span>
-                  )}
-                </TableCell>
-                <TableCell className="font-mono text-xs text-muted-foreground px-4 py-2.5">
-                  {inv.email}
-                </TableCell>
-                <TableCell className="px-4 py-2.5">
-                  <Badge
-                    variant="outline"
-                    className={`font-mono text-xs px-1.5 py-0 h-4 ${config.className}`}
-                  >
-                    {config.label}
-                  </Badge>
-                </TableCell>
-                <TableCell className="px-4 py-2.5">
-                  {inv.openedAt ? (
+    <TooltipProvider>
+      <div className="border border-border">
+        <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent border-border">
+              <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4">
+                Name
+              </TableHead>
+              <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4">
+                Email
+              </TableHead>
+              <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4">
+                Status
+              </TableHead>
+              <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4">
+                Opened
+              </TableHead>
+              <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4">
+                Responded
+              </TableHead>
+              <TableHead className="font-mono text-xs text-muted-foreground h-9 px-4 text-right">
+                Actions
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {sorted.map((inv: Invitation) => {
+              const config = statusConfig[inv.status];
+              return (
+                <TableRow
+                  key={inv.id}
+                  className="border-border hover:bg-muted/30"
+                >
+                  <TableCell className="font-mono text-xs text-foreground px-4 py-2.5">
+                    {inv.name ?? (
+                      <span className="text-muted-foreground italic">
+                        No name
+                      </span>
+                    )}
+                  </TableCell>
+                  <TableCell className="font-mono text-xs text-muted-foreground px-4 py-2.5">
+                    {inv.email}
+                  </TableCell>
+                  <TableCell className="px-4 py-2.5">
                     <Badge
                       variant="outline"
-                      className="font-mono text-xs px-1.5 py-0 h-4 bg-blue-500/10 text-blue-500 border-blue-500/20"
+                      className={`font-mono text-xs px-1.5 py-0 h-4 ${config.className}`}
                     >
-                      Opened
+                      {config.label}
                     </Badge>
-                  ) : (
-                    <Badge
-                      variant="outline"
-                      className="font-mono text-xs px-1.5 py-0 h-4 bg-muted text-muted-foreground border-border"
-                    >
-                      Not opened
-                    </Badge>
-                  )}
-                </TableCell>
-                <TableCell className="font-mono text-xs text-muted-foreground px-4 py-2.5">
-                  {formatDate(inv.respondedAt)}
-                </TableCell>
-                <TableCell className="px-4 py-2.5 text-right">
-                  <ResendLinkButton eventId={eventId} email={inv.email} />
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </div>
+                  </TableCell>
+                  <TableCell className="px-4 py-2.5">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        {inv.openedAt ? (
+                          <Badge
+                            variant="outline"
+                            className="font-mono text-xs px-1.5 py-0 h-4 bg-blue-500/10 text-blue-500 border-blue-500/20 cursor-default"
+                          >
+                            Opened
+                          </Badge>
+                        ) : (
+                          <Badge
+                            variant="outline"
+                            className="font-mono text-xs px-1.5 py-0 h-4 bg-muted text-muted-foreground border-border cursor-default"
+                          >
+                            Unknown
+                          </Badge>
+                        )}
+                      </TooltipTrigger>
+                      <TooltipContent className="font-mono text-xs max-w-48">
+                        {inv.openedAt
+                          ? `Opened ${new Date(inv.openedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}`
+                          : "Cannot confirm — recipient may have images blocked"}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell className="font-mono text-xs text-muted-foreground px-4 py-2.5">
+                    {formatDate(inv.respondedAt)}
+                  </TableCell>
+                  <TableCell className="px-4 py-2.5 text-right">
+                    {!isScheduled && (
+                      <ResendLinkButton eventId={eventId} email={inv.email} />
+                    )}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
+    </TooltipProvider>
   );
 }
