@@ -65,6 +65,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // hard guard suggested time must be at least 18 hours before event
+    const eventAtDate = new Date(data.eventDate);
+    const suggestedAtDate = new Date(validated.data.suggestedAt);
+    const eighteenHoursBeforeEvent = new Date(
+      eventAtDate.getTime() - 18 * 60 * 60 * 1000,
+    );
+
+    if (suggestedAtDate > eighteenHoursBeforeEvent) {
+      return NextResponse.json(
+        {
+          message: "event is too soon to schedule send now instead",
+          success: false,
+        },
+        { status: 400 },
+      );
+    }
+
     return NextResponse.json(
       {
         message: "smart send time generated",

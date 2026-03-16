@@ -57,7 +57,9 @@ Event Details:
 - Current Time: ${data.currentTime}
 
 Rules:
-- Suggest a time between 1 hour and 14 days from now
+- Suggested time MUST be at least 18 hours before the event date — never suggest a time after that cutoff
+- Suggested time must also be at least 1 hour from the current time
+- If the event is less than 18 hours away, do not suggest a scheduled time — suggest sending immediately instead by setting suggestedAt to 1 hour from now
 - Best times are typically Tuesday–Thursday, 9AM–11AM or 6PM–8PM in a general timezone
 - Consider how far away the event is — closer events need sooner sends
 - Reason must be one concise sentence, max 15 words
@@ -108,42 +110,57 @@ Return exactly this JSON shape:
 export function buildInsightsPrompt(data: {
   eventName: string;
   eventDate: string;
+  daysUntilEvent: number;
   totalInvited: number;
   attending: number;
   maybe: number;
   declined: number;
   pending: number;
+  openedNotResponded: number;
   responseRate: number;
   avgResponseHours: number | null;
 }): string {
   return `
-You are an expert event analytics assistant.
-Analyse this event's RSVP data and provide actionable insights for the organiser.
+You are an expert event analytics assistant helping an organiser understand their RSVP situation.
 
 Event: ${data.eventName}
 Event Date: ${data.eventDate}
-Total Invited: ${data.totalInvited}
-Attending: ${data.attending}
-Maybe: ${data.maybe}
-Declined: ${data.declined}
-Pending (no response): ${data.pending}
-Response Rate: ${data.responseRate}%
-Average Response Time: ${data.avgResponseHours !== null ? `${data.avgResponseHours} hours after sending` : "not available"}
+Days Until Event: ${data.daysUntilEvent} day${data.daysUntilEvent === 1 ? "" : "s"}
 
-Rules:
-- summary: 2 sentences max, plain language overview of the response situation
-- topInsight: the single most important observation, 1 sentence max 20 words
-- suggestion: one actionable thing the organiser should do next, 1 sentence max 20 words
-- responseRate: return the number as-is from the data provided
-- Be direct and specific — no generic platitudes
-- Return ONLY valid JSON, no markdown, no backticks
+RSVP Breakdown:
+- Total Invited: ${data.totalInvited}
+- Attending: ${data.attending}
+- Maybe: ${data.maybe}
+- Declined: ${data.declined}
+- Pending (no response): ${data.pending}
+- Opened email but not responded: ${data.openedNotResponded}
+- Response Rate: ${data.responseRate}%
+- Average Response Time: ${data.avgResponseHours !== null ? `${data.avgResponseHours} hours after receiving` : "not available"}
+
+Your job:
+Analyse this data and return insights that are specific, direct, and actionable. Use the numbers. Reference the days until event. Consider urgency based on how soon the event is.
+
+Urgency rules:
+- If daysUntilEvent <= 2: urgency is "high"
+- If daysUntilEvent <= 7: urgency is "medium"
+- If daysUntilEvent > 7: urgency is "low"
+
+Field rules:
+- summary: exactly 2 sentences. Sentence 1 states the response situation with specific numbers. Sentence 2 interprets what it means given the time remaining.
+- topInsight: the single sharpest observation. Must reference actual numbers. BAD: "Response rate is low." GOOD: "12 guests opened the email but haven't responded — they are the easiest wins."
+- suggestion: one concrete next step the organiser can take TODAY. Must be specific. BAD: "Send a reminder." GOOD: "Send a personal follow-up to the 12 guests who opened but haven't responded."
+- urgency: "low", "medium", or "high" based on days until event and pending count
+- responseRate: return exactly ${data.responseRate} — do not change this number
+
+Return ONLY valid JSON, no markdown, no backticks, no explanation.
 
 Return exactly this JSON shape:
 {
-  "summary": "2 sentence overview",
+  "summary": "2 sentence situation overview with specific numbers",
   "responseRate": ${data.responseRate},
-  "topInsight": "single most important observation",
-  "suggestion": "one actionable next step"
+  "topInsight": "sharpest observation referencing actual numbers",
+  "suggestion": "one concrete actionable next step for today",
+  "urgency": "low" | "medium" | "high"
 }
 `.trim();
 }

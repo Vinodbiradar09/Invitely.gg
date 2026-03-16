@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
             status: true,
             sentAt: true,
             respondedAt: true,
+            openedAt: true,
           },
         },
       },
@@ -105,15 +106,28 @@ export async function POST(req: NextRequest) {
       month: "long",
       day: "numeric",
     });
+    const daysUntilEvent = Math.max(
+      0,
+      Math.ceil(
+        (new Date(event.eventAt).getTime() - new Date().getTime()) /
+          (1000 * 60 * 60 * 24),
+      ),
+    );
+
+    const openedNotResponded = event.invitations.filter(
+      (i) => i.openedAt && i.status === "pending",
+    ).length;
 
     const prompt = buildInsightsPrompt({
       eventName: event.name,
       eventDate,
+      daysUntilEvent,
       totalInvited: total,
       attending,
       maybe,
       declined,
       pending,
+      openedNotResponded,
       responseRate,
       avgResponseHours,
     });

@@ -113,6 +113,7 @@ export const ZodInsightsResponse = z.object({
   responseRate: z.number(),
   topInsight: z.string(),
   suggestion: z.string(),
+  urgency: z.enum(["low", "medium", "high"]),
 });
 
 export const ZodCreateTemplate = z.object({

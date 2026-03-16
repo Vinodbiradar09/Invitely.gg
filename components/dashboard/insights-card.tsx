@@ -11,11 +11,33 @@ interface Insights {
   responseRate: number;
   topInsight: string;
   suggestion: string;
+  urgency: "low" | "medium" | "high";
 }
 
 interface InsightsCardProps {
   eventId: string;
 }
+
+const urgencyConfig = {
+  low: {
+    border: "border-blue-500/20",
+    bg: "bg-blue-500/5",
+    text: "text-blue-500",
+    label: "Suggestion",
+  },
+  medium: {
+    border: "border-yellow-500/20",
+    bg: "bg-yellow-500/5",
+    text: "text-yellow-500",
+    label: "Action needed",
+  },
+  high: {
+    border: "border-red-500/20",
+    bg: "bg-red-500/5",
+    text: "text-red-500",
+    label: "Urgent",
+  },
+};
 
 export function InsightsCard({ eventId }: InsightsCardProps) {
   const [insights, setInsights] = useState<Insights | null>(null);
@@ -81,7 +103,7 @@ export function InsightsCard({ eventId }: InsightsCardProps) {
 
         {!generated && !isLoading && (
           <p className="font-mono text-xs text-muted-foreground">
-            Generate AI-powered insights based on your guest responses.
+            Generate AI powered insights based on your guest responses.
           </p>
         )}
 
@@ -120,9 +142,13 @@ export function InsightsCard({ eventId }: InsightsCardProps) {
               </div>
             </div>
 
-            <div className="border border-blue-500/20 bg-blue-500/5 px-3 py-2.5 flex flex-col gap-1">
-              <span className="font-mono text-xs text-blue-500 uppercase tracking-widest">
-                Suggestion
+            <div
+              className={`border ${urgencyConfig[insights.urgency].border} ${urgencyConfig[insights.urgency].bg} px-3 py-2.5 flex flex-col gap-1`}
+            >
+              <span
+                className={`font-mono text-xs uppercase tracking-widest ${urgencyConfig[insights.urgency].text}`}
+              >
+                {urgencyConfig[insights.urgency].label}
               </span>
               <span className="font-mono text-xs text-foreground leading-relaxed">
                 {insights.suggestion}
