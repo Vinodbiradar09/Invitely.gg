@@ -164,3 +164,19 @@ Return exactly this JSON shape:
 }
 `.trim();
 }
+
+export function getNextEventDate(eventAt: Date, recurrence: string): Date {
+  const next = new Date(eventAt);
+  switch (recurrence) {
+    case "weekly":
+      next.setDate(next.getDate() + 7);
+      break;
+    case "monthly":
+      next.setMonth(next.getMonth() + 1);
+      break;
+    case "annually":
+      next.setFullYear(next.getFullYear() + 1);
+      break;
+  }
+  return next;
+}

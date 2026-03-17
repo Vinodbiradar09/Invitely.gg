@@ -8,8 +8,8 @@ import { Plus, ArrowRight } from "lucide-react";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { db } from "@/lib/prisma";
+import { Suspense } from "react";
 import Link from "next/link";
 
 export const metadata: Metadata = {

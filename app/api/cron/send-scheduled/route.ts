@@ -1,6 +1,7 @@
 import { InviteEmail } from "@/components/email-template";
 import { NextRequest, NextResponse } from "next/server";
 import { EmailData, ResendResult } from "@/lib/types";
+import { getNextEventDate } from "@/lib/prompt";
 import { resend } from "@/lib/resend";
 import { db } from "@/lib/prisma";
 
@@ -18,6 +19,7 @@ export async function GET(req: NextRequest) {
 
     const now = new Date();
 
+    // fire scheduled sends
     const scheduledEvents = await db.event.findMany({
       where: {
         status: "scheduled",
@@ -37,14 +39,7 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    if (scheduledEvents.length === 0) {
-      return NextResponse.json(
-        { message: "no scheduled events to send", success: true, processed: 0 },
-        { status: 200 },
-      );
-    }
-
-    const results = await Promise.allSettled(
+    const scheduleResults = await Promise.allSettled(
       scheduledEvents.map(async (event) => {
         const eventDate = new Date(event.eventAt).toLocaleDateString("en-US", {
           weekday: "long",
@@ -68,6 +63,7 @@ export async function GET(req: NextRequest) {
             eventDate,
             eventLocation: event.location,
             emailBody: event.emailBody,
+            personalizedOpening: inv.personalizedOpening ?? "",
             token: inv.token,
           }),
         }));
@@ -88,11 +84,7 @@ export async function GET(req: NextRequest) {
 
         await db.event.update({
           where: { id: event.id },
-          data: {
-            status: "active",
-            sentAt: now,
-            scheduledAt: null,
-          },
+          data: { status: "active", sentAt: now, scheduledAt: null },
         });
 
         if (failed.length > 0) {
@@ -105,20 +97,83 @@ export async function GET(req: NextRequest) {
       }),
     );
 
-    const succeeded = results.filter((r) => r.status === "fulfilled").length;
-    const failed = results.filter((r) => r.status === "rejected");
+    // create next occurrence for recurring events
+    const recurringEvents = await db.event.findMany({
+      where: {
+        recurrence: { not: null },
+        status: "active",
+        eventAt: { lt: now },
+        parentEventId: null,
+      },
+      include: {
+        childEvents: {
+          orderBy: { eventAt: "desc" },
+          take: 1,
+          select: { eventAt: true },
+        },
+      },
+    });
 
-    if (failed.length > 0) {
-      console.error("some scheduled events failed to send:", failed);
-    }
+    const recurringResults = await Promise.allSettled(
+      recurringEvents.map(async (event) => {
+        const lastEventAt =
+          event.childEvents.length > 0
+            ? event.childEvents[0].eventAt
+            : event.eventAt;
+
+        const nextEventAt = getNextEventDate(lastEventAt, event.recurrence!);
+
+        if (nextEventAt <= now) return;
+
+        const existingChild = await db.event.findFirst({
+          where: {
+            parentEventId: event.id,
+            eventAt: nextEventAt,
+          },
+        });
+
+        if (existingChild) return;
+
+        await db.event.create({
+          data: {
+            userId: event.userId,
+            name: event.name,
+            desc: event.desc,
+            eventAt: nextEventAt,
+            location: event.location,
+            emailSubject: event.emailSubject,
+            emailBody: event.emailBody,
+            recurrence: event.recurrence,
+            parentEventId: event.id,
+            status: "active",
+          },
+        });
+      }),
+    );
+
+    const scheduledSucceeded = scheduleResults.filter(
+      (r) => r.status === "fulfilled",
+    ).length;
+    const scheduledFailed = scheduleResults.filter(
+      (r) => r.status === "rejected",
+    ).length;
+    const recurringCreated = recurringResults.filter(
+      (r) => r.status === "fulfilled",
+    ).length;
 
     return NextResponse.json(
       {
-        message: `processed ${scheduledEvents.length} scheduled events`,
+        message: "cron completed",
         success: true,
-        processed: scheduledEvents.length,
-        succeeded,
-        failed: failed.length,
+        scheduled: {
+          processed: scheduledEvents.length,
+          succeeded: scheduledSucceeded,
+          failed: scheduledFailed,
+        },
+        recurring: {
+          processed: recurringEvents.length,
+          created: recurringCreated,
+        },
       },
       { status: 200 },
     );

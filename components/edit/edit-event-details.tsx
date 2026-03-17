@@ -3,7 +3,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RefreshCw } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useState } from "react";
+
+type Recurrence = "weekly" | "monthly" | "annually" | null;
 
 interface EditEventDetailsProps {
   initialValues: {
@@ -11,12 +21,14 @@ interface EditEventDetailsProps {
     desc: string;
     eventAt: string;
     location: string;
+    recurrence: Recurrence;
   };
   onNext: (values: {
     name: string;
     desc: string;
     eventAt: string;
     location: string;
+    recurrence: Recurrence;
   }) => void;
 }
 
@@ -28,6 +40,9 @@ export function EditEventDetails({
   const [desc, setDesc] = useState(initialValues.desc);
   const [eventAt, setEventAt] = useState(initialValues.eventAt);
   const [location, setLocation] = useState(initialValues.location);
+  const [recurrence, setRecurrence] = useState<Recurrence>(
+    initialValues.recurrence,
+  );
 
   const now = new Date();
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -43,7 +58,7 @@ export function EditEventDetails({
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!isValid) return;
-    onNext({ name, desc, eventAt, location });
+    onNext({ name, desc, eventAt, location, recurrence });
   }
 
   return (
@@ -105,6 +120,44 @@ export function EditEventDetails({
             required
           />
         </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label className="font-mono text-xs flex items-center gap-2">
+          <RefreshCw className="h-3 w-3" />
+          Repeat this event
+        </Label>
+        <Select
+          value={recurrence ?? "none"}
+          onValueChange={(val) =>
+            setRecurrence(val === "none" ? null : (val as Recurrence))
+          }
+        >
+          <SelectTrigger className="font-mono text-xs h-9 w-full sm:w-48">
+            <SelectValue placeholder="Does not repeat" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none" className="font-mono text-xs">
+              Does not repeat
+            </SelectItem>
+            <SelectItem value="weekly" className="font-mono text-xs">
+              Weekly
+            </SelectItem>
+            <SelectItem value="monthly" className="font-mono text-xs">
+              Monthly
+            </SelectItem>
+            <SelectItem value="annually" className="font-mono text-xs">
+              Annually
+            </SelectItem>
+          </SelectContent>
+        </Select>
+        {recurrence && (
+          <p className="font-mono text-xs text-muted-foreground">
+            A new event will be created automatically every{" "}
+            <span className="text-foreground">{recurrence}</span> after this one
+            ends.
+          </p>
+        )}
       </div>
 
       <div className="flex justify-end pt-2">

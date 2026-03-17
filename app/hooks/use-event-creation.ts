@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 export type Step = 1 | 2 | 3 | 4;
+export type Recurrence = "weekly" | "monthly" | "annually" | null;
 
 export interface RecipientEntry {
   email: string;
@@ -29,6 +30,7 @@ export interface EventCreationState {
   currentStep: Step;
   isPolishing: boolean;
   isSending: boolean;
+  recurrence: Recurrence;
 }
 
 const initialState: Omit<EventCreationState, "selectedRecipients"> & {
@@ -44,6 +46,7 @@ const initialState: Omit<EventCreationState, "selectedRecipients"> & {
   currentStep: 1,
   isPolishing: false,
   isSending: false,
+  recurrence: null,
 };
 
 export function useEventCreation() {
@@ -167,6 +170,7 @@ export function useEventCreation() {
           location: state.location.trim(),
           emailSubject: state.emailSubject.trim(),
           emailBody: state.emailBody.trim(),
+          recurrence: state.recurrence,
         }),
       });
 
@@ -227,6 +231,7 @@ export function useEventCreation() {
           location: state.location.trim(),
           emailSubject: state.emailSubject.trim(),
           emailBody: state.emailBody.trim(),
+          recurrence: state.recurrence,
         }),
       });
 

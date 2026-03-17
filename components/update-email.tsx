@@ -2,6 +2,7 @@ import * as React from "react";
 
 interface UpdateEmailProps {
   organizerName: string;
+  organizerEmail: string;
   recipientName: string;
   recipientEmail: string;
   eventName: string;
@@ -18,6 +19,7 @@ interface UpdateEmailProps {
 
 export function UpdateEmail({
   organizerName,
+  organizerEmail,
   recipientName,
   recipientEmail,
   eventName,
@@ -101,7 +103,7 @@ export function UpdateEmail({
                               paddingBottom: "6px",
                             }}
                           >
-                            noreply@invitely.gg
+                            {organizerEmail}
                           </td>
                         </tr>
                         <tr>

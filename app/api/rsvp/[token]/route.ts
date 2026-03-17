@@ -32,6 +32,7 @@ export async function GET(
             desc: true,
             eventAt: true,
             location: true,
+            status: true,
             // never return emailBody/emailSubject
             user: {
               select: {
@@ -63,6 +64,7 @@ export async function GET(
           currentStatus: invitation.status,
           respondedAt: invitation.respondedAt,
           eventHasPassed,
+          eventCancelled: invitation.event.status === "cancelled",
           event: {
             id: invitation.event.id,
             name: invitation.event.name,
@@ -168,7 +170,7 @@ export async function PATCH(
       }
     }
 
-    if (invitation.status === data.status) {
+    if (invitation.status === data.status && !data.guestNote) {
       return NextResponse.json(
         {
           message: `you already responded as ${data.status}`,
@@ -184,10 +186,12 @@ export async function PATCH(
       data: {
         status: data.status,
         respondedAt: new Date(),
+        ...(data.guestNote !== undefined && { guestNote: data.guestNote }),
       },
       select: {
         status: true,
         respondedAt: true,
+        guestNote: true,
       },
     });
 
@@ -197,6 +201,7 @@ export async function PATCH(
         success: true,
         status: updated.status,
         respondedAt: updated.respondedAt,
+        guestNote: updated.guestNote,
       },
       { status: 200 },
     );

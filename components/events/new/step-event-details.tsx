@@ -1,10 +1,17 @@
 "use client";
-
-import { EventCreationState } from "@/app/hooks/use-event-creation";
+import { EventCreationState, Recurrence } from "@/app/hooks/use-event-creation";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { RefreshCw } from "lucide-react";
 
 interface StepEventDetailsProps {
   state: EventCreationState;
@@ -20,7 +27,6 @@ export function StepEventDetails({
   setField,
   onNext,
 }: StepEventDetailsProps) {
-  // get current datetime as min value for the picker
   const now = new Date();
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
   const minDateTime = now.toISOString().slice(0, 16);
@@ -86,7 +92,6 @@ export function StepEventDetails({
             required
           />
         </div>
-
         <div className="flex flex-col gap-2">
           <Label htmlFor="event-location" className="font-mono text-xs">
             Location *
@@ -101,6 +106,44 @@ export function StepEventDetails({
             required
           />
         </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label className="font-mono text-xs flex items-center gap-2">
+          <RefreshCw className="h-3 w-3" />
+          Repeat this event
+        </Label>
+        <Select
+          value={state.recurrence ?? "none"}
+          onValueChange={(val) =>
+            setField("recurrence", val === "none" ? null : (val as Recurrence))
+          }
+        >
+          <SelectTrigger className="font-mono text-xs h-9 w-full sm:w-48">
+            <SelectValue placeholder="Does not repeat" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none" className="font-mono text-xs">
+              Does not repeat
+            </SelectItem>
+            <SelectItem value="weekly" className="font-mono text-xs">
+              Weekly
+            </SelectItem>
+            <SelectItem value="monthly" className="font-mono text-xs">
+              Monthly
+            </SelectItem>
+            <SelectItem value="annually" className="font-mono text-xs">
+              Annually
+            </SelectItem>
+          </SelectContent>
+        </Select>
+        {state.recurrence && (
+          <p className="font-mono text-xs text-muted-foreground">
+            A new event will be created automatically every{" "}
+            <span className="text-foreground">{state.recurrence}</span> after
+            this one ends.
+          </p>
+        )}
       </div>
 
       <div className="flex justify-end pt-2">

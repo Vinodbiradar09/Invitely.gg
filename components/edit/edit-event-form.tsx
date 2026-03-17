@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
+type Recurrence = "weekly" | "monthly" | "annually" | null;
+
 interface EditEventFormProps {
   event: {
     id: string;
@@ -16,6 +18,7 @@ interface EditEventFormProps {
     location: string;
     emailSubject: string;
     emailBody: string;
+    recurrence: Recurrence;
   };
 }
 
@@ -42,6 +45,7 @@ export function EditEventForm({ event }: EditEventFormProps) {
     desc: event.desc,
     eventAt: eventAtValue,
     location: event.location,
+    recurrence: event.recurrence ?? null,
   });
 
   async function handleSave(emailValues: {
@@ -60,6 +64,7 @@ export function EditEventForm({ event }: EditEventFormProps) {
           location: detailsValues.location,
           emailSubject: emailValues.emailSubject,
           emailBody: emailValues.emailBody,
+          recurrence: detailsValues.recurrence,
         }),
       });
       const data = await res.json();
@@ -68,7 +73,7 @@ export function EditEventForm({ event }: EditEventFormProps) {
         return;
       }
       if (data.notified) {
-        toast.success("event updated guests notified of changes");
+        toast.success("event updated — guests notified of changes");
       } else {
         toast.success("event updated successfully");
       }

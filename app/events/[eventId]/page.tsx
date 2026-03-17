@@ -1,10 +1,11 @@
+import { StopRecurrenceButton } from "@/components/dashboard/stop-recurrence-button";
+import { ArrowLeft, Calendar, MapPin, Pencil, RefreshCw } from "lucide-react";
 import { EventCancelDialog } from "@/components/events/event-cancel-dialog";
 import { EventDeleteDialog } from "@/components/events/event-delete-dialog";
 import { UnscheduleButton } from "@/components/dashboard/unschedule-button";
 import { ReminderButton } from "@/components/dashboard/reminder-button";
 import { SummaryCards } from "@/components/dashboard/summary-cards";
 import { InsightsCard } from "@/components/dashboard/insights-card";
-import { ArrowLeft, Calendar, MapPin, Pencil } from "lucide-react";
 import { GuestTable } from "@/components/dashboard/guest-table";
 import { Separator } from "@/components/ui/separator";
 import { redirect, notFound } from "next/navigation";
@@ -27,7 +28,21 @@ interface PageProps {
 }
 
 const getEvent = cache(async (eventId: string) => {
-  return db.event.findUnique({ where: { id: eventId } });
+  return db.event.findUnique({
+    where: { id: eventId },
+    include: {
+      _count: {
+        select: {
+          childEvents: {
+            where: {
+              eventAt: { gt: new Date() },
+              status: { not: "cancelled" },
+            },
+          },
+        },
+      },
+    },
+  });
 });
 
 export async function generateMetadata({
@@ -58,6 +73,8 @@ async function GuestSection({
       sentAt: true,
       respondedAt: true,
       openedAt: true,
+      guestNote: true,
+      organizerNote: true,
     },
   });
 
@@ -106,6 +123,8 @@ export default async function EventDashboardPage({ params }: PageProps) {
   const isCancelled = event.status === "cancelled";
   const isScheduled = event.status === "scheduled";
   const isPast = new Date(event.eventAt) < new Date();
+  const isRecurring = !!event.recurrence;
+  const futureChildCount = event._count.childEvents;
 
   const badgeClass = isCancelled
     ? "bg-red-500/10 text-red-500 border-red-500/20"
@@ -149,12 +168,23 @@ export default async function EventDashboardPage({ params }: PageProps) {
 
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <Badge
-            variant="secondary"
-            className={`font-mono text-xs px-1.5 py-0 h-4 w-fit ${badgeClass}`}
-          >
-            {badgeLabel}
-          </Badge>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Badge
+              variant="secondary"
+              className={`font-mono text-xs px-1.5 py-0 h-4 w-fit ${badgeClass}`}
+            >
+              {badgeLabel}
+            </Badge>
+            {isRecurring && (
+              <Badge
+                variant="secondary"
+                className="font-mono text-xs px-1.5 py-0 h-4 w-fit bg-purple-500/10 text-purple-500 border-purple-500/20 flex items-center gap-1"
+              >
+                <RefreshCw className="h-2.5 w-2.5" />
+                {event.recurrence}
+              </Badge>
+            )}
+          </div>
           <h1 className="font-mono text-base font-semibold text-foreground">
             {event.name}
           </h1>
@@ -195,6 +225,13 @@ export default async function EventDashboardPage({ params }: PageProps) {
             <UnscheduleButton
               eventId={event.id}
               scheduledAt={event.scheduledAt}
+            />
+          )}
+          {!isCancelled && !isScheduled && isRecurring && (
+            <StopRecurrenceButton
+              eventId={event.id}
+              recurrence={event.recurrence!}
+              futureCount={futureChildCount}
             />
           )}
           {!isCancelled && !isScheduled && (

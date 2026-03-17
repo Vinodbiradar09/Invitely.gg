@@ -1,5 +1,5 @@
-import { Prisma, InvitationStatus, $Enums } from "@prisma/client";
 import { CreateBatchResponse, CreateBatchRequestOptions } from "resend";
+import { Prisma, InvitationStatus, $Enums } from "@prisma/client";
 import React from "react";
 import { z } from "zod";
 
@@ -25,6 +25,7 @@ export const ZodEvent = z.object({
   location: z.string().min(1, "Location is required").max(200),
   emailSubject: z.string().min(1, "Email subject is required").max(150),
   emailBody: z.string().min(1, "Email body is required").max(5000),
+  recurrence: z.enum(["weekly", "monthly", "annually"]).nullable().optional(),
 });
 
 export const ZodSendInvitations = z.object({
@@ -41,6 +42,7 @@ export const ZodSendInvitations = z.object({
 
 export const ZodRsvpStatus = z.object({
   status: z.enum(["attending", "maybe", "declined"]),
+  guestNote: z.string().max(500).optional(),
 });
 
 export interface GeminiResponse {
@@ -123,6 +125,14 @@ export const ZodCreateTemplate = z.object({
   eventId: z.string().optional(),
 });
 
+export const ZodOrganizerNote = z.object({
+  organizerNote: z.string().max(500),
+});
+
+export const ZodRecurrence = z.object({
+  recurrence: z.enum(["weekly", "monthly", "annually"]).nullable(),
+});
+
 export type RawEvent = Prisma.EventGetPayload<{
   include: {
     _count: { select: { invitations: true } };
@@ -187,6 +197,8 @@ export interface Invitation {
   respondedAt: Date | null;
   sentAt: Date;
   openedAt: Date | null;
+  guestNote: string | null;
+  organizerNote: string | null;
 }
 
 export interface WorkspaceMember {

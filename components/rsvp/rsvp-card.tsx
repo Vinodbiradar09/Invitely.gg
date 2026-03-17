@@ -9,7 +9,9 @@ interface RSVPCardProps {
   token: string;
   recipientName: string | null;
   currentStatus: RSVPStatus;
+  guestNote: string | null;
   eventHasPassed: boolean;
+  eventCancelled: boolean;
   event: {
     name: string;
     desc: string;
@@ -23,7 +25,9 @@ export function RSVPCard({
   token,
   recipientName,
   currentStatus,
+  guestNote,
   eventHasPassed,
+  eventCancelled,
   event,
 }: RSVPCardProps) {
   const formattedDate = new Date(event.eventAt).toLocaleDateString("en-US", {
@@ -54,7 +58,15 @@ export function RSVPCard({
 
       <div className="px-5 py-6 flex flex-col gap-5">
         <div className="flex flex-col gap-2">
-          {eventHasPassed && (
+          {eventCancelled && (
+            <Badge
+              variant="secondary"
+              className="font-mono text-xs px-1.5 py-0 h-4 w-fit bg-red-500/10 text-red-500 border-red-500/20"
+            >
+              cancelled
+            </Badge>
+          )}
+          {!eventCancelled && eventHasPassed && (
             <Badge
               variant="secondary"
               className="font-mono text-xs px-1.5 py-0 h-4 w-fit bg-muted text-muted-foreground"
@@ -70,13 +82,17 @@ export function RSVPCard({
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <Calendar className="h-3 w-3 text-muted-foreground shrink-0" />
-            <span className="font-mono text-xs text-muted-foreground">
+            <span
+              className={`font-mono text-xs text-muted-foreground ${eventCancelled ? "line-through" : ""}`}
+            >
               {formattedDate} at {formattedTime}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <MapPin className="h-3 w-3 text-muted-foreground shrink-0" />
-            <span className="font-mono text-xs text-muted-foreground">
+            <span
+              className={`font-mono text-xs text-muted-foreground ${eventCancelled ? "line-through" : ""}`}
+            >
               {event.location}
             </span>
           </div>
@@ -102,7 +118,9 @@ export function RSVPCard({
         <RSVPButtons
           token={token}
           initialStatus={currentStatus}
+          initialGuestNote={guestNote}
           eventHasPassed={eventHasPassed}
+          eventCancelled={eventCancelled}
         />
       </div>
 

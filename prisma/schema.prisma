@@ -96,22 +96,26 @@ model WorkSpaceMember {
 }
 
 model Event {
-  id           String          @id @default(uuid())
-  userId       String
-  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name         String
-  desc         String
-  eventAt      DateTime
-  location     String
-  emailSubject String
-  emailBody    String
-  status       EventStatus     @default(active)
-  cancelledAt  DateTime?
-  scheduledAt  DateTime?
-  sentAt       DateTime?
-  createdAt    DateTime        @default(now())
-  invitations  Invitation[]
-  templates    EventTemplate[]
+  id            String          @id @default(uuid())
+  userId        String
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  desc          String
+  eventAt       DateTime
+  location      String
+  emailSubject  String
+  emailBody     String
+  status        EventStatus     @default(active)
+  cancelledAt   DateTime?
+  scheduledAt   DateTime?
+  sentAt        DateTime?
+  recurrence    Recurrence?
+  parentEventId String?
+  parentEvent   Event?          @relation("RecurringEvents", fields: [parentEventId], references: [id], onDelete: SetNull)
+  childEvents   Event[]         @relation("RecurringEvents")
+  createdAt     DateTime        @default(now())
+  invitations   Invitation[]
+  templates     EventTemplate[]
 
   @@index([userId])
   @@index([userId, status])
@@ -129,6 +133,8 @@ model Invitation {
   status              InvitationStatus @default(pending)
   personalizedOpening String?
   openedAt            DateTime?
+  guestNote           String?
+  organizerNote       String?
   respondedAt         DateTime?
   sentAt              DateTime         @default(now())
   updatedAt           DateTime?        @updatedAt
@@ -166,4 +172,10 @@ enum InvitationStatus {
   attending
   declined
   maybe
+}
+
+enum Recurrence {
+  weekly
+  monthly
+  annually
 }

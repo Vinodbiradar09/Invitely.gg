@@ -157,6 +157,7 @@ export async function PUT(
           subject: `Event Update: ${updated.name}`,
           react: UpdateEmail({
             organizerName: session.user.name,
+            organizerEmail: session.user.email,
             recipientName: inv.name ?? "",
             recipientEmail: inv.email,
             eventName: updated.name,
