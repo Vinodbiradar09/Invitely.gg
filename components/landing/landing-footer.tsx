@@ -22,7 +22,6 @@ export function LandingFooter() {
               their time.
             </p>
           </div>
-
           <div className="flex flex-col gap-3">
             <span className="font-mono text-xs font-semibold text-foreground uppercase tracking-widest">
               Product
@@ -31,6 +30,7 @@ export function LandingFooter() {
               {[
                 { label: "How it works", href: "#how-it-works" },
                 { label: "Features", href: "#features" },
+                { label: "Templates", href: "/templates" },
                 { label: "Get started", href: "/login" },
               ].map(({ label, href }) => (
                 <Link
@@ -43,7 +43,6 @@ export function LandingFooter() {
               ))}
             </div>
           </div>
-
           <div className="flex flex-col gap-3">
             <span className="font-mono text-xs font-semibold text-foreground uppercase tracking-widest">
               Legal
@@ -64,9 +63,7 @@ export function LandingFooter() {
             </div>
           </div>
         </div>
-
         <Separator className="bg-border" />
-
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="font-mono text-xs text-muted-foreground">
             © 2025 Invitely.gg · All rights reserved

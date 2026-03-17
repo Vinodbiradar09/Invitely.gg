@@ -51,7 +51,7 @@ export function OrganizerNoteInput({
     return (
       <div className="flex items-start gap-2 group/note min-w-0">
         {savedNote ? (
-          <p className="font-mono text-xs text-muted-foreground leading-relaxed flex-1 break-words whitespace-pre-wrap min-w-0">
+          <p className="font-mono text-xs text-muted-foreground leading-relaxed flex-1 wrap-break-words whitespace-pre-wrap min-w-0">
             {savedNote}
           </p>
         ) : (

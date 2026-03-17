@@ -23,17 +23,14 @@ export function Hero() {
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.03]"
         style={{
-          backgroundImage: `
-            linear-gradient(white 1px, transparent 1px),
-            linear-gradient(90deg, white 1px, transparent 1px)
-          `,
+          backgroundImage: `linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)`,
           backgroundSize: "64px 64px",
         }}
       />
       <div className="pointer-events-none absolute top-0 left-0 right-0 h-32 bg-linear-to-b from-background to-transparent" />
       <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-background to-transparent" />
 
-      <div className="relative z-10 flex flex-col items-center text-center gap-8 max-w-4xl">
+      <div className="relative z-10 flex flex-col items-center text-center gap-8 max-w-4xl w-full">
         <Badge
           variant="outline"
           className="font-mono text-xs px-3 py-1 border-border text-muted-foreground gap-2 flex items-center"
@@ -50,8 +47,8 @@ export function Hero() {
           </h1>
           <p className="font-mono text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
             Invitely.gg lets you create beautiful event invitations and send
-            them to everyone at once no copy-pasting, no manual emails. Just
-            write once, send to all.
+            them to everyone at once no copy-pasting, no manual emails. Write
+            once, send to all. Track every RSVP in real time.
           </p>
         </div>
 
@@ -100,7 +97,7 @@ export function Hero() {
               invitely.gg — event dashboard
             </span>
           </div>
-          <div className="px-4 py-3 grid grid-cols-4 gap-4 divide-x divide-border">
+          <div className="px-4 py-3 grid grid-cols-2 sm:grid-cols-4 gap-4 divide-y sm:divide-y-0 sm:divide-x divide-border">
             {[
               { label: "Invited", value: "47" },
               { label: "Attending", value: "23" },
@@ -109,7 +106,7 @@ export function Hero() {
             ].map(({ label, value }) => (
               <div
                 key={label}
-                className="flex flex-col gap-0.5 px-4 first:pl-0"
+                className="flex flex-col gap-0.5 px-4 first:pl-0 py-2 sm:py-0"
               >
                 <span className="font-mono text-lg font-semibold text-foreground">
                   {value}

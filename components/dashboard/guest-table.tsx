@@ -178,7 +178,7 @@ function GuestRow({
                   Guest note
                 </span>
                 {inv.guestNote ? (
-                  <p className="font-mono text-xs text-foreground leading-relaxed break-words whitespace-pre-wrap">
+                  <p className="font-mono text-xs text-foreground leading-relaxed wrap-break-words whitespace-pre-wrap">
                     {inv.guestNote}
                   </p>
                 ) : (

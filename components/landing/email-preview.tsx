@@ -32,7 +32,7 @@ export function EmailPreview() {
                 <span className="text-foreground">vinod@gmail.com</span>
                 <span className="text-muted-foreground">Subject</span>
                 <span className="text-foreground font-semibold">
-                  You&rsquo;re invited to Shambavi&rsquo;s Birthday Party 🎉
+                  You&rsquo;re invited to Shambavi&rsquo;s Birthday Party
                 </span>
               </div>
             </div>
@@ -47,9 +47,16 @@ export function EmailPreview() {
                   </span>
                 </span>
               </div>
+
+              <p className="font-mono text-xs text-muted-foreground italic">
+                As someone who never misses a good celebration, we knew
+                you&rsquo;d want to be there.
+              </p>
+
               <h3 className="font-mono text-lg font-bold text-foreground">
                 Shambavi&rsquo;s Birthday Party
               </h3>
+
               <div className="flex flex-col gap-1.5 border border-border px-3 py-2.5 bg-background">
                 <div className="flex items-center gap-2">
                   <Calendar className="h-3 w-3 text-muted-foreground" />
@@ -85,24 +92,23 @@ export function EmailPreview() {
                 <div className="flex gap-2 flex-wrap">
                   {[
                     {
-                      label: "✅ Attending",
+                      label: "Attending",
                       cls: "bg-green-500/10 text-green-500 border-green-500/30",
                     },
                     {
-                      label: "🤔 Maybe",
+                      label: "Maybe",
                       cls: "bg-yellow-500/10 text-yellow-500 border-yellow-500/30",
                     },
                     {
-                      label: "❌ Can't Make It",
+                      label: "Can&apos;t Make It",
                       cls: "bg-red-500/10 text-red-500 border-red-500/30",
                     },
                   ].map(({ label, cls }) => (
                     <div
                       key={label}
                       className={`font-mono text-xs px-3 py-1.5 border ${cls}`}
-                    >
-                      {label}
-                    </div>
+                      dangerouslySetInnerHTML={{ __html: label }}
+                    />
                   ))}
                 </div>
                 <p className="font-mono text-xs text-muted-foreground">
@@ -126,13 +132,18 @@ export function EmailPreview() {
             {[
               {
                 tag: "Personalised",
-                title: "Your name. Your event.",
-                desc: 'Every email shows you as the organiser "Invited by Teej Devries" not some faceless service.',
+                title: "Your name. Your email. Your event.",
+                desc: 'Every email shows you as the organiser "Invited by Teej Devries" and "From teej@gmail.com" not some faceless service. AI writes a unique opening line for each guest.',
               },
               {
                 tag: "No account needed",
                 title: "Guests just click.",
                 desc: "Recipients don't need to sign up for anything. One click on any RSVP button and their response is recorded instantly.",
+              },
+              {
+                tag: "Guest notes",
+                title: "They can leave a message.",
+                desc: "After RSVPing, guests can add a note dietary requirements, plus ones, or anything else. You see it all in the dashboard.",
               },
               {
                 tag: "Real-time",
