@@ -31,6 +31,7 @@ export interface EventCreationState {
   isPolishing: boolean;
   isSending: boolean;
   recurrence: Recurrence;
+  autoInvite: boolean;
 }
 
 const initialState: Omit<EventCreationState, "selectedRecipients"> & {
@@ -47,6 +48,7 @@ const initialState: Omit<EventCreationState, "selectedRecipients"> & {
   isPolishing: false,
   isSending: false,
   recurrence: null,
+  autoInvite: false,
 };
 
 export function useEventCreation() {
@@ -171,6 +173,7 @@ export function useEventCreation() {
           emailSubject: state.emailSubject.trim(),
           emailBody: state.emailBody.trim(),
           recurrence: state.recurrence,
+          autoInvite: state.autoInvite,
         }),
       });
 

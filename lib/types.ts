@@ -26,6 +26,7 @@ export const ZodEvent = z.object({
   emailSubject: z.string().min(1, "Email subject is required").max(150),
   emailBody: z.string().min(1, "Email body is required").max(5000),
   recurrence: z.enum(["weekly", "monthly", "annually"]).nullable().optional(),
+  autoInvite: z.boolean().optional().default(false),
 });
 
 export const ZodSendInvitations = z.object({
@@ -131,6 +132,7 @@ export const ZodOrganizerNote = z.object({
 
 export const ZodRecurrence = z.object({
   recurrence: z.enum(["weekly", "monthly", "annually"]).nullable(),
+  autoInvite: z.boolean().optional().default(false),
 });
 
 export type RawEvent = Prisma.EventGetPayload<{
@@ -183,6 +185,8 @@ export interface EventWithStatus {
   status: string;
   cancelledAt: Date | null;
   scheduledAt: Date | null;
+  recurrence: string | null;
+  parentEventId: string | null;
   sentAt: Date | null;
   invitations: {
     status: $Enums.InvitationStatus;
@@ -224,6 +228,9 @@ export interface PastEvent {
   eventAt: Date;
   createdAt: Date;
   status: string;
+  recurrence: string | null;
+  parentEventId: string | null;
+  sentAt: Date | null;
   summary: {
     total: number;
     attending: number;

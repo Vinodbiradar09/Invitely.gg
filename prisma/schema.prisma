@@ -109,6 +109,7 @@ model Event {
   cancelledAt   DateTime?
   scheduledAt   DateTime?
   sentAt        DateTime?
+  autoInvite    Boolean?        @default(false)
   recurrence    Recurrence?
   parentEventId String?
   parentEvent   Event?          @relation("RecurringEvents", fields: [parentEventId], references: [id], onDelete: SetNull)

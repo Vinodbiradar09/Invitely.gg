@@ -1,9 +1,11 @@
 "use client";
 import { EventCreationState, Recurrence } from "@/app/hooks/use-event-creation";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RefreshCw } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -11,7 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { RefreshCw } from "lucide-react";
 
 interface StepEventDetailsProps {
   state: EventCreationState;
@@ -108,16 +109,18 @@ export function StepEventDetails({
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
         <Label className="font-mono text-xs flex items-center gap-2">
           <RefreshCw className="h-3 w-3" />
           Repeat this event
         </Label>
         <Select
           value={state.recurrence ?? "none"}
-          onValueChange={(val) =>
-            setField("recurrence", val === "none" ? null : (val as Recurrence))
-          }
+          onValueChange={(val) => {
+            const newRecurrence = val === "none" ? null : (val as Recurrence);
+            setField("recurrence", newRecurrence);
+            if (!newRecurrence) setField("autoInvite", false);
+          }}
         >
           <SelectTrigger className="font-mono text-xs h-9 w-full sm:w-48">
             <SelectValue placeholder="Does not repeat" />
@@ -137,12 +140,38 @@ export function StepEventDetails({
             </SelectItem>
           </SelectContent>
         </Select>
+
         {state.recurrence && (
-          <p className="font-mono text-xs text-muted-foreground">
-            A new event will be created automatically every{" "}
-            <span className="text-foreground">{state.recurrence}</span> after
-            this one ends.
-          </p>
+          <div className="flex flex-col gap-3">
+            <p className="font-mono text-xs text-muted-foreground">
+              A new event will be created automatically every{" "}
+              <span className="text-foreground">{state.recurrence}</span> after
+              this one ends.
+            </p>
+            <div className="flex items-start gap-3 border border-border px-4 py-3">
+              <Checkbox
+                id="auto-invite"
+                checked={state.autoInvite}
+                onCheckedChange={(checked) =>
+                  setField("autoInvite", checked === true)
+                }
+                className="mt-0.5"
+              />
+              <div className="flex flex-col gap-1">
+                <label
+                  htmlFor="auto-invite"
+                  className="font-mono text-xs text-foreground font-semibold cursor-pointer"
+                >
+                  Automatically invite same guests each time
+                </label>
+                <p className="font-mono text-xs text-muted-foreground">
+                  When the next occurrence is created, invitations are sent to
+                  the same guest list automatically. Leave unchecked to select
+                  guests manually each time.
+                </p>
+              </div>
+            </div>
+          </div>
         )}
       </div>
 

@@ -12,6 +12,9 @@ interface EventListProps {
     eventAt: Date;
     createdAt: Date;
     status: string;
+    sentAt: Date | null;
+    recurrence: string | null;
+    parentEventId: string | null;
     summary: {
       total: number;
       attending: number;

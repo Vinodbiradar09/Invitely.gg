@@ -1,9 +1,15 @@
 import { EventDeleteDialog } from "@/components/events/event-delete-dialog";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Calendar, MapPin, Users } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import {
+  Calendar,
+  MapPin,
+  Users,
+  RefreshCw,
+  AlertTriangle,
+} from "lucide-react";
 
 interface EventSummary {
   total: number;
@@ -21,14 +27,39 @@ interface EventCardProps {
     eventAt: Date;
     createdAt: Date;
     status: string;
+    recurrence: string | null;
+    parentEventId: string | null;
+    sentAt: Date | null;
     summary: EventSummary;
   };
 }
 
 export function EventCard({ event }: EventCardProps) {
-  const isPast = new Date(event.eventAt) < new Date();
+  const now = new Date();
+  const isPast = new Date(event.eventAt) < now;
   const isCancelled = event.status === "cancelled";
   const isScheduled = event.status === "scheduled";
+  const isRecurring = !!event.recurrence;
+  const isChildEvent = !!event.parentEventId;
+  const noInvitationsSent = !event.sentAt && event.status !== "scheduled";
+
+  const hoursUntilEvent =
+    (new Date(event.eventAt).getTime() - now.getTime()) / (1000 * 60 * 60);
+
+  const isUrgent =
+    isChildEvent &&
+    !isCancelled &&
+    !isPast &&
+    noInvitationsSent &&
+    hoursUntilEvent <= 18 &&
+    hoursUntilEvent > 0;
+
+  const isInvitePending =
+    isChildEvent &&
+    !isCancelled &&
+    !isPast &&
+    noInvitationsSent &&
+    hoursUntilEvent > 18;
 
   const formattedDate = new Date(event.eventAt).toLocaleDateString("en-US", {
     month: "short",
@@ -59,20 +90,55 @@ export function EventCard({ event }: EventCardProps) {
 
   return (
     <Card
-      className={`border-border bg-card group transition-colors ${
-        isCancelled ? "opacity-60" : "hover:border-foreground/20"
+      className={`border-border bg-card group transition-colors relative ${
+        isCancelled
+          ? "opacity-60"
+          : isUrgent
+            ? "border-red-500/30 hover:border-red-500/50"
+            : "hover:border-foreground/20"
       }`}
     >
+      {isUrgent && (
+        <div className="absolute top-3 right-10 flex items-center gap-1">
+          <AlertTriangle className="h-3 w-3 text-red-500 animate-pulse" />
+        </div>
+      )}
+
       <CardHeader className="pb-3 px-4 pt-4">
         <div className="flex items-start justify-between gap-2">
           <div className="flex flex-col gap-1.5 min-w-0">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <Badge
                 variant="secondary"
                 className={`font-mono text-xs px-1.5 py-0 h-4 ${badgeClass}`}
               >
                 {badgeLabel}
               </Badge>
+              {isRecurring && (
+                <Badge
+                  variant="secondary"
+                  className="font-mono text-xs px-1.5 py-0 h-4 bg-purple-500/10 text-purple-500 border-purple-500/20 flex items-center gap-1"
+                >
+                  <RefreshCw className="h-2.5 w-2.5" />
+                  {event.recurrence}
+                </Badge>
+              )}
+              {isUrgent && (
+                <Badge
+                  variant="secondary"
+                  className="font-mono text-xs px-1.5 py-0 h-4 bg-red-500/10 text-red-500 border-red-500/20"
+                >
+                  invite urgent
+                </Badge>
+              )}
+              {isInvitePending && (
+                <Badge
+                  variant="secondary"
+                  className="font-mono text-xs px-1.5 py-0 h-4 bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
+                >
+                  invite pending
+                </Badge>
+              )}
             </div>
             <Link href={`/events/${event.id}`}>
               <h3 className="font-mono text-sm font-semibold text-foreground truncate hover:underline underline-offset-4">
@@ -119,7 +185,11 @@ export function EventCard({ event }: EventCardProps) {
             <div className="flex items-center gap-2">
               <Users className="h-3 w-3 text-muted-foreground" />
               <span className="font-mono text-xs text-muted-foreground">
-                {isScheduled ? "Send scheduled" : "No invitations sent yet"}
+                {isScheduled
+                  ? "Send scheduled"
+                  : isInvitePending || isUrgent
+                    ? "No invitations sent — action needed"
+                    : "No invitations sent yet"}
               </span>
             </div>
           ) : (

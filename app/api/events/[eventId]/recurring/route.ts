@@ -68,6 +68,7 @@ export async function PUT(
       },
       data: {
         recurrence: data.recurrence,
+        autoInvite: data.recurrence ? data.autoInvite : false,
       },
     });
     return NextResponse.json(

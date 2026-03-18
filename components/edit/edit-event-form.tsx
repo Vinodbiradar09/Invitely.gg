@@ -19,6 +19,7 @@ interface EditEventFormProps {
     emailSubject: string;
     emailBody: string;
     recurrence: Recurrence;
+    autoInvite: boolean | null;
   };
 }
 
@@ -46,6 +47,7 @@ export function EditEventForm({ event }: EditEventFormProps) {
     eventAt: eventAtValue,
     location: event.location,
     recurrence: event.recurrence ?? null,
+    autoInvite: event.autoInvite ?? false,
   });
 
   async function handleSave(emailValues: {
@@ -65,6 +67,7 @@ export function EditEventForm({ event }: EditEventFormProps) {
           emailSubject: emailValues.emailSubject,
           emailBody: emailValues.emailBody,
           recurrence: detailsValues.recurrence,
+          autoInvite: detailsValues.autoInvite,
         }),
       });
       const data = await res.json();
@@ -73,7 +76,7 @@ export function EditEventForm({ event }: EditEventFormProps) {
         return;
       }
       if (data.notified) {
-        toast.success("event updated — guests notified of changes");
+        toast.success("event updated guests notified of changes");
       } else {
         toast.success("event updated successfully");
       }

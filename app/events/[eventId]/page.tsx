@@ -1,5 +1,4 @@
 import { StopRecurrenceButton } from "@/components/dashboard/stop-recurrence-button";
-import { ArrowLeft, Calendar, MapPin, Pencil, RefreshCw } from "lucide-react";
 import { EventCancelDialog } from "@/components/events/event-cancel-dialog";
 import { EventDeleteDialog } from "@/components/events/event-delete-dialog";
 import { UnscheduleButton } from "@/components/dashboard/unschedule-button";
@@ -16,12 +15,20 @@ import { Invitation } from "@/lib/types";
 import type { Metadata } from "next";
 import { db } from "@/lib/prisma";
 import { Suspense } from "react";
-import { cache } from "react";
-import Link from "next/link";
 import {
   SummaryCardsSkeleton,
   GuestTableSkeleton,
 } from "@/components/skeletons";
+import { cache } from "react";
+import Link from "next/link";
+import {
+  ArrowLeft,
+  Calendar,
+  MapPin,
+  Pencil,
+  RefreshCw,
+  AlertTriangle,
+} from "lucide-react";
 
 interface PageProps {
   params: Promise<{ eventId: string }>;
@@ -124,7 +131,32 @@ export default async function EventDashboardPage({ params }: PageProps) {
   const isScheduled = event.status === "scheduled";
   const isPast = new Date(event.eventAt) < new Date();
   const isRecurring = !!event.recurrence;
+  const isChildEvent = !!event.parentEventId;
   const futureChildCount = event._count.childEvents;
+
+  const hoursUntilEvent =
+    (new Date(event.eventAt).getTime() - new Date().getTime()) /
+    (1000 * 60 * 60);
+  const noInvitationsSent = !event.sentAt && event.status !== "scheduled";
+  const showUrgentBanner =
+    isChildEvent &&
+    !isCancelled &&
+    !isPast &&
+    noInvitationsSent &&
+    hoursUntilEvent <= 18 &&
+    hoursUntilEvent > 0;
+
+  const showInvitePendingBanner =
+    isChildEvent &&
+    !isCancelled &&
+    !isPast &&
+    noInvitationsSent &&
+    hoursUntilEvent > 18;
+
+  const hoursLabel =
+    hoursUntilEvent < 1
+      ? "less than 1 hour"
+      : `${Math.round(hoursUntilEvent)} hour${Math.round(hoursUntilEvent) === 1 ? "" : "s"}`;
 
   const badgeClass = isCancelled
     ? "bg-red-500/10 text-red-500 border-red-500/20"
@@ -166,6 +198,56 @@ export default async function EventDashboardPage({ params }: PageProps) {
         All events
       </Link>
 
+      {showUrgentBanner && (
+        <div className="border border-red-500/30 bg-red-500/5 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="h-4 w-4 text-red-500 shrink-0 mt-0.5 animate-pulse" />
+            <div className="flex flex-col gap-0.5">
+              <p className="font-mono text-xs font-semibold text-red-500">
+                Event starts in {hoursLabel} — no invitations sent
+              </p>
+              <p className="font-mono text-xs text-muted-foreground">
+                Your guests don&apos;t know about this recurring event yet.
+              </p>
+            </div>
+          </div>
+          <Link href={`/events/new?from=${eventId}`} className="shrink-0">
+            <Button
+              size="sm"
+              className="font-mono text-xs h-8 bg-red-500 hover:bg-red-600 text-white border-0"
+            >
+              Send invitations now
+            </Button>
+          </Link>
+        </div>
+      )}
+
+      {showInvitePendingBanner && (
+        <div className="border border-yellow-500/30 bg-yellow-500/5 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <RefreshCw className="h-4 w-4 text-yellow-500 shrink-0 mt-0.5" />
+            <div className="flex flex-col gap-0.5">
+              <p className="font-mono text-xs font-semibold text-yellow-500">
+                Recurring event — no invitations sent yet
+              </p>
+              <p className="font-mono text-xs text-muted-foreground">
+                This occurrence was created automatically. Select guests and
+                send invitations.
+              </p>
+            </div>
+          </div>
+          <Link href={`/events/new?from=${eventId}`} className="shrink-0">
+            <Button
+              variant="outline"
+              size="sm"
+              className="font-mono text-xs h-8 border-yellow-500/30 text-yellow-500 hover:border-yellow-500/60"
+            >
+              Send invitations
+            </Button>
+          </Link>
+        </div>
+      )}
+
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2 flex-wrap">
@@ -182,6 +264,14 @@ export default async function EventDashboardPage({ params }: PageProps) {
               >
                 <RefreshCw className="h-2.5 w-2.5" />
                 {event.recurrence}
+              </Badge>
+            )}
+            {isChildEvent && noInvitationsSent && !isCancelled && !isPast && (
+              <Badge
+                variant="secondary"
+                className="font-mono text-xs px-1.5 py-0 h-4 w-fit bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
+              >
+                invite pending
               </Badge>
             )}
           </div>

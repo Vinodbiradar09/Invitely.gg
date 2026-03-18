@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
         emailSubject: data.emailSubject.trim(),
         emailBody: data.emailBody.trim(),
         recurrence: data.recurrence ?? null,
+        autoInvite: data.autoInvite ?? false,
       },
     });
 

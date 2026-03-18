@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { EmailData, ResendResult } from "@/lib/types";
 import { getNextEventDate } from "@/lib/prompt";
 import { resend } from "@/lib/resend";
+import { randomBytes } from "crypto";
 import { db } from "@/lib/prisma";
 
 const BATCH_SIZE = 25;
@@ -106,10 +107,18 @@ export async function GET(req: NextRequest) {
         parentEventId: null,
       },
       include: {
+        user: { select: { name: true, email: true } },
         childEvents: {
           orderBy: { eventAt: "desc" },
           take: 1,
           select: { eventAt: true },
+        },
+        invitations: {
+          select: {
+            email: true,
+            name: true,
+          },
+          distinct: ["email"],
         },
       },
     });
@@ -134,7 +143,7 @@ export async function GET(req: NextRequest) {
 
         if (existingChild) return;
 
-        await db.event.create({
+        const childEvent = await db.event.create({
           data: {
             userId: event.userId,
             name: event.name,
@@ -144,9 +153,68 @@ export async function GET(req: NextRequest) {
             emailSubject: event.emailSubject,
             emailBody: event.emailBody,
             recurrence: event.recurrence,
+            autoInvite: event.autoInvite,
             parentEventId: event.id,
             status: "active",
           },
+        });
+
+        if (!event.autoInvite || event.invitations.length === 0) return;
+
+        // autoInvite copy guest list from parent and send immediately
+        const invitationData = event.invitations.map((inv) => ({
+          eventId: childEvent.id,
+          email: inv.email,
+          name: inv.name ?? null,
+          token: randomBytes(32).toString("hex"),
+        }));
+
+        const createdInvitations = await db.invitation.createManyAndReturn({
+          data: invitationData,
+        });
+
+        const eventDate = new Date(childEvent.eventAt).toLocaleDateString(
+          "en-US",
+          {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          },
+        );
+
+        const batchPayload: EmailData[] = createdInvitations.map((inv) => ({
+          from: process.env.FROM!,
+          to: inv.email,
+          subject: childEvent.emailSubject,
+          react: InviteEmail({
+            organizerName: event.user.name,
+            organizerEmail: event.user.email,
+            recipientName: inv.name ?? "",
+            recipientEmail: inv.email,
+            eventName: childEvent.name,
+            eventDate,
+            eventLocation: childEvent.location,
+            emailBody: childEvent.emailBody,
+            personalizedOpening: "",
+            token: inv.token,
+          }),
+        }));
+
+        const batches: EmailData[][] = [];
+        for (let i = 0; i < batchPayload.length; i += BATCH_SIZE) {
+          batches.push(batchPayload.slice(i, i + BATCH_SIZE));
+        }
+
+        await Promise.allSettled(
+          batches.map((batch) => resend.batch.send(batch)),
+        );
+
+        await db.event.update({
+          where: { id: childEvent.id },
+          data: { sentAt: now },
         });
       }),
     );
