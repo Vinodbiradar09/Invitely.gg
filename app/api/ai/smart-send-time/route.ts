@@ -18,7 +18,6 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-
     const { success, data, error } = ZodSmartSendTime.safeParse(body);
     if (!success) {
       return NextResponse.json(
@@ -27,7 +26,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const currentTime = new Date().toLocaleString("en-US", {
+    const now = new Date();
+    const currentIso = now.toISOString();
+    const currentTime = now.toLocaleString("en-US", {
       weekday: "long",
       year: "numeric",
       month: "long",
@@ -43,6 +44,7 @@ export async function POST(req: NextRequest) {
       eventLocation: data.eventLocation,
       eventDesc: data.eventDesc,
       currentTime,
+      currentIso,
     });
 
     const raw = await llm(prompt);
@@ -65,17 +67,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // hard guard suggested time must be at least 18 hours before event
+    const suggestedAt = new Date(validated.data.suggestedAt);
+    const thirtyMinutesFromNow = new Date(now.getTime() + 30 * 60 * 1000);
     const eventAtDate = new Date(data.eventDate);
-    const suggestedAtDate = new Date(validated.data.suggestedAt);
     const eighteenHoursBeforeEvent = new Date(
       eventAtDate.getTime() - 18 * 60 * 60 * 1000,
     );
 
-    if (suggestedAtDate > eighteenHoursBeforeEvent) {
+    if (suggestedAt <= thirtyMinutesFromNow) {
       return NextResponse.json(
         {
-          message: "event is too soon to schedule send now instead",
+          message: "event is too soon for a scheduled send — send now instead",
+          success: false,
+        },
+        { status: 400 },
+      );
+    }
+
+    if (suggestedAt > eighteenHoursBeforeEvent) {
+      return NextResponse.json(
+        {
+          message: "event is too soon to schedule — send now instead",
           success: false,
         },
         { status: 400 },

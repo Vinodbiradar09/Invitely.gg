@@ -44,6 +44,7 @@ export function buildSmartSendTimePrompt(data: {
   eventLocation: string;
   eventDesc: string;
   currentTime: string;
+  currentIso: string;
 }): string {
   return `
 You are an expert at email marketing and event management.
@@ -54,20 +55,22 @@ Event Details:
 - Event Date: ${data.eventDate}
 - Location: ${data.eventLocation}
 - Description: ${data.eventDesc || "Not provided"}
-- Current Time: ${data.currentTime}
+- Current Time (human readable): ${data.currentTime}
+- Current Time (exact ISO): ${data.currentIso}
 
 Rules:
-- Suggested time MUST be at least 18 hours before the event date — never suggest a time after that cutoff
-- Suggested time must also be at least 1 hour from the current time
-- If the event is less than 18 hours away, do not suggest a scheduled time — suggest sending immediately instead by setting suggestedAt to 1 hour from now
-- Best times are typically Tuesday–Thursday, 9AM–11AM or 6PM–8PM in a general timezone
+- suggestedAt MUST be AFTER ${data.currentIso} — never suggest a time in the past
+- Suggested time must be at least 30 minutes from now
+- Suggested time MUST be at least 18 hours before the event date
+- If the event is less than 18 hours away, set suggestedAt to exactly 30 minutes from now
+- Best times are typically Tuesday–Thursday, 9AM–11AM or 6PM–8PM
 - Consider how far away the event is — closer events need sooner sends
 - Reason must be one concise sentence, max 15 words
-- Return ONLY valid JSON, no markdown, no backticks, no explanation
+- Return ONLY valid JSON, no markdown, no backticks
 
 Return exactly this JSON shape:
 {
-  "suggestedAt": "ISO 8601 datetime string e.g. 2026-03-18T19:00:00.000Z",
+  "suggestedAt": "ISO 8601 datetime string",
   "dayLabel": "e.g. Tuesday",
   "timeLabel": "e.g. 7:00 PM",
   "reason": "one sentence reason max 15 words"

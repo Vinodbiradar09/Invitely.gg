@@ -103,7 +103,7 @@ async function GuestSection({
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <h2 className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
-            Guest list — {summary.total}
+            Guest list {summary.total}
           </h2>
           {!isScheduled && (
             <ReminderButton eventId={eventId} pendingCount={summary.pending} />
@@ -138,15 +138,24 @@ export default async function EventDashboardPage({ params }: PageProps) {
     (new Date(event.eventAt).getTime() - new Date().getTime()) /
     (1000 * 60 * 60);
   const noInvitationsSent = !event.sentAt && event.status !== "scheduled";
+
   const showUrgentBanner =
     isChildEvent &&
     !isCancelled &&
     !isPast &&
     noInvitationsSent &&
-    hoursUntilEvent <= 18 &&
+    hoursUntilEvent <= 12 &&
     hoursUntilEvent > 0;
 
   const showInvitePendingBanner =
+    isChildEvent &&
+    !isCancelled &&
+    !isPast &&
+    noInvitationsSent &&
+    hoursUntilEvent > 12 &&
+    hoursUntilEvent <= 18;
+
+  const showYellowBanner =
     isChildEvent &&
     !isCancelled &&
     !isPast &&
@@ -211,7 +220,10 @@ export default async function EventDashboardPage({ params }: PageProps) {
               </p>
             </div>
           </div>
-          <Link href={`/events/new?from=${eventId}`} className="shrink-0">
+          <Link
+            href={`/events/${eventId}/send-invitations`}
+            className="shrink-0"
+          >
             <Button
               size="sm"
               className="font-mono text-xs h-8 bg-red-500 hover:bg-red-600 text-white border-0"
@@ -228,7 +240,7 @@ export default async function EventDashboardPage({ params }: PageProps) {
             <RefreshCw className="h-4 w-4 text-yellow-500 shrink-0 mt-0.5" />
             <div className="flex flex-col gap-0.5">
               <p className="font-mono text-xs font-semibold text-yellow-500">
-                Recurring event — no invitations sent yet
+                Event in {hoursLabel} send invitations soon
               </p>
               <p className="font-mono text-xs text-muted-foreground">
                 This occurrence was created automatically. Select guests and
@@ -236,11 +248,43 @@ export default async function EventDashboardPage({ params }: PageProps) {
               </p>
             </div>
           </div>
-          <Link href={`/events/new?from=${eventId}`} className="shrink-0">
+          <Link
+            href={`/events/${eventId}/send-invitations`}
+            className="shrink-0"
+          >
             <Button
               variant="outline"
               size="sm"
               className="font-mono text-xs h-8 border-yellow-500/30 text-yellow-500 hover:border-yellow-500/60"
+            >
+              Send invitations
+            </Button>
+          </Link>
+        </div>
+      )}
+
+      {showYellowBanner && (
+        <div className="border border-yellow-500/20 bg-yellow-500/5 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <RefreshCw className="h-4 w-4 text-yellow-500/60 shrink-0 mt-0.5" />
+            <div className="flex flex-col gap-0.5">
+              <p className="font-mono text-xs font-semibold text-yellow-500/80">
+                Recurring event no invitations sent yet
+              </p>
+              <p className="font-mono text-xs text-muted-foreground">
+                This occurrence was created automatically. Select guests when
+                ready.
+              </p>
+            </div>
+          </div>
+          <Link
+            href={`/events/${eventId}/send-invitations`}
+            className="shrink-0"
+          >
+            <Button
+              variant="outline"
+              size="sm"
+              className="font-mono text-xs h-8 border-yellow-500/20 text-yellow-500/80 hover:border-yellow-500/40"
             >
               Send invitations
             </Button>

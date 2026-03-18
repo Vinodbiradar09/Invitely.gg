@@ -98,8 +98,8 @@ export async function GET(req: NextRequest) {
       }),
     );
 
-    // create next occurrence for recurring events
-    const recurringEvents = await db.event.findMany({
+    // create next occurrence for recurring parent events
+    const recurringParents = await db.event.findMany({
       where: {
         recurrence: { not: null },
         status: "active",
@@ -107,24 +107,16 @@ export async function GET(req: NextRequest) {
         parentEventId: null,
       },
       include: {
-        user: { select: { name: true, email: true } },
         childEvents: {
           orderBy: { eventAt: "desc" },
           take: 1,
           select: { eventAt: true },
         },
-        invitations: {
-          select: {
-            email: true,
-            name: true,
-          },
-          distinct: ["email"],
-        },
       },
     });
 
     const recurringResults = await Promise.allSettled(
-      recurringEvents.map(async (event) => {
+      recurringParents.map(async (event) => {
         const lastEventAt =
           event.childEvents.length > 0
             ? event.childEvents[0].eventAt
@@ -135,15 +127,12 @@ export async function GET(req: NextRequest) {
         if (nextEventAt <= now) return;
 
         const existingChild = await db.event.findFirst({
-          where: {
-            parentEventId: event.id,
-            eventAt: nextEventAt,
-          },
+          where: { parentEventId: event.id, eventAt: nextEventAt },
         });
 
         if (existingChild) return;
 
-        const childEvent = await db.event.create({
+        await db.event.create({
           data: {
             userId: event.userId,
             name: event.name,
@@ -154,15 +143,56 @@ export async function GET(req: NextRequest) {
             emailBody: event.emailBody,
             recurrence: event.recurrence,
             autoInvite: event.autoInvite,
+            inviteSendOffset: event.inviteSendOffset,
             parentEventId: event.id,
             status: "active",
           },
         });
+      }),
+    );
 
-        if (!event.autoInvite || event.invitations.length === 0) return;
+    // auto-send invitations for recurring child events at the right time
+    // find child events where autoInvite=true, not yet sent,
+    // and the send time (eventAt - inviteSendOffset hours) has arrived
+    const autoInviteChildren = await db.event.findMany({
+      where: {
+        autoInvite: true,
+        sentAt: null,
+        status: "active",
+        parentEventId: { not: null },
+        eventAt: { gt: now },
+      },
+      include: {
+        user: { select: { name: true, email: true } },
+        parentEvent: {
+          include: {
+            invitations: {
+              select: { email: true, name: true },
+              distinct: ["email"],
+            },
+          },
+        },
+      },
+    });
 
-        // autoInvite copy guest list from parent and send immediately
-        const invitationData = event.invitations.map((inv) => ({
+    const autoInviteResults = await Promise.allSettled(
+      autoInviteChildren.map(async (childEvent) => {
+        if (!childEvent.parentEvent) return;
+        if (!childEvent.inviteSendOffset) return;
+
+        // calculate when invites should be sent for this child
+        const sendAt = new Date(
+          childEvent.eventAt.getTime() -
+            childEvent.inviteSendOffset * 60 * 60 * 1000,
+        );
+
+        // only send if we've reached or passed the send time
+        if (sendAt > now) return;
+
+        const parentInvitations = childEvent.parentEvent.invitations;
+        if (parentInvitations.length === 0) return;
+
+        const invitationData = parentInvitations.map((inv) => ({
           eventId: childEvent.id,
           email: inv.email,
           name: inv.name ?? null,
@@ -171,7 +201,10 @@ export async function GET(req: NextRequest) {
 
         const createdInvitations = await db.invitation.createManyAndReturn({
           data: invitationData,
+          skipDuplicates: true,
         });
+
+        if (createdInvitations.length === 0) return;
 
         const eventDate = new Date(childEvent.eventAt).toLocaleDateString(
           "en-US",
@@ -190,8 +223,8 @@ export async function GET(req: NextRequest) {
           to: inv.email,
           subject: childEvent.emailSubject,
           react: InviteEmail({
-            organizerName: event.user.name,
-            organizerEmail: event.user.email,
+            organizerName: childEvent.user.name,
+            organizerEmail: childEvent.user.email,
             recipientName: inv.name ?? "",
             recipientEmail: inv.email,
             eventName: childEvent.name,
@@ -228,6 +261,9 @@ export async function GET(req: NextRequest) {
     const recurringCreated = recurringResults.filter(
       (r) => r.status === "fulfilled",
     ).length;
+    const autoInviteSent = autoInviteResults.filter(
+      (r) => r.status === "fulfilled",
+    ).length;
 
     return NextResponse.json(
       {
@@ -239,8 +275,12 @@ export async function GET(req: NextRequest) {
           failed: scheduledFailed,
         },
         recurring: {
-          processed: recurringEvents.length,
+          processed: recurringParents.length,
           created: recurringCreated,
+        },
+        autoInvite: {
+          processed: autoInviteChildren.length,
+          sent: autoInviteSent,
         },
       },
       { status: 200 },

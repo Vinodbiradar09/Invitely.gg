@@ -6,7 +6,6 @@ import { resend } from "@/lib/resend";
 import { db } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { llm } from "@/lib/llm";
-
 import { randomBytes } from "crypto";
 import {
   EmailData,
@@ -24,9 +23,7 @@ export async function POST(
   { params }: { params: Promise<{ eventId: string }> },
 ) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await auth.api.getSession({ headers: await headers() });
     if (!session || !session.user) {
       return NextResponse.json(
         { message: "unauthorized user", success: false },
@@ -92,6 +89,13 @@ export async function POST(
       );
     }
 
+    const now = new Date();
+
+    // calculate how many hours before the event the organizer is sending
+    const hoursBeforeEvent = Math.round(
+      (new Date(event.eventAt).getTime() - now.getTime()) / (1000 * 60 * 60),
+    );
+
     const eventDate = new Date(event.eventAt).toLocaleDateString("en-US", {
       weekday: "long",
       year: "numeric",
@@ -101,7 +105,6 @@ export async function POST(
       minute: "2-digit",
     });
 
-    // generate personalised openings in parallel if any fail we fall back to empty string
     const openings = await Promise.allSettled(
       data.recipients.map(
         async (recipient: { email: string; name?: string | null }) => {
@@ -123,11 +126,10 @@ export async function POST(
     const openingMap = new Map<string, string>();
     openings.forEach((result, i) => {
       const email = data.recipients[i].email;
-      if (result.status === "fulfilled") {
-        openingMap.set(email, result.value.opening);
-      } else {
-        openingMap.set(email, "");
-      }
+      openingMap.set(
+        email,
+        result.status === "fulfilled" ? result.value.opening : "",
+      );
     });
 
     const invitationData = data.recipients.map(
@@ -146,7 +148,14 @@ export async function POST(
       });
       await tx.event.update({
         where: { id: eventId },
-        data: { sentAt: new Date() },
+        data: {
+          sentAt: now,
+          // store offset only if this is a recurring event and offset not already set
+          ...(event.recurrence &&
+            !event.inviteSendOffset && {
+              inviteSendOffset: hoursBeforeEvent,
+            }),
+        },
       });
       return invitations;
     });
