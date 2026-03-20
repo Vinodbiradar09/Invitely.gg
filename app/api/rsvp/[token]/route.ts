@@ -159,7 +159,7 @@ export async function PATCH(
         (new Date().getTime() - new Date(invitation.respondedAt).getTime()) /
         1000;
 
-      if (secondsSinceLastResponse < 30) {
+      if (secondsSinceLastResponse < 10) {
         return NextResponse.json(
           {
             message: "please wait a moment before changing your response",
