@@ -98,13 +98,19 @@ export async function GET(req: NextRequest) {
       }),
     );
 
-    // create next occurrence for recurring parent events
+    // create next occurrence for recurring parent events only if no future child exists
     const recurringParents = await db.event.findMany({
       where: {
         recurrence: { not: null },
         status: "active",
         eventAt: { lt: now },
         parentEventId: null,
+        childEvents: {
+          none: {
+            eventAt: { gt: now },
+            status: { not: "cancelled" },
+          },
+        },
       },
       include: {
         childEvents: {
