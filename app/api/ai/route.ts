@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       console.error("gemini returned non-JSON:", raw);
       return NextResponse.json(
         {
-          message: "AI returned an unexpected response. Please try again.",
+          message: "ai returned an unexpected response. please try again.",
           success: false,
         },
         { status: 502 },

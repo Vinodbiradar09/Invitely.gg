@@ -1,6 +1,6 @@
-import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 function GitHubIcon() {
@@ -19,103 +19,91 @@ function GitHubIcon() {
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16 overflow-hidden">
+    <section className="relative pt-32 pb-24 px-6">
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.03]"
+        className="pointer-events-none absolute inset-0 opacity-[0.02]"
         style={{
-          backgroundImage: `linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px)`,
           backgroundSize: "64px 64px",
         }}
       />
       <div className="pointer-events-none absolute top-0 left-0 right-0 h-32 bg-linear-to-b from-background to-transparent" />
       <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-background to-transparent" />
 
-      <div className="relative z-10 flex flex-col items-center text-center gap-8 max-w-4xl w-full">
-        <Badge
-          variant="outline"
-          className="font-mono text-xs px-3 py-1 border-border text-muted-foreground gap-2 flex items-center"
-        >
-          <Sparkles className="h-3 w-3" />
-          AI powered invitation platform
-        </Badge>
-
-        <div className="flex flex-col gap-4">
-          <h1 className="font-mono text-4xl sm:text-5xl md:text-6xl font-bold text-foreground leading-[1.1] tracking-tight">
-            Send invitations
-            <br />
-            <span className="text-muted-foreground">on your behalf.</span>
-          </h1>
-          <p className="font-mono text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
-            Invitely.gg lets you create beautiful event invitations and send
-            them to everyone at once no copy-pasting, no manual emails. Write
-            once, send to all. Track every RSVP in real time.
-          </p>
-        </div>
-
-        <div className="flex flex-col sm:flex-row items-center gap-3">
-          <Link href="/login">
-            <Button className="font-mono text-sm px-8 h-10 gap-2">
-              Start for free
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
-          <Link href="#how-it-works">
-            <Button
-              variant="outline"
-              className="font-mono text-sm px-8 h-10 text-muted-foreground"
-            >
-              See how it works
-            </Button>
-          </Link>
-          <Link
-            href="https://github.com/Vinodbiradar09/Invitely.gg"
-            target="_blank"
-            rel="noopener noreferrer"
+      <div className="relative z-10 mx-auto max-w-5xl">
+        <div className="flex flex-col items-center text-center gap-8">
+          <Badge
+            variant="outline"
+            className="font-mono text-xs px-3 py-1 border-border text-muted-foreground"
           >
-            <Button
-              variant="outline"
-              className="font-mono text-sm px-8 h-10 gap-2 text-muted-foreground hover:text-foreground"
+            AI powered invitation platform
+          </Badge>
+
+          <h1 className="font-mono text-4xl sm:text-5xl md:text-6xl font-bold text-foreground leading-[1.1] tracking-tight text-balance">
+            Send <span className="text-muted-foreground">invitations</span> on
+            <br />
+            your
+            <span className="text-muted-foreground"> behalf.</span>
+          </h1>
+
+          <p className="font-mono text-sm sm:text-base text-muted-foreground max-w-xl leading-relaxed">
+            Stop manual emailing. Give us your list, and we’ll handle the rest.
+            Professional, automated, and sent on your behalf.
+          </p>
+
+          <div className="flex items-center gap-3">
+            <Link href="/login">
+              <Button className="font-mono text-sm px-6 h-10 gap-2">
+                Get Started
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <Link
+              href="https://github.com/Vinodbiradar09/Invitely.gg"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <GitHubIcon />
-              Open Source
-            </Button>
-          </Link>
-        </div>
-
-        <p className="font-mono text-xs text-muted-foreground">
-          Free to use · No credit card · Google sign-in · Open source on GitHub
-        </p>
-
-        <div className="w-full max-w-2xl border border-border bg-card mt-4">
-          <div className="border-b border-border px-4 py-2 flex items-center gap-2">
-            <div className="flex gap-1.5">
-              <div className="h-2.5 w-2.5 bg-muted-foreground/30" />
-              <div className="h-2.5 w-2.5 bg-muted-foreground/30" />
-              <div className="h-2.5 w-2.5 bg-muted-foreground/30" />
-            </div>
-            <span className="font-mono text-xs text-muted-foreground ml-2">
-              invitely.gg — event dashboard
-            </span>
-          </div>
-          <div className="px-4 py-3 grid grid-cols-2 sm:grid-cols-4 gap-4 divide-y sm:divide-y-0 sm:divide-x divide-border">
-            {[
-              { label: "Invited", value: "47" },
-              { label: "Attending", value: "23" },
-              { label: "Maybe", value: "8" },
-              { label: "Pending", value: "16" },
-            ].map(({ label, value }) => (
-              <div
-                key={label}
-                className="flex flex-col gap-0.5 px-4 first:pl-0 py-2 sm:py-0"
+              <Button
+                variant="outline"
+                className="font-mono text-sm px-6 h-10 gap-2 text-muted-foreground hover:text-foreground"
               >
-                <span className="font-mono text-lg font-semibold text-foreground">
-                  {value}
-                </span>
-                <span className="font-mono text-xs text-muted-foreground">
-                  {label}
-                </span>
+                <GitHubIcon />
+                Open Source
+              </Button>
+            </Link>
+          </div>
+
+          <div className="w-full max-w-2xl border border-border bg-card mt-8">
+            <div className="border-b border-border px-4 py-2.5 flex items-center gap-2">
+              <div className="flex gap-1.5">
+                <div className="h-2.5 w-2.5 bg-muted-foreground/30" />
+                <div className="h-2.5 w-2.5 bg-muted-foreground/30" />
+                <div className="h-2.5 w-2.5 bg-muted-foreground/30" />
               </div>
-            ))}
+              <span className="font-mono text-xs text-muted-foreground ml-2">
+                invitely.gg [event dashboard]
+              </span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4">
+              {[
+                { label: "Invited", value: "47" },
+                { label: "Attending", value: "23" },
+                { label: "Maybe", value: "8" },
+                { label: "Pending", value: "16" },
+              ].map(({ label, value }, index) => (
+                <div
+                  key={label}
+                  className={`flex flex-col gap-1 p-4 sm:p-5 ${index % 2 !== 0 ? "border-l border-border" : ""} ${index >= 2 ? "border-t sm:border-t-0 border-border" : ""} ${index >= 1 ? "sm:border-l" : ""}`}
+                >
+                  <span className="font-mono text-xl sm:text-2xl font-semibold text-foreground">
+                    {value}
+                  </span>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {label}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

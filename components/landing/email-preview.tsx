@@ -1,179 +1,178 @@
-import { Separator } from "@/components/ui/separator";
-import { Calendar, MapPin, User } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import {
+  Sparkles,
+  Check,
+  HelpCircle,
+  Calendar,
+  MapPin,
+  Clock,
+  X,
+} from "lucide-react";
 
 export function EmailPreview() {
   return (
     <section className="py-24 px-6 border-t border-border">
-      <div className="max-w-6xl mx-auto flex flex-col gap-16">
-        <div className="flex flex-col gap-3 max-w-xl">
-          <span className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
-            What your guests receive
-          </span>
-          <h2 className="font-mono text-2xl sm:text-3xl font-bold text-foreground leading-tight">
-            A real email.
-            <br />
-            <span className="text-muted-foreground">Not a notification.</span>
-          </h2>
-          <p className="font-mono text-xs text-muted-foreground leading-relaxed max-w-lg">
-            Every guest gets a beautifully formatted email delivered straight to
-            their inbox with your name as the organiser, the full event details,
-            and three clear RSVP buttons.
-          </p>
-        </div>
+      <div className="mx-auto max-w-5xl">
+        <div className="flex flex-col gap-16">
+          <div className="text-center">
+            <span className="font-mono text-xs text-muted-foreground uppercase tracking-widest flex items-center justify-center gap-2">
+              <Sparkles className="h-3 w-3" />
+              AI Powered
+            </span>
+            <h2 className="font-mono text-2xl sm:text-3xl font-bold text-foreground leading-tight mt-3 text-balance">
+              Write casually. Send professionally.
+            </h2>
+            <p className="font-mono text-sm text-muted-foreground mt-4 max-w-lg mx-auto">
+              Type your message the way you{"'"}d text a friend. Invitely{"'"}s
+              AI transforms it into a polished invitation.
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          <div className="border border-border bg-card">
-            <div className="border-b border-border bg-muted/20 px-4 py-3">
-              <div className="grid grid-cols-[56px_1fr] gap-1 font-mono text-xs">
-                <span className="text-muted-foreground">From</span>
-                <span className="text-foreground">teej@gmail.com</span>
-                <span className="text-muted-foreground">To</span>
-                <span className="text-foreground">vinod@gmail.com</span>
-                <span className="text-muted-foreground">Subject</span>
-                <span className="text-foreground font-semibold">
-                  You&rsquo;re invited to Shambavi&rsquo;s Birthday Party
+          <div className="border border-border bg-card overflow-hidden">
+            <div className="border-b border-border px-4 py-3 bg-muted/20 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex gap-2">
+                  <div className="h-3 w-3 bg-destructive/60" />
+                  <div className="h-3 w-3 bg-chart-4/60" />
+                  <div className="h-3 w-3 bg-chart-2/60" />
+                </div>
+                <span className="font-mono text-xs text-muted-foreground ml-2">
+                  mail.google.com
                 </span>
+              </div>
+              <span className="font-mono text-xs text-muted-foreground">
+                Just now
+              </span>
+            </div>
+
+            <div className="border-b border-border px-6 py-4">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-11 w-11 items-center justify-center border border-border bg-primary shrink-0">
+                    <span className="font-mono text-base font-bold text-primary-foreground">
+                      I
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-0.5">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-mono text-sm font-semibold text-foreground">
+                        Invitely.gg
+                      </span>
+                      <span className="font-mono text-xs text-muted-foreground">
+                        {"<"}noreply@invitely.gg{">"}
+                      </span>
+                    </div>
+                    <span className="font-mono text-xs text-muted-foreground">
+                      to me
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="p-5 flex flex-col gap-4">
-              <div className="flex items-center gap-2 border-l-2 border-foreground/30 pl-3">
-                <User className="h-3 w-3 text-muted-foreground" />
-                <span className="font-mono text-xs text-muted-foreground">
-                  Invited by{" "}
-                  <span className="text-foreground font-semibold">
-                    Teej Devries
-                  </span>
-                </span>
-              </div>
-
-              <p className="font-mono text-xs text-muted-foreground italic">
-                As someone who never misses a good celebration, we knew
-                you&rsquo;d want to be there.
-              </p>
-
-              <h3 className="font-mono text-lg font-bold text-foreground">
-                Shambavi&rsquo;s Birthday Party
-              </h3>
-
-              <div className="flex flex-col gap-1.5 border border-border px-3 py-2.5 bg-background">
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-3 w-3 text-muted-foreground" />
-                  <span className="font-mono text-xs text-muted-foreground">
-                    Saturday, March 15, 2025 at 8:00 PM
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-3 w-3 text-muted-foreground" />
-                  <span className="font-mono text-xs text-muted-foreground">
-                    123 MG Road, Bangalore
-                  </span>
-                </div>
-              </div>
-
-              <div className="font-mono text-xs text-foreground leading-relaxed flex flex-col gap-2">
-                <p>
-                  It&rsquo;s that time of year again! Come celebrate my birthday
-                  with good food, great music, and even better company.
-                </p>
-                <p>
-                  Dress smart-casual. Dinner and drinks will be on me just bring
-                  yourself and good vibes.
-                </p>
-              </div>
-
-              <Separator className="bg-border" />
-
-              <div className="flex flex-col gap-2">
-                <p className="font-mono text-xs text-muted-foreground">
-                  Hey Vinod, will you be attending?
-                </p>
-                <div className="flex gap-2 flex-wrap">
-                  {[
-                    {
-                      label: "Attending",
-                      cls: "bg-green-500/10 text-green-500 border-green-500/30",
-                    },
-                    {
-                      label: "Maybe",
-                      cls: "bg-yellow-500/10 text-yellow-500 border-yellow-500/30",
-                    },
-                    {
-                      label: "Can&apos;t Make It",
-                      cls: "bg-red-500/10 text-red-500 border-red-500/30",
-                    },
-                  ].map(({ label, cls }) => (
-                    <div
-                      key={label}
-                      className={`font-mono text-xs px-3 py-1.5 border ${cls}`}
-                      dangerouslySetInnerHTML={{ __html: label }}
-                    />
-                  ))}
-                </div>
-                <p className="font-mono text-xs text-muted-foreground">
-                  You can change your response anytime before the event.
-                </p>
-              </div>
+            <div className="border-b border-border px-6 py-3 bg-muted/5">
+              <span className="font-mono text-base font-semibold text-foreground">
+                You{"'"}re Invited: Birthday Celebration
+              </span>
             </div>
 
-            <div className="border-t border-border px-5 py-3">
-              <p className="font-mono text-xs text-muted-foreground text-center">
-                Sent via{" "}
-                <span className="text-foreground font-semibold">
-                  Invitely.gg
-                </span>{" "}
-                on behalf of Teej Devries
-              </p>
+            <div className="px-6 py-8 sm:px-8 sm:py-10">
+              <div className="max-w-xl mx-auto flex flex-col gap-6">
+                <div className="flex flex-col gap-4">
+                  <p className="font-mono text-sm text-foreground leading-relaxed">
+                    Hi Shambavi,
+                  </p>
+                  <p className="font-mono text-sm text-muted-foreground leading-relaxed">
+                    It{"'"}s that time of year! You{"'"}re invited to celebrate
+                    my birthday this Saturday evening at my place.
+                  </p>
+                  <p className="font-mono text-sm text-muted-foreground leading-relaxed">
+                    Dinner and drinks are on me just bring yourself and good
+                    energy. It{"'"}s going to be a great night.
+                  </p>
+                </div>
+
+                <div className="border border-border p-5 bg-muted/10">
+                  <h4 className="font-mono text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+                    Event Details
+                  </h4>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-8 w-8 items-center justify-center border border-border bg-background shrink-0">
+                        <Calendar className="h-4 w-4 text-foreground" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-mono text-sm font-medium text-foreground">
+                          Saturday, March 29th
+                        </span>
+                        <span className="font-mono text-xs text-muted-foreground">
+                          Date
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-8 w-8 items-center justify-center border border-border bg-background shrink-0">
+                        <Clock className="h-4 w-4 text-foreground" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-mono text-sm font-medium text-foreground">
+                          7:00 PM onwards
+                        </span>
+                        <span className="font-mono text-xs text-muted-foreground">
+                          Time
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-8 w-8 items-center justify-center border border-border bg-background shrink-0">
+                        <MapPin className="h-4 w-4 text-foreground" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-mono text-sm font-medium text-foreground">
+                          123 Main Street, Apartment 4B
+                        </span>
+                        <span className="font-mono text-xs text-muted-foreground">
+                          Location
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-4 pt-2">
+                  <p className="font-mono text-sm text-foreground">
+                    Will you be joining us?
+                  </p>
+                  <div className="grid grid-cols-3 gap-3">
+                    <button className="font-mono text-sm px-4 py-3 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+                      <Check className="h-4 w-4" />
+                      <span className="hidden sm:inline">Yes</span>
+                    </button>
+                    <button className="font-mono text-sm px-4 py-3 border border-border bg-background text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors flex items-center justify-center gap-2">
+                      <HelpCircle className="h-4 w-4" />
+                      <span className="hidden sm:inline">Maybe</span>
+                    </button>
+                    <button className="font-mono text-sm px-4 py-3 border border-border bg-background text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors flex items-center justify-center gap-2">
+                      <X className="h-4 w-4" />
+                      <span className="hidden sm:inline">No</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="pt-6 border-t border-border mt-2">
+                  <p className="font-mono text-xs text-muted-foreground text-center">
+                    Sent via Invitely.gg — Event invitations made simple
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-4">
-            {[
-              {
-                tag: "Personalised",
-                title: "Your name. Your email. Your event.",
-                desc: 'Every email shows you as the organiser "Invited by Teej Devries" and "From teej@gmail.com" not some faceless service. AI writes a unique opening line for each guest.',
-              },
-              {
-                tag: "No account needed",
-                title: "Guests just click.",
-                desc: "Recipients don't need to sign up for anything. One click on any RSVP button and their response is recorded instantly.",
-              },
-              {
-                tag: "Guest notes",
-                title: "They can leave a message.",
-                desc: "After RSVPing, guests can add a note dietary requirements, plus ones, or anything else. You see it all in the dashboard.",
-              },
-              {
-                tag: "Real-time",
-                title: "Responses update live.",
-                desc: "The moment a guest clicks Attending, your dashboard updates. Watch RSVPs come in as they happen.",
-              },
-              {
-                tag: "Changeable",
-                title: "They can update anytime.",
-                desc: "Plans change. Guests can click the link again at any time to update their response before the event.",
-              },
-            ].map(({ tag, title, desc }) => (
-              <div
-                key={tag}
-                className="border border-border px-5 py-4 flex flex-col gap-2 hover:border-foreground/20 transition-colors"
-              >
-                <Badge
-                  variant="secondary"
-                  className="font-mono text-xs px-1.5 py-0 h-4 w-fit"
-                >
-                  {tag}
-                </Badge>
-                <h4 className="font-mono text-sm font-semibold text-foreground">
-                  {title}
-                </h4>
-                <p className="font-mono text-xs text-muted-foreground leading-relaxed">
-                  {desc}
-                </p>
-              </div>
-            ))}
+          <div className="flex items-center gap-4">
+            <div className="h-px flex-1 bg-border" />
+            <span className="font-mono text-xs text-muted-foreground px-2">
+              You always review before sending
+            </span>
+            <div className="h-px flex-1 bg-border" />
           </div>
         </div>
       </div>

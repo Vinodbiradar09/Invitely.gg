@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
     if (suggestedAt <= thirtyMinutesFromNow) {
       return NextResponse.json(
         {
-          message: "event is too soon for a scheduled send — send now instead",
+          message: "event is too soon for a scheduled send send now instead",
           success: false,
         },
         { status: 400 },
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
     if (suggestedAt > eighteenHoursBeforeEvent) {
       return NextResponse.json(
         {
-          message: "event is too soon to schedule — send now instead",
+          message: "event is too soon to schedule send now instead",
           success: false,
         },
         { status: 400 },
