@@ -237,7 +237,7 @@ const BrandFooter = () => {
           </mask>
           <linearGradient
             id="text-gradient"
-            x1="466"
+            x1="463"
             y1="0"
             x2="466"
             y2="171"
@@ -247,12 +247,13 @@ const BrandFooter = () => {
             <stop offset="1" stopColor="#2C2C2C" stopOpacity="0.25" />
           </linearGradient>
           <linearGradient id="circle-rgb-gradient" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#06b6d4" />
-            <stop offset="0.2" stopColor="#818cf8" />
-            <stop offset="0.4" stopColor="#a78bfa" />
-            <stop offset="0.55" stopColor="#ec4899" />
-            <stop offset="0.75" stopColor="#f97316" />
-            <stop offset="1" stopColor="#06b6d4" />
+            <stop offset="0.125" stopColor="#FF0000" />
+            <stop offset="0.26" stopColor="#FFA500" />
+            <stop offset="0.39" stopColor="#FFFF00" />
+            <stop offset="0.52" stopColor="#008000" />
+            <stop offset="0.65" stopColor="#0000FF" />
+            <stop offset="0.78" stopColor="#4B0082" />
+            <stop offset="0.91" stopColor="#EE82EE" />
           </linearGradient>
         </defs>
       </svg>
