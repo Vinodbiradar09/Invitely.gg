@@ -9,13 +9,13 @@ const steps = [
     number: "02",
     title: "Write Your Invite",
     description:
-      "Type your message casually. AI transforms it into a polished invitation.",
+      "Type your message casually. AI tailors it into a professional invitation.",
   },
   {
     number: "03",
     title: "Send & Track",
     description:
-      "Send to everyone at once. Watch RSVPs come in live on your dashboard.",
+      "Send to everyone at once. Watch responses come in live on your dashboard.",
   },
 ];
 

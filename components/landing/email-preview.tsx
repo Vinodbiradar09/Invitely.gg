@@ -23,7 +23,7 @@ export function EmailPreview() {
             </h2>
             <p className="font-mono text-sm text-muted-foreground mt-4 max-w-lg mx-auto">
               Type your message the way you{"'"}d text a friend. Invitely{"'"}s
-              AI transforms it into a polished invitation.
+              AI transforms it into a high-end invitation.
             </p>
           </div>
 
@@ -160,7 +160,7 @@ export function EmailPreview() {
 
                 <div className="pt-6 border-t border-border mt-2">
                   <p className="font-mono text-xs text-muted-foreground text-center">
-                    Sent via Invitely.gg — Event invitations made simple
+                    Sent via Invitely.gg [ Event invitations made simple ]
                   </p>
                 </div>
               </div>

@@ -40,10 +40,11 @@ export function Hero() {
           </Badge>
 
           <h1 className="font-mono text-4xl sm:text-5xl md:text-6xl font-bold text-foreground leading-[1.1] tracking-tight text-balance">
-            Send <span className="text-muted-foreground">invitations</span> on
+            Send <span className="text-muted-foreground">Invitations</span> At
+            Scale
             <br />
-            your
-            <span className="text-muted-foreground"> behalf.</span>
+            On Your
+            <span className="text-muted-foreground"> Behalf.</span>
           </h1>
 
           <p className="font-mono text-sm sm:text-base text-muted-foreground max-w-xl leading-relaxed">

@@ -74,7 +74,7 @@ export function LandingFooter() {
               © 2025 Invitely.gg
             </p>
             <p className="font-mono text-xs text-muted-foreground">
-              Built with Love
+              Built for organizers
             </p>
           </div>
         </div>

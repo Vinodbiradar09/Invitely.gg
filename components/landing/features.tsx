@@ -12,7 +12,7 @@ const features: Feature[] = [
     icon: Sparkles,
     title: "AI Powered",
     description:
-      "Write casually, send professionally. AI optimizes your message into a polished invitation with personalized openings for each guest.",
+      "Write casually, send professionally. AI optimizes your message into a clean invitation with personalized openings for each guest.",
   },
   {
     icon: Send,
