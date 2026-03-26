@@ -29,7 +29,9 @@ export default function LandingPage() {
         <Features />
         <HowItWorks />
         <EmailPreview />
-        <BrandFooter />
+        <div className="-mt-14">
+          <BrandFooter />
+        </div>
       </div>
     </main>
   );

@@ -23,33 +23,30 @@ export function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="py-24 px-6 border-t border-border bg-card/30"
+      className="py-10 px-6 border-t border-border bg-card/30"
     >
       <div className="mx-auto max-w-5xl">
-        <div className="flex flex-col gap-16">
+        <div className="flex flex-col gap-12">
+          {" "}
           <div className="text-center">
             <span className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
-              How it works
+              HOW IT WORKS
             </span>
             <h2 className="font-mono text-2xl sm:text-3xl font-bold text-foreground leading-tight mt-3">
               Three steps to send
             </h2>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0">
-            {steps.map(({ number, title, description }, index) => (
-              <div
-                key={number}
-                className={`flex flex-col gap-4 ${index !== 0 ? "md:border-l md:border-border md:pl-8" : ""}`}
-              >
-                <span className="font-mono text-4xl font-bold text-border select-none">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
+            {steps.map(({ number, title, description }) => (
+              <div key={number} className="flex flex-col gap-6">
+                <span className="font-mono text-5xl font-bold text-border/80 select-none">
                   {number}
                 </span>
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-mono text-sm font-semibold text-foreground">
+                <div className="flex flex-col gap-3">
+                  <h3 className="font-mono text-lg font-semibold text-foreground tracking-tight">
                     {title}
                   </h3>
-                  <p className="font-mono text-xs text-muted-foreground leading-relaxed">
+                  <p className="font-mono text-sm text-muted-foreground leading-relaxed">
                     {description}
                   </p>
                 </div>

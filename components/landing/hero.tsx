@@ -20,13 +20,6 @@ function GitHubIcon() {
 export function Hero() {
   return (
     <section className="relative pt-32 pb-24 px-6">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.02]"
-        style={{
-          backgroundImage: `linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px)`,
-          backgroundSize: "64px 64px",
-        }}
-      />
       <div className="pointer-events-none absolute top-0 left-0 right-0 h-32 bg-linear-to-b from-background to-transparent" />
       <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-background to-transparent" />
 
@@ -59,6 +52,7 @@ export function Hero() {
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
+
             <Link
               href="https://github.com/Vinodbiradar09/Invitely.gg"
               target="_blank"

@@ -82,7 +82,7 @@ const BrandFooter = () => {
   return (
     <div
       ref={containerRef}
-      className="flex h-32.5 items-center overflow-hidden px-4 sm:h-auto sm:px-0"
+      className="flex h-32.5 items-center justify-center overflow-hidden px-4 sm:h-auto sm:px-0"
       onMouseMove={handleMouseMove}
       onMouseOver={() => setIsHovered(true)}
       onMouseOut={() => setIsHovered(false)}
@@ -90,7 +90,7 @@ const BrandFooter = () => {
       <svg
         width="100%"
         height="213"
-        viewBox="0 0 932 213"
+        viewBox="-18 0 932 213"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >

@@ -30,7 +30,7 @@ const features: Feature[] = [
 
 export function Features() {
   return (
-    <section id="features" className="py-24 px-6 border-t border-border">
+    <section id="features" className="py-20 px-6 border-t border-border">
       <div className="mx-auto max-w-5xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border border border-border">
           {features.map(({ icon: Icon, title, description }) => (

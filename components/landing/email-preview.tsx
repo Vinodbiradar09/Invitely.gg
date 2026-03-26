@@ -11,9 +11,9 @@ import { Logo } from "@/components/landing/logo";
 
 export function EmailPreview() {
   return (
-    <section className="py-16 px-6 border-t border-border">
+    <section className="py-14 px-6 border-t border-border">
       <div className="mx-auto max-w-5xl">
-        <div className="flex flex-col gap-16">
+        <div className="flex flex-col gap-12">
           <div className="text-center">
             <span className="font-mono text-xs text-muted-foreground uppercase tracking-widest flex items-center justify-center gap-2">
               <Sparkles className="h-3 w-3" />
@@ -166,7 +166,7 @@ export function EmailPreview() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 -mt-4">
             <div className="h-px flex-1 bg-border" />
             <span className="font-mono text-xs text-muted-foreground px-2">
               You always review before sending
