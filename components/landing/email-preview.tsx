@@ -10,7 +10,7 @@ import {
 
 export function EmailPreview() {
   return (
-    <section className="py-24 px-6 border-t border-border">
+    <section className="py-16 px-6 border-t border-border">
       <div className="mx-auto max-w-5xl">
         <div className="flex flex-col gap-16">
           <div className="text-center">
