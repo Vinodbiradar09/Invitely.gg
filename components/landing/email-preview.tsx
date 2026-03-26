@@ -7,6 +7,7 @@ import {
   Clock,
   X,
 } from "lucide-react";
+import { Logo } from "@/components/landing/logo";
 
 export function EmailPreview() {
   return (
@@ -47,10 +48,8 @@ export function EmailPreview() {
             <div className="border-b border-border px-6 py-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center border border-border bg-primary shrink-0">
-                    <span className="font-mono text-base font-bold text-primary-foreground">
-                      I
-                    </span>
+                  <div className="flex h-11 w-11 items-center justify-center bg-black shrink-0">
+                    <Logo className="h-5 w-5 text-white" />
                   </div>
                   <div className="flex flex-col gap-0.5">
                     <div className="flex items-center gap-2 flex-wrap">
