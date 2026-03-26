@@ -99,10 +99,10 @@ export function BrandFooter() {
   };
 
   return (
-    <section className="py-12 px-6 border-t border-border overflow-hidden">
+    <section className="py-16 px-6 border-t border-border overflow-hidden bg-muted/10">
       <div
         ref={containerRef}
-        className="flex h-25 items-center justify-center overflow-hidden sm:h-35 lg:h-45"
+        className="flex h-28 items-center justify-center overflow-hidden sm:h-36 lg:h-48 cursor-crosshair"
         onMouseMove={handleMouseMove}
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
@@ -154,43 +154,6 @@ export function BrandFooter() {
               d="M700 60 C700 30, 660 20, 645 40 C630 60, 630 100, 645 120 C660 140, 700 130, 700 100 L670 100"
               fill="none"
             />
-
-            {/* 3D offset lines for depth effect */}
-            <path
-              d="M20 20 L15 15 M20 140 L15 145 M30 20 L35 15"
-              stroke="hsl(var(--border))"
-              strokeOpacity="0.3"
-            />
-            <path
-              d="M50 20 L45 15 M100 20 L105 15"
-              stroke="hsl(var(--border))"
-              strokeOpacity="0.3"
-            />
-            <path
-              d="M120 20 L115 15 M170 20 L175 15"
-              stroke="hsl(var(--border))"
-              strokeOpacity="0.3"
-            />
-            <path
-              d="M220 20 L215 15 M280 20 L285 15"
-              stroke="hsl(var(--border))"
-              strokeOpacity="0.3"
-            />
-            <path
-              d="M300 20 L295 15 M360 20 L365 15"
-              stroke="hsl(var(--border))"
-              strokeOpacity="0.3"
-            />
-            <path
-              d="M380 20 L375 15 M440 140 L445 145"
-              stroke="hsl(var(--border))"
-              strokeOpacity="0.3"
-            />
-            <path
-              d="M460 20 L455 15 M520 20 L525 15"
-              stroke="hsl(var(--border))"
-              strokeOpacity="0.3"
-            />
           </g>
 
           {/* Animated gradient mask */}
@@ -209,7 +172,7 @@ export function BrandFooter() {
               cx={smoothX}
               cy={smoothY}
               r="120"
-              fill="url(#invitely-rgb-gradient)"
+              fill="url(#invitely-gradient)"
               filter="url(#invitely-blur)"
               overflow="visible"
             />
@@ -232,7 +195,7 @@ export function BrandFooter() {
                 strokeWidth="2"
                 strokeLinejoin="round"
                 fill="none"
-                opacity="0.8"
+                opacity="0.9"
               >
                 {/* I */}
                 <path d="M20 20 L20 140 M10 20 L30 20 M10 140 L30 140" />
@@ -259,18 +222,18 @@ export function BrandFooter() {
               </g>
             </mask>
 
+            {/* Updated gradient with highlight color */}
             <linearGradient
-              id="invitely-rgb-gradient"
+              id="invitely-gradient"
               x1="0"
               y1="0"
               x2="1"
               y2="1"
             >
-              <stop offset="0" stopColor="#06b6d4" />
-              <stop offset="0.25" stopColor="#8b5cf6" />
-              <stop offset="0.5" stopColor="#ec4899" />
-              <stop offset="0.75" stopColor="#f97316" />
-              <stop offset="1" stopColor="#06b6d4" />
+              <stop offset="0" stopColor="oklch(0.65 0.18 145)" />
+              <stop offset="0.33" stopColor="oklch(0.55 0.15 180)" />
+              <stop offset="0.66" stopColor="oklch(0.6 0.16 200)" />
+              <stop offset="1" stopColor="oklch(0.65 0.18 145)" />
             </linearGradient>
           </defs>
         </svg>
