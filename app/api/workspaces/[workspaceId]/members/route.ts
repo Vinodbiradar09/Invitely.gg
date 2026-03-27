@@ -1,13 +1,10 @@
 import { MemberService } from "@/lib/validations/validate-workspace-members";
+import { WorkspaceService } from "@/lib/validations/validate-workspace";
 import { validateRequest } from "@/lib/validations/validate-request";
 import { requireSession } from "@/lib/auth/server/require-session";
 import { InvitelyError, InvitelyResponse } from "@/lib/shared/api";
 import { ZodWorkspaceMembers } from "@/lib/types";
 import { WorkspaceIdParams } from "@/lib/utils";
-import {
-  getOwnWorkspace,
-  WorkspaceService,
-} from "@/lib/validations/validate-workspace";
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db/prisma";
 
@@ -46,7 +43,7 @@ export async function GET(_req: NextRequest, { params }: WorkspaceIdParams) {
   try {
     const session = await requireSession();
     const { workspaceId } = await params;
-    await getOwnWorkspace(workspaceId, session.user.id);
+    await WorkspaceService.ownedWorkspace(workspaceId, session.user.id);
     const members = await db.workSpaceMember.findMany({
       where: { workspaceId },
       orderBy: { createdAt: "asc" },

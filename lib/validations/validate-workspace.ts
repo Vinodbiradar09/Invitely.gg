@@ -6,20 +6,6 @@ import {
   NotFoundError,
 } from "../shared/exceptions";
 
-const getOwnWorkspace = async (workspaceId: string, userId: string) => {
-  const workspace = await db.workSpace.findUnique({
-    where: { id: workspaceId },
-  });
-  if (!workspace) {
-    throw new NotFoundError("Workspace not found");
-  }
-  if (workspace.userId !== userId) {
-    throw new ForbiddenError("You have not access to this workspace");
-  }
-  return workspace;
-};
-export { getOwnWorkspace };
-
 const WorkspaceService = {
   async verifyWorkspaceName(userId: string, name: string) {
     const exists = await db.workSpace.findUnique({
