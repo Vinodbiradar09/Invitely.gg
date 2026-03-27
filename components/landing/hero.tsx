@@ -19,7 +19,7 @@ function GitHubIcon() {
 
 export function Hero() {
   return (
-    <section className="relative pt-32 pb-24 px-6">
+    <section className="relative pt-22 pb-20 px-6">
       <div className="pointer-events-none absolute top-0 left-0 right-0 h-32 bg-linear-to-b from-background to-transparent" />
       <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-background to-transparent" />
 

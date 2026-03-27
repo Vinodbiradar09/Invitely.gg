@@ -1,88 +1,33 @@
-import { NextResponse, NextRequest } from "next/server";
+import { MemberService } from "@/lib/validations/validate-workspace-members";
+import { validateRequest } from "@/lib/validations/validate-request";
+import { requireSession } from "@/lib/auth/server/require-session";
+import { InvitelyError, InvitelyResponse } from "@/lib/shared/api";
 import { ZodWorkspaceMembers } from "@/lib/types";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
-import { db } from "@/lib/prisma";
+import { WorkspaceIdParams } from "@/lib/utils";
+import {
+  getOwnWorkspace,
+  WorkspaceService,
+} from "@/lib/validations/validate-workspace";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db/prisma";
 
-const MAX_MEMBERS = 25;
 type TxClient = Parameters<Parameters<typeof db.$transaction>[0]>[0];
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ workspaceId: string }> },
-) {
+
+export async function POST(req: NextRequest, { params }: WorkspaceIdParams) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-
-    if (!session || !session.user) {
-      return NextResponse.json(
-        { message: "unauthorized user", success: false },
-        { status: 401 },
-      );
-    }
-
+    const session = await requireSession();
     const { workspaceId } = await params;
     const body = await req.json();
-
-    const { success, data } = ZodWorkspaceMembers.safeParse(body);
-    if (!success) {
-      return NextResponse.json(
-        { message: "invalid input for members", success: false },
-        { status: 400 },
-      );
-    }
-
-    // find workspace if not found return
-    const workspace = await db.workSpace.findUnique({
-      where: { id: workspaceId },
-    });
-
-    if (!workspace) {
-      return NextResponse.json(
-        { message: "workspace not found", success: false },
-        { status: 404 },
-      );
-    }
-    // check ownership
-    if (workspace.userId !== session.user.id) {
-      return NextResponse.json(
-        { message: "forbidden you are not owner of workspace", success: false },
-        { status: 403 },
-      );
-    }
-
+    const data = validateRequest(ZodWorkspaceMembers, body);
+    await WorkspaceService.ownedWorkspace(workspaceId, session.user.id);
     const members = await db.$transaction(async (tx: TxClient) => {
       // count workspace members
-      const memberCount = await tx.workSpaceMember.count({
-        where: { workspaceId },
-      });
-
-      const remainingSlots = MAX_MEMBERS - memberCount;
-
-      if (data.length > remainingSlots) {
-        throw new Error(
-          `slot_exceeded:you can only add ${remainingSlots} more member${remainingSlots === 1 ? "" : "s"} (limit: ${MAX_MEMBERS})`,
-        );
-      }
-
-      const incomingEmails = data.map((m) => m.email);
+      await MemberService.slotAvailability(workspaceId, data.length);
       // check existing members email address
-      const existingMembers = await tx.workSpaceMember.findMany({
-        where: {
-          workspaceId,
-          email: { in: incomingEmails },
-        },
-        select: { email: true },
-      });
-
-      if (existingMembers.length > 0) {
-        const duplicates = existingMembers
-          .map((m: { email: string }) => m.email)
-          .join(", ");
-        throw new Error(`duplicate_emails:${duplicates}`);
-      }
-
+      await MemberService.checkDuplicateEmails(
+        workspaceId,
+        data.map((m) => m.email),
+      );
       return tx.workSpaceMember.createManyAndReturn({
         data: data.map((mem: { email: string; name?: string | undefined }) => ({
           workspaceId,
@@ -91,100 +36,24 @@ export async function POST(
         })),
       });
     });
-
-    return NextResponse.json(
-      {
-        message: "members added successfully",
-        success: true,
-        members,
-      },
-      { status: 201 },
-    );
+    return InvitelyResponse(201, "Members added successfully", members);
   } catch (e) {
-    if (e instanceof Error) {
-      if (e.message.startsWith("slot_exceeded:")) {
-        return NextResponse.json(
-          { message: e.message.split("slot_exceeded:")[1], success: false },
-          { status: 409 },
-        );
-      }
-      if (e.message.startsWith("duplicate_emails:")) {
-        const emails = e.message.split("duplicate_emails:")[1];
-        return NextResponse.json(
-          {
-            message: `these emails already exist in the workspace: ${emails}`,
-            success: false,
-          },
-          { status: 409 },
-        );
-      }
-    }
-    console.error(e);
-    return NextResponse.json(
-      { message: "internal server error", success: false },
-      { status: 500 },
-    );
+    return InvitelyError(e);
   }
 }
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ workspaceId: string }> },
-) {
+export async function GET(_req: NextRequest, { params }: WorkspaceIdParams) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-
-    if (!session || !session.user) {
-      return NextResponse.json(
-        { message: "unauthorized user", success: false },
-        { status: 401 },
-      );
-    }
-
+    const session = await requireSession();
     const { workspaceId } = await params;
-
-    // find workspace if not found return
-    const workspace = await db.workSpace.findUnique({
-      where: { id: workspaceId },
-    });
-
-    if (!workspace) {
-      return NextResponse.json(
-        { message: "Workspace not found", success: false },
-        { status: 404 },
-      );
-    }
-    // check ownership
-    if (workspace.userId !== session.user.id) {
-      return NextResponse.json(
-        {
-          message: "forbidden you are not the owner of workspace",
-          success: false,
-        },
-        { status: 403 },
-      );
-    }
-
+    await getOwnWorkspace(workspaceId, session.user.id);
     const members = await db.workSpaceMember.findMany({
       where: { workspaceId },
       orderBy: { createdAt: "asc" },
     });
 
-    return NextResponse.json(
-      {
-        message: "members got successfully",
-        success: true,
-        members,
-      },
-      { status: 200 },
-    );
+    return InvitelyResponse(200, "Workspace members", members);
   } catch (e) {
-    console.error(e);
-    return NextResponse.json(
-      { message: "internal server error", success: false },
-      { status: 500 },
-    );
+    return InvitelyError(e);
   }
 }

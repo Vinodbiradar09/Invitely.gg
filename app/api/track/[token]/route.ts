@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/prisma";
+import { db } from "@/lib/db/prisma";
+import { Token } from "@/lib/utils";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ token: string }> },
-) {
+export async function GET(_req: NextRequest, { params }: Token) {
   try {
     const { token } = await params;
 

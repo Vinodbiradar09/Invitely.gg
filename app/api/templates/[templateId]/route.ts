@@ -1,60 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
-import { db } from "@/lib/prisma";
+import { TemplateService } from "@/lib/validations/validate-template";
+import { requireSession } from "@/lib/auth/server/require-session";
+import { InvitelyError, InvitelyResponse } from "@/lib/shared/api";
+import { TemplateIdParams } from "@/lib/utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db/prisma";
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ templateId: string }> },
-) {
+export async function DELETE(_req: NextRequest, { params }: TemplateIdParams) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-    if (!session || !session.user) {
-      return NextResponse.json(
-        {
-          message: "unauthorized user",
-          success: false,
-        },
-        { status: 401 },
-      );
-    }
+    const session = await requireSession();
     const { templateId } = await params;
-    const template = await db.eventTemplate.findUnique({
-      where: {
-        id: templateId,
-      },
-    });
-    if (!template) {
-      return NextResponse.json(
-        { message: "template not found", success: false },
-        { status: 404 },
-      );
-    }
-    if (template.userId !== session.user.id) {
-      return NextResponse.json(
-        { message: "forbidden", success: false },
-        { status: 403 },
-      );
-    }
+    const template = await TemplateService.ownedTemplate(
+      templateId,
+      session.user.id,
+    );
     await db.eventTemplate.delete({
       where: {
-        id: templateId,
+        id: templateId ?? template.id,
       },
     });
-    return NextResponse.json(
-      { message: "template deleted successfully", success: true },
-      { status: 200 },
-    );
+    return InvitelyResponse(200, "Template deleted successfully");
   } catch (e) {
-    console.log(e);
-    return NextResponse.json(
-      {
-        message: "internal server error",
-        success: false,
-      },
-      { status: 500 },
-    );
+    return InvitelyError(e);
   }
 }

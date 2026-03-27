@@ -23,7 +23,7 @@ export function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="py-10 px-6 border-t border-border bg-card/30"
+      className="py-12 px-6 border-t border-border bg-card/30"
     >
       <div className="mx-auto max-w-5xl">
         <div className="flex flex-col gap-12">

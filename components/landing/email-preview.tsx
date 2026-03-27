@@ -1,3 +1,4 @@
+import { Logo } from "@/components/landing/logo";
 import {
   Sparkles,
   Check,
@@ -7,7 +8,6 @@ import {
   Clock,
   X,
 } from "lucide-react";
-import { Logo } from "@/components/landing/logo";
 
 export function EmailPreview() {
   return (
@@ -166,7 +166,7 @@ export function EmailPreview() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4 -mt-4">
+          <div className="flex items-center gap-4 -mt-2">
             <div className="h-px flex-1 bg-border" />
             <span className="font-mono text-xs text-muted-foreground px-2">
               You always review before sending

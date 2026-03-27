@@ -1,73 +1,33 @@
-import { NextResponse, NextRequest } from "next/server";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
-import { db } from "@/lib/prisma";
+import { ForbiddenError, NotFoundError } from "@/lib/shared/exceptions";
+import { requireSession } from "@/lib/auth/server/require-session";
+import { InvitelyError, InvitelyResponse } from "@/lib/shared/api";
+import { MemberIdParams } from "@/lib/utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db/prisma";
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ memberId: string }> },
-) {
+export async function DELETE(_req: NextRequest, { params }: MemberIdParams) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-    if (!session || !session.user) {
-      return NextResponse.json(
-        {
-          message: "unauthorized user",
-          success: false,
-        },
-        { status: 401 },
-      );
-    }
+    const session = await requireSession();
     const { memberId } = await params;
-    // find the member
-    const isMember = await db.workSpaceMember.findUnique({
-      where: {
-        id: memberId,
-      },
+    const member = await db.workSpaceMember.findUnique({
+      where: { id: memberId },
       include: {
-        workspace: true,
-      },
-    });
-    // return not found
-    if (!isMember) {
-      return NextResponse.json(
-        { message: "member not found", success: false },
-        { status: 404 },
-      );
-    }
-    // check ownership
-    if (isMember.workspace.userId !== session.user.id) {
-      return NextResponse.json(
-        {
-          message: "Forbidden",
-          success: false,
+        workspace: {
+          select: { userId: true },
         },
-        { status: 403 },
-      );
-    }
-    // delete the member from workspace
-    await db.workSpaceMember.delete({
-      where: {
-        id: memberId,
       },
     });
-    return NextResponse.json(
-      {
-        message: "member removed from workspace successfully",
-        success: true,
-      },
-      { status: 200 },
-    );
+    if (!member) {
+      throw new NotFoundError("This member does not exist in our workspace.");
+    }
+    if (member.workspace.userId !== session.user.id) {
+      throw new ForbiddenError("Only workspace owners can remove members.");
+    }
+    await db.workSpaceMember.delete({
+      where: { id: memberId },
+    });
+    return InvitelyResponse(200, "Member successfully removed from workspace");
   } catch (e) {
-    console.log(e);
-    return NextResponse.json(
-      {
-        message: "internal server error",
-        success: false,
-      },
-      { status: 500 },
-    );
+    return InvitelyError(e);
   }
 }

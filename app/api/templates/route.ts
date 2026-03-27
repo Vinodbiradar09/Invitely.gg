@@ -1,99 +1,31 @@
-import { NextRequest, NextResponse } from "next/server";
+import { TemplateService } from "@/lib/validations/validate-template";
+import { validateRequest } from "@/lib/validations/validate-request";
+import { requireSession } from "@/lib/auth/server/require-session";
+import { InvitelyError, InvitelyResponse } from "@/lib/shared/api";
+import { EventService } from "@/lib/validations/validate-event";
 import { ZodCreateTemplate } from "@/lib/types";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
-import { db } from "@/lib/prisma";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db/prisma";
 
 export async function GET() {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-    if (!session || !session.user) {
-      return NextResponse.json(
-        { message: "unauthorized user", success: false },
-        { status: 401 },
-      );
-    }
-    const templates = await db.eventTemplate.findMany({
-      where: {
-        userId: session.user.id,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      select: {
-        id: true,
-        name: true,
-        emailSubject: true,
-        emailBody: true,
-        createdAt: true,
-        eventId: true,
-        event: {
-          select: { id: true, name: true },
-        },
-      },
-    });
-    return NextResponse.json(
-      { message: "templates fetched successfully", success: true, templates },
-      { status: 200 },
-    );
+    const session = await requireSession();
+    const templates = await TemplateService.eventTemplates(session.user.id);
+    return InvitelyResponse(200, "templated got successfully", templates);
   } catch (e) {
-    console.error(e);
-    return NextResponse.json(
-      { message: "internal server error", success: false },
-      { status: 500 },
-    );
+    return InvitelyError(e);
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-    if (!session || !session.user) {
-      return NextResponse.json(
-        { message: "unauthorized user", success: false },
-        { status: 401 },
-      );
-    }
+    const session = await requireSession();
     const body = await req.json();
-    const { success, data } = ZodCreateTemplate.safeParse(body);
-    if (!success) {
-      return NextResponse.json(
-        { message: "invalid data", success: false },
-        { status: 400 },
-      );
-    }
-    const existingCount = await db.eventTemplate.count({
-      where: {
-        userId: session.user.id,
-      },
-    });
-    if (existingCount >= 20) {
-      return NextResponse.json(
-        { message: "maximum 20 templates allowed", success: false },
-        { status: 409 },
-      );
-    }
+    const data = validateRequest(ZodCreateTemplate, body);
+    await TemplateService.templatesLimit(session.user.id);
     if (data.eventId) {
-      const event = await db.event.findUnique({
-        where: {
-          id: data.eventId,
-        },
-        select: {
-          userId: true,
-        },
-      });
-      if (!event || event.userId !== session.user.id) {
-        return NextResponse.json(
-          { message: "event not found or forbidden", success: false },
-          { status: 404 },
-        );
-      }
+      await EventService.ownedEvent(data.eventId, session.user.id);
     }
-
     const template = await db.eventTemplate.create({
       data: {
         userId: session.user.id,
@@ -103,15 +35,8 @@ export async function POST(req: NextRequest) {
         emailSubject: data.emailSubject,
       },
     });
-    return NextResponse.json(
-      { message: "template created successfully", success: true, template },
-      { status: 201 },
-    );
+    return InvitelyResponse(201, "Template created successfully", template);
   } catch (e) {
-    console.error(e);
-    return NextResponse.json(
-      { message: "internal server error", success: false },
-      { status: 500 },
-    );
+    return InvitelyError(e);
   }
 }
