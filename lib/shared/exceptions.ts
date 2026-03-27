@@ -44,3 +44,10 @@ export class TimeoutError extends InvitelyApiError {
     super(504, message, "GATEWAY_TIMEOUT");
   }
 }
+
+export class BadRequestError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "BadRequestError";
+  }
+}

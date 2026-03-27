@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
@@ -25,12 +24,10 @@ export function Hero() {
 
       <div className="relative z-10 mx-auto max-w-5xl">
         <div className="flex flex-col items-center text-center gap-8">
-          <Badge
-            variant="outline"
-            className="font-mono text-xs px-3 py-1 border-border text-muted-foreground"
-          >
+          <span className="inline-flex items-center gap-1.5 font-mono text-[10px] tracking-widest text-muted-foreground/60 uppercase">
+            <span className="h-1.25 w-1.25 rounded-full bg-current animate-[pulse_2.4s_ease-in-out_infinite]" />
             AI powered invitation platform
-          </Badge>
+          </span>
 
           <h1 className="font-mono text-4xl sm:text-5xl md:text-6xl font-bold text-foreground leading-[1.1] tracking-tight text-balance">
             Send <span className="text-muted-foreground">Invitations</span> At

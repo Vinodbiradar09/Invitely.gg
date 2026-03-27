@@ -1,12 +1,12 @@
 import { NotificationService } from "@/lib/validations/validate-notification";
+import { BadRequestError, ConflictError } from "@/lib/shared/exceptions";
 import { validateRequest } from "@/lib/validations/validate-request";
 import { requireSession } from "@/lib/auth/server/require-session";
 import { InvitelyError, InvitelyResponse } from "@/lib/shared/api";
 import { EventService } from "@/lib/validations/validate-event";
-import { ConflictError } from "@/lib/shared/exceptions";
-import { NextRequest, NextResponse } from "next/server";
 import { ZodUpdateEvent } from "@/lib/zod/event";
 import { EventIdParams } from "@/lib/utils";
+import { NextRequest } from "next/server";
 import { db } from "@/lib/db/prisma";
 
 export async function GET(_req: NextRequest, { params }: EventIdParams) {
@@ -27,10 +27,7 @@ export async function PUT(req: NextRequest, { params }: EventIdParams) {
     const body = await req.json();
     const data = validateRequest(ZodUpdateEvent, body);
     if (Object.keys(data).length === 0) {
-      return NextResponse.json(
-        { message: "no fields to update", success: false },
-        { status: 400 },
-      );
+      throw new BadRequestError("Please provide at least one field to update.");
     }
     const event = await EventService.ownedEvent(eventId, session.user.id);
     if (event.status === "cancelled") {
