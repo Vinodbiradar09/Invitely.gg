@@ -3,6 +3,7 @@ import { validateRequest } from "@/lib/validations/validate-request";
 import { InvitelyError, InvitelyResponse } from "@/lib/shared/api";
 import { requireSession } from "@/lib/auth/server/require-session";
 import { ZodLLMSmartSendTime } from "@/lib/zod/llm";
+import { formatEventDate } from "@/lib/utils";
 import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -15,15 +16,7 @@ export async function POST(req: NextRequest) {
     const promptParams = {
       ...data,
       currentIso: now.toISOString(),
-      currentTime: now.toLocaleString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        timeZoneName: "short",
-      }),
+      currentTime: formatEventDate(now, "llm"),
     };
     const recommendation =
       await SchedulingService.getSmartSendRecommendation(promptParams);

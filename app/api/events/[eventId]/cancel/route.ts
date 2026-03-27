@@ -2,10 +2,8 @@ import { NotificationService } from "@/lib/validations/validate-notification";
 import { requireSession } from "@/lib/auth/server/require-session";
 import { InvitelyError, InvitelyResponse } from "@/lib/shared/api";
 import { EventService } from "@/lib/validations/validate-event";
-import { ConflictError } from "@/lib/shared/exceptions";
 import { EventIdParams } from "@/lib/utils";
 import { NextRequest } from "next/server";
-import { db } from "@/lib/prisma";
 
 const BATCH_SIZE = 50;
 
@@ -13,28 +11,8 @@ export async function POST(_req: NextRequest, { params }: EventIdParams) {
   try {
     const session = await requireSession();
     const { eventId } = await params;
-    const event = await EventService.ownedEvent(eventId, session.user.id);
-    if (event.status === "cancelled") {
-      throw new ConflictError("Event already cancelled");
-    }
-    const invitations = await db.invitation.findMany({
-      where: {
-        eventId,
-      },
-      select: {
-        email: true,
-        name: true,
-      },
-    });
-    await db.event.update({
-      where: {
-        id: eventId,
-      },
-      data: {
-        status: "cancelled",
-        cancelledAt: new Date(),
-      },
-    });
+    const { event, invitations } =
+      await EventService.getInvitationAndCancelEvent(eventId, session.user.id);
     if (invitations.length === 0) {
       return InvitelyResponse(200, "Event cancelled successfully", {
         notified: 0,

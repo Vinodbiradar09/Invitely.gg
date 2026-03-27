@@ -1,4 +1,7 @@
+import { ScheduleInvitationsDTO, UpdateEventDTO } from "../types/index";
+import { formatEventDate } from "../utils";
 import { Prisma } from "@prisma/client";
+import { randomBytes } from "crypto";
 import { db } from "../db/prisma";
 import {
   ConflictError,
@@ -141,6 +144,141 @@ const EventService = {
       cancelledFutureCount: cancelFuture ? futureCount : 0,
       wasFutureCancelled: cancelFuture && futureCount > 0,
     };
+  },
+  async cancelscheduledInvitations(eventId: string) {
+    await db.$transaction(async (tx) => {
+      await tx.invitation.deleteMany({
+        where: {
+          eventId,
+        },
+      });
+      await tx.event.update({
+        where: {
+          id: eventId,
+        },
+        data: {
+          status: "active",
+          scheduledAt: null,
+        },
+      });
+    });
+  },
+  async scheduleInvitations(
+    eventId: string,
+    userId: string,
+    scheduledDTO: ScheduleInvitationsDTO,
+  ) {
+    const scheduledAt = new Date(scheduledDTO.scheduledAt);
+    if (scheduledAt <= new Date()) {
+      throw new ValidationError("Scheduled time must be in the future");
+    }
+    const event = await this.ownedEvent(eventId, userId);
+    if (event.status === "cancelled")
+      throw new ConflictError("Cannot schedule a cancelled event");
+    if (event.status === "scheduled")
+      throw new ConflictError("Event is already scheduled");
+    if (event.sentAt)
+      throw new ConflictError("Invitations have already been sent");
+
+    const incomingEmails = scheduledDTO.recipients.map((r) => r.email);
+    const alreadyInvited = await db.invitation.findMany({
+      where: {
+        eventId,
+        email: { in: incomingEmails },
+      },
+      select: { email: true },
+    });
+
+    if (alreadyInvited.length > 0) {
+      const duplicates = alreadyInvited.map((i) => i.email).join(", ");
+      throw new ConflictError(
+        `These emails were already invited: ${duplicates}`,
+      );
+    }
+    const invitationData = scheduledDTO.recipients.map((recipient) => ({
+      eventId,
+      email: recipient.email,
+      name: recipient.name ?? null,
+      token: randomBytes(32).toString("hex"),
+    }));
+    await db.$transaction(async (tx) => {
+      await tx.invitation.createMany({
+        data: invitationData,
+      });
+      await tx.event.update({
+        where: { id: eventId },
+        data: {
+          status: "scheduled",
+          scheduledAt,
+        },
+      });
+    });
+    return {
+      scheduledAt,
+      recipientCount: scheduledDTO.recipients.length,
+    };
+  },
+  async updateEvent(eventId: string, userId: string, eventDTO: UpdateEventDTO) {
+    const event = await this.ownedEvent(eventId, userId);
+    if (event.status === "cancelled") {
+      throw new ConflictError("Cannot edit a cancelled event.");
+    }
+    const locationChanged = !!(
+      eventDTO.location && eventDTO.location !== event.location
+    );
+    const timeChanged = !!(
+      eventDTO.eventAt &&
+      new Date(eventDTO.eventAt).getTime() !== new Date(event.eventAt).getTime()
+    );
+    const oldLocation = event.location;
+    const oldDateFormatted = formatEventDate(event.eventAt, "full");
+    const updated = await db.event.update({
+      where: { id: eventId },
+      data: {
+        ...(eventDTO.name && { name: eventDTO.name }),
+        ...(eventDTO.desc && { desc: eventDTO.desc }),
+        ...(eventDTO.eventAt && { eventAt: new Date(eventDTO.eventAt) }),
+        ...(eventDTO.location && { location: eventDTO.location }),
+        ...(eventDTO.emailSubject && { emailSubject: eventDTO.emailSubject }),
+        ...(eventDTO.emailBody && { emailBody: eventDTO.emailBody }),
+      },
+    });
+    return {
+      updated,
+      hasSentInvitations: !!event.sentAt,
+      changes: {
+        locationChanged,
+        timeChanged,
+        oldLocation: locationChanged ? oldLocation : undefined,
+        oldDate: timeChanged ? oldDateFormatted : undefined,
+      },
+    };
+  },
+
+  async getInvitationAndCancelEvent(id: string, userId: string) {
+    const event = await this.ownedEvent(id, userId);
+    if (event.status === "cancelled") {
+      throw new ConflictError("Event already cancelled");
+    }
+    const invitations = await db.invitation.findMany({
+      where: {
+        eventId: id,
+      },
+      select: {
+        email: true,
+        name: true,
+      },
+    });
+    await db.event.update({
+      where: {
+        id,
+      },
+      data: {
+        status: "cancelled",
+        cancelledAt: new Date(),
+      },
+    });
+    return { event, invitations };
   },
 };
 

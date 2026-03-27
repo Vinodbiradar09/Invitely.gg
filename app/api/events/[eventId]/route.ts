@@ -1,9 +1,9 @@
 import { NotificationService } from "@/lib/validations/validate-notification";
-import { BadRequestError, ConflictError } from "@/lib/shared/exceptions";
 import { validateRequest } from "@/lib/validations/validate-request";
 import { requireSession } from "@/lib/auth/server/require-session";
 import { InvitelyError, InvitelyResponse } from "@/lib/shared/api";
 import { EventService } from "@/lib/validations/validate-event";
+import { BadRequestError } from "@/lib/shared/exceptions";
 import { ZodUpdateEvent } from "@/lib/zod/event";
 import { EventIdParams } from "@/lib/utils";
 import { NextRequest } from "next/server";
@@ -29,40 +29,10 @@ export async function PUT(req: NextRequest, { params }: EventIdParams) {
     if (Object.keys(data).length === 0) {
       throw new BadRequestError("Please provide at least one field to update.");
     }
-    const event = await EventService.ownedEvent(eventId, session.user.id);
-    if (event.status === "cancelled") {
-      throw new ConflictError("Cannot edit a cancelled event.");
-    }
-
-    const locationChanged = data.location && data.location !== event.location;
-    const timeChanged =
-      data.eventAt &&
-      new Date(data.eventAt).getTime() !== new Date(event.eventAt).getTime();
-    const shouldNotify = !!(locationChanged || timeChanged);
-
-    const oldLocation = event.location;
-    const oldDate = new Date(event.eventAt).toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    const updated = await db.event.update({
-      where: { id: eventId },
-      data: {
-        ...(data.name && { name: data.name }),
-        ...(data.desc && { desc: data.desc }),
-        ...(data.eventAt && { eventAt: new Date(data.eventAt) }),
-        ...(data.location && { location: data.location }),
-        ...(data.emailSubject && { emailSubject: data.emailSubject }),
-        ...(data.emailBody && { emailBody: data.emailBody }),
-      },
-    });
-
-    if (shouldNotify && event.sentAt) {
+    const { updated, hasSentInvitations, changes } =
+      await EventService.updateEvent(eventId, session.user.id, data);
+    const shouldNotify = changes.locationChanged || changes.timeChanged;
+    if (shouldNotify && hasSentInvitations) {
       const invitations = await db.invitation.findMany({
         where: { eventId },
         select: { email: true, name: true, token: true },
@@ -73,23 +43,14 @@ export async function PUT(req: NextRequest, { params }: EventIdParams) {
           event: updated,
           invitations,
           session,
-          changes: {
-            locationChanged: !!locationChanged,
-            timeChanged: !!timeChanged,
-            oldLocation: locationChanged ? oldLocation : undefined,
-            oldDate: timeChanged ? oldDate : undefined,
-          },
+          changes,
         });
       }
     }
     return InvitelyResponse(200, "Event updated successfully", {
       event: updated,
-      shouldNotify,
-      notified: shouldNotify && !!event.sentAt,
-      changes: {
-        locationChanged: !!locationChanged,
-        timeChanged: !!timeChanged,
-      },
+      notified: shouldNotify && hasSentInvitations,
+      changes,
     });
   } catch (e) {
     return InvitelyError(e);

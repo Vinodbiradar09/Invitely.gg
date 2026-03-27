@@ -62,3 +62,20 @@ export interface EmailData {
   subject: string;
   react: React.ReactElement;
 }
+
+export interface ScheduleInvitationsDTO {
+  scheduledAt: string;
+  recipients: {
+    email: string;
+    name?: string | null;
+  }[];
+}
+
+export interface UpdateEventDTO {
+  name?: string;
+  desc?: string;
+  eventAt?: string;
+  location?: string;
+  emailSubject?: string;
+  emailBody?: string;
+}

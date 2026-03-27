@@ -55,6 +55,22 @@ const InvitationService = {
     };
     return { invitations, summary };
   },
+  async addNote(id: string, userId: string, note: { organizerNote: string }) {
+    const invitation = await this.ownedInvitation(id, userId);
+    const addedNote = await db.invitation.update({
+      where: {
+        id: id ?? invitation.id,
+      },
+      data: {
+        organizerNote: note.organizerNote ?? null,
+      },
+      select: {
+        id: true,
+        organizerNote: true,
+      },
+    });
+    return addedNote;
+  },
 };
 
 export { InvitationService };
