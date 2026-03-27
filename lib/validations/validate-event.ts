@@ -1,12 +1,17 @@
 import { Prisma } from "@prisma/client";
 import { db } from "../db/prisma";
 import {
+  ConflictError,
   ForbiddenError,
   NotFoundError,
   ValidationError,
 } from "../shared/exceptions";
 
 type CreateEventDTO = Omit<Prisma.EventUncheckedCreateInput, "userId">;
+type RecurrenceUpdateDTO = Pick<
+  Prisma.EventUpdateInput,
+  "recurrence" | "autoInvite"
+>;
 
 const EventService = {
   async ownedEvent(id: string, userId: string) {
@@ -75,6 +80,67 @@ const EventService = {
         summary: stats,
       };
     });
+  },
+  async updateRecurrence(
+    id: string,
+    userId: string,
+    data: RecurrenceUpdateDTO,
+  ) {
+    const event = await this.ownedEvent(id, userId);
+    if (event.status === "cancelled") {
+      throw new ConflictError("Cannot set recurrence on a cancelled event");
+    }
+    return await db.event.update({
+      where: { id },
+      data: {
+        recurrence: data.recurrence,
+        autoInvite: data.recurrence ? data.autoInvite : false,
+      },
+    });
+  },
+  async stopRecurrence(eventId: string, userId: string, cancelFuture: boolean) {
+    const event = await db.event.findUnique({
+      where: { id: eventId },
+      include: {
+        childEvents: {
+          where: {
+            eventAt: { gt: new Date() },
+            status: { not: "cancelled" },
+          },
+          select: { id: true },
+        },
+      },
+    });
+    if (!event) throw new NotFoundError("Event not found");
+    if (event.userId !== userId)
+      throw new ForbiddenError("Forbidden access: you are not the owner");
+    if (!event.recurrence)
+      throw new ConflictError("This event has no recurrence set");
+
+    const now = new Date();
+    const futureCount = event.childEvents.length;
+    await db.$transaction(async (tx) => {
+      await tx.event.update({
+        where: { id: eventId },
+        data: { recurrence: null },
+      });
+      if (cancelFuture && futureCount > 0) {
+        await tx.event.updateMany({
+          where: {
+            id: { in: event.childEvents.map((c) => c.id) },
+          },
+          data: {
+            status: "cancelled",
+            cancelledAt: now,
+            recurrence: null,
+          },
+        });
+      }
+    });
+    return {
+      cancelledFutureCount: cancelFuture ? futureCount : 0,
+      wasFutureCancelled: cancelFuture && futureCount > 0,
+    };
   },
 };
 

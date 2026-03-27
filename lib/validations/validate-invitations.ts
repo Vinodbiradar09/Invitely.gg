@@ -26,6 +26,35 @@ const InvitationService = {
     }
     return invitation;
   },
+  async userInvitationsData(eventId: string) {
+    const invitations = await db.invitation.findMany({
+      where: { eventId },
+      orderBy: { sentAt: "asc" },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        status: true,
+        sentAt: true,
+        respondedAt: true,
+      },
+    });
+    const summary = {
+      total: invitations.length,
+      attending: invitations.filter(
+        (i: { status: string }) => i.status === "attending",
+      ).length,
+      maybe: invitations.filter((i: { status: string }) => i.status === "maybe")
+        .length,
+      declined: invitations.filter(
+        (i: { status: string }) => i.status === "declined",
+      ).length,
+      pending: invitations.filter(
+        (i: { status: string }) => i.status === "pending",
+      ).length,
+    };
+    return { invitations, summary };
+  },
 };
 
 export { InvitationService };
