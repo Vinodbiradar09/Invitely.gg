@@ -1,125 +1,28 @@
-import { NextRequest, NextResponse } from "next/server";
-import { ZodEvent, RawEvent } from "@/lib/types";
-import { headers } from "next/headers";
-import { db } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
+import { validateRequest } from "@/lib/validations/validate-request";
+import { requireSession } from "@/lib/auth/server/require-session";
+import { InvitelyError, InvitelyResponse } from "@/lib/shared/api";
+import { EventService } from "@/lib/validations/validate-event";
+import { ZodEvent } from "@/lib/zod/event";
+import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-
-    if (!session || !session.user) {
-      return NextResponse.json(
-        { message: "unauthorized user", success: false },
-        { status: 401 },
-      );
-    }
-
+    const session = await requireSession();
     const body = await req.json();
-    const { success, data } = ZodEvent.safeParse(body);
-
-    if (!success) {
-      return NextResponse.json(
-        { message: "invalid event data", success: false },
-        { status: 400 },
-      );
-    }
-
-    // eventAt must be in the future
-    if (new Date(data.eventAt) <= new Date()) {
-      return NextResponse.json(
-        { message: "event date must be in the future", success: false },
-        { status: 400 },
-      );
-    }
-
-    const event = await db.event.create({
-      data: {
-        userId: session.user.id,
-        name: data.name.trim(),
-        desc: data.desc.trim(),
-        eventAt: new Date(data.eventAt),
-        location: data.location.trim(),
-        emailSubject: data.emailSubject.trim(),
-        emailBody: data.emailBody.trim(),
-        recurrence: data.recurrence ?? null,
-        autoInvite: data.autoInvite ?? false,
-      },
-    });
-
-    return NextResponse.json(
-      { message: "event created successfully", success: true, event },
-      { status: 201 },
-    );
+    const data = validateRequest(ZodEvent, body);
+    const event = await EventService.createEvent(session.user.id, data);
+    return InvitelyResponse(201, "event created successfully", event);
   } catch (e) {
-    console.error(e);
-    return NextResponse.json(
-      { message: "internal server error", success: false },
-      { status: 500 },
-    );
+    return InvitelyError(e);
   }
 }
 
 export async function GET() {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-
-    if (!session || !session.user) {
-      return NextResponse.json(
-        { message: "unauthorized user", success: false },
-        { status: 401 },
-      );
-    }
-
-    const events = await db.event.findMany({
-      where: { userId: session.user.id },
-      orderBy: { createdAt: "desc" },
-      include: {
-        _count: {
-          select: {
-            invitations: true,
-          },
-        },
-        invitations: {
-          select: { status: true },
-        },
-      },
-    });
-
-    const shaped = events.map((event: RawEvent) => {
-      const summary = {
-        total: event.invitations.length,
-        attending: event.invitations.filter(
-          (i: { status: string }) => i.status === "attending",
-        ).length,
-        maybe: event.invitations.filter(
-          (i: { status: string }) => i.status === "maybe",
-        ).length,
-        declined: event.invitations.filter(
-          (i: { status: string }) => i.status === "declined",
-        ).length,
-        pending: event.invitations.filter(
-          (i: { status: string }) => i.status === "pending",
-        ).length,
-      };
-
-      const { invitations, _count, ...rest } = event;
-      return { ...rest, summary };
-    });
-
-    return NextResponse.json(
-      { message: "events fetched successfully", success: true, events: shaped },
-      { status: 200 },
-    );
+    const session = await requireSession();
+    const events = await EventService.userEvents(session.user.id);
+    return InvitelyResponse(200, "Events fetched successfully", events);
   } catch (e) {
-    console.error(e);
-    return NextResponse.json(
-      { message: "internal server error", success: false },
-      { status: 500 },
-    );
+    return InvitelyError(e);
   }
 }

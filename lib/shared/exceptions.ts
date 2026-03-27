@@ -38,3 +38,9 @@ export class InternalServerError extends InvitelyApiError {
     super(500, message, "INTERNAL_SERVER_ERROR");
   }
 }
+
+export class TimeoutError extends InvitelyApiError {
+  constructor(message = "Request Timeout") {
+    super(504, message, "GATEWAY_TIMEOUT");
+  }
+}

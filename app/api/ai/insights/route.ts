@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/prisma";
 import { llm } from "@/lib/llm";
+import { InvitelyError } from "@/lib/shared/api";
 
 export async function POST(req: NextRequest) {
   try {
@@ -158,10 +159,6 @@ export async function POST(req: NextRequest) {
       { status: 200 },
     );
   } catch (e) {
-    console.error(e);
-    return NextResponse.json(
-      { message: "internal server error", success: false },
-      { status: 500 },
-    );
+    return InvitelyError(e);
   }
 }

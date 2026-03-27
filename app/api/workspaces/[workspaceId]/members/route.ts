@@ -48,7 +48,6 @@ export async function GET(_req: NextRequest, { params }: WorkspaceIdParams) {
       where: { workspaceId },
       orderBy: { createdAt: "asc" },
     });
-
     return InvitelyResponse(200, "Workspace members", members);
   } catch (e) {
     return InvitelyError(e);

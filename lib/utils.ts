@@ -21,6 +21,14 @@ export interface TemplateIdParams {
   params: Promise<{ templateId: string }>;
 }
 
+export interface InvitationIdParams {
+  params: Promise<{ invitationId: string }>;
+}
+
+export interface EventIdParams {
+  params: Promise<{ eventId: string }>;
+}
+
 export const WORKSPACE_LIMITS = {
   MAX_WORKSPACES_PER_USER: 5,
   MAX_MEMBERS_PER_WORKSPACE: 25,

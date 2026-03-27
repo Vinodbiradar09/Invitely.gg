@@ -1,69 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
-import { ZodOrganizerNote } from "@/lib/types";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
-import { db } from "@/lib/prisma";
+import { InvitationService } from "@/lib/validations/validate-invitations";
+import { validateRequest } from "@/lib/validations/validate-request";
+import { requireSession } from "@/lib/auth/server/require-session";
+import { InvitelyError, InvitelyResponse } from "@/lib/shared/api";
+import { ZodOrganizerNote } from "@/lib/zod/event";
+import { InvitationIdParams } from "@/lib/utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db/prisma";
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ invitationId: string }> },
-) {
+export async function PUT(req: NextRequest, { params }: InvitationIdParams) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-    if (!session || !session.user) {
-      return NextResponse.json(
-        {
-          message: "unauthorized user",
-          success: false,
-        },
-        { status: 401 },
-      );
-    }
+    const session = await requireSession();
     const { invitationId } = await params;
     const body = await req.json();
-    const { success, data } = ZodOrganizerNote.safeParse(body);
-    if (!success) {
-      return NextResponse.json(
-        {
-          message: "note is required",
-          success: false,
-        },
-        { status: 400 },
-      );
-    }
-    const invitation = await db.invitation.findUnique({
-      where: {
-        id: invitationId,
-      },
-      select: {
-        id: true,
-        event: {
-          select: {
-            userId: true,
-          },
-        },
-      },
-    });
-    if (!invitation) {
-      return NextResponse.json(
-        {
-          message: "invitation not found",
-          success: false,
-        },
-        { status: 404 },
-      );
-    }
-    if (invitation.event.userId !== session.user.id) {
-      return NextResponse.json(
-        { message: "forbidden access you are not the owner", success: false },
-        { status: 403 },
-      );
-    }
+    const data = validateRequest(ZodOrganizerNote, body);
+    const invitation = await InvitationService.ownedInvitation(
+      invitationId,
+      session.user.id,
+    );
     const updated = await db.invitation.update({
       where: {
-        id: invitationId,
+        id: invitationId ?? invitation.id,
       },
       data: {
         organizerNote: data.organizerNote || null,
@@ -73,22 +29,10 @@ export async function PUT(
         organizerNote: true,
       },
     });
-    return NextResponse.json(
-      {
-        message: "note saved",
-        success: true,
-        organizerNote: updated.organizerNote,
-      },
-      { status: 200 },
-    );
+    return InvitelyResponse(200, "Note saved successfully", {
+      organizerNote: updated.organizerNote,
+    });
   } catch (e) {
-    console.log(e);
-    return NextResponse.json(
-      {
-        message: "internal server error",
-        success: false,
-      },
-      { status: 500 },
-    );
+    return InvitelyError(e);
   }
 }
