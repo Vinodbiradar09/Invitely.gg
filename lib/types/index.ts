@@ -79,3 +79,10 @@ export interface UpdateEventDTO {
   emailSubject?: string;
   emailBody?: string;
 }
+
+export interface InvitationData {
+  status: string;
+  sentAt: Date | string | null;
+  respondedAt: Date | string | null;
+  openedAt: Date | string | null;
+}
