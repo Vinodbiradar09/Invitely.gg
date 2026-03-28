@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
         data: { name: data.name, userId: session.user.id },
       });
     });
-    InvitelyResponse(201, "workspace created", workspace);
+    return InvitelyResponse(201, "workspace created", workspace);
   } catch (e) {
     return InvitelyError(e);
   }
@@ -33,7 +33,7 @@ export async function GET() {
     const workspace = await WorkspaceService.userWorkspaces(session.user.id);
     const message =
       workspace.length === 0 ? "Zero workspaces found" : `Your workspaces`;
-    InvitelyResponse(200, message, workspace);
+    return InvitelyResponse(200, message, workspace);
   } catch (e) {
     return InvitelyError(e);
   }

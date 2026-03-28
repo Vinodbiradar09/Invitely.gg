@@ -63,12 +63,12 @@ export function StepPreviewSend({
           eventDesc: state.desc,
         }),
       });
-      const data = await res.json();
-      if (!data.success) {
-        toast.error(data.message);
+      const result = await res.json();
+      if (!result.success) {
+        toast.error(result.message);
         return;
       }
-      setSuggestion(data.suggestion);
+      setSuggestion(result.data);
     } catch {
       toast.error("failed to get suggestion");
     } finally {

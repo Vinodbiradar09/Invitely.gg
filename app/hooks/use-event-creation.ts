@@ -143,8 +143,8 @@ export function useEventCreation() {
       }
       setState((prev) => ({
         ...prev,
-        emailSubject: data.subject,
-        emailBody: data.body,
+        emailSubject: data.data.subject,
+        emailBody: data.data.body,
       }));
       toast.success("email improved by ai");
     } catch {
@@ -183,7 +183,7 @@ export function useEventCreation() {
         return;
       }
 
-      const eventId = eventData.event.id;
+      const eventId = eventData.data.id;
 
       // step 2 — send invitations
       const recipients = Array.from(state.selectedRecipients.values());
@@ -244,7 +244,7 @@ export function useEventCreation() {
         return;
       }
 
-      const eventId = eventData.event.id;
+      const eventId = eventData.data.id;
       const recipients = Array.from(state.selectedRecipients.values());
 
       const scheduleRes = await fetch(`/api/events/${eventId}/schedule`, {

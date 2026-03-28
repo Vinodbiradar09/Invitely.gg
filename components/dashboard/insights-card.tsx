@@ -52,12 +52,12 @@ export function InsightsCard({ eventId }: InsightsCardProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ eventId }),
       });
-      const data = await res.json();
-      if (!data.success) {
-        toast.error(data.message);
+      const result = await res.json();
+      if (!result.success) {
+        toast.error(result.message);
         return;
       }
-      setInsights(data.insights);
+      setInsights(result.data.insights);
       setGenerated(true);
     } catch {
       toast.error("failed to generate insights");

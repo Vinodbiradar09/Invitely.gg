@@ -59,8 +59,8 @@ export function EditEmailContent({
         toast.error(data.message);
         return;
       }
-      setEmailSubject(data.subject);
-      setEmailBody(data.body);
+      setEmailSubject(data.data.subject);
+      setEmailBody(data.data.body);
       toast.success("email polished");
     } catch {
       toast.error("failed to polish email");
@@ -134,8 +134,7 @@ export function EditEmailContent({
             maxLength={5000}
           />
           <p className="font-mono text-xs text-muted-foreground">
-            Do not include greeting or sign-off — the email template handles
-            that.
+            Do not include greeting or sign-off the email template handles that.
           </p>
         </div>
       </div>

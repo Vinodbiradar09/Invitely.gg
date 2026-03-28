@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const data = validateRequest(ZodLLMOptimze, body);
     const prompt = generateInviteEmailPrompt(data);
-    const optimizedContent = LLMService.optimizeInvite(prompt);
+    const optimizedContent = await LLMService.optimizeInvite(prompt);
     return InvitelyResponse(
       200,
       "Email optimized successfully",

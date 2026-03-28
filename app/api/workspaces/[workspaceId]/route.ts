@@ -19,7 +19,7 @@ export async function DELETE(_req: NextRequest, { params }: WorkspaceIdParams) {
         userId: session.user.id,
       },
     });
-    return InvitelyResponse(200, "Workspace deleted successfully");
+    return InvitelyResponse(200, "Workspace deleted successfullys");
   } catch (e) {
     return InvitelyError(e);
   }

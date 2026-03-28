@@ -2,11 +2,11 @@ import { isInvitelyApiError } from "./base";
 import { InternalServerError } from "./exceptions";
 import { NextResponse } from "next/server";
 
-type ApiSuccessResponse<T> = {
-  success: true;
-  message: string;
-  data: T | null;
-};
+// type ApiSuccessResponse<T> = {
+//   success: true;
+//   message: string;
+//   data: T | null;
+// };
 
 type ApiErrorResponse = {
   success: false;
@@ -14,14 +14,19 @@ type ApiErrorResponse = {
   code?: string;
 };
 
-export function InvitelyResponse<T>(status: number, message: string, data?: T) {
-  const body: ApiSuccessResponse<T> = {
-    success: true,
-    message,
-    data: data ?? null,
-  };
-
-  return NextResponse.json(body, { status });
+export function InvitelyResponse<T>(
+  status: number,
+  message: string,
+  data: T | null = null,
+) {
+  return NextResponse.json(
+    {
+      success: status >= 200 && status < 300,
+      message,
+      data,
+    },
+    { status },
+  );
 }
 
 export function InvitelyError(error: unknown) {
