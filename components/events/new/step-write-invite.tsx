@@ -74,7 +74,7 @@ export function StepWriteInvite({
         toast.error("failed to load templates");
         return;
       }
-      setTemplates(data.templates);
+      setTemplates(data.data);
       setTemplatesLoaded(true);
     } catch {
       toast.error("failed to load templates");

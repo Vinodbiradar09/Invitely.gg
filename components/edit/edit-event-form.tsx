@@ -75,7 +75,7 @@ export function EditEventForm({ event }: EditEventFormProps) {
         toast.error(data.message);
         return;
       }
-      if (data.notified) {
+      if (data.data.notified) {
         toast.success("event updated guests notified of changes");
       } else {
         toast.success("event updated successfully");
