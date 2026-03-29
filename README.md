@@ -6,17 +6,6 @@ The system embraces a **engineering philosophy**: simple primitives, explicit da
 
 ---
 
-## Features
-
-- Server-side rendered and streamed UI for instant first paint
-- Fully type-safe authentication and session handling
-- Scalable email delivery with batching support
-- Strict schema validation across API and UI
-- Production-ready database access optimized for serverless
-- Clean, auditable architecture with minimal abstraction leaks
-
----
-
 ## Tech Stack
 
 ### Core Architecture & UI
@@ -103,8 +92,6 @@ VERCEL_URL=invitely-gg.vercel.app
 # Cron / Security
 CRON_SECRET=generate_a_complex_uuid_for_cron_security
 ```
-
-> ⚠️ Never commit `.env` files to version control.
 
 ### 4. Database Setup & Migration
 ```bash
