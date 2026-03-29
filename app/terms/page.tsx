@@ -1,4 +1,5 @@
 import { Separator } from "@/components/ui/separator";
+import { Logo } from "@/components/landing/logo";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -86,10 +87,8 @@ export default function TermsPage() {
 
         <div className="flex flex-col gap-3 mb-10">
           <div className="flex items-center gap-2 mb-2">
-            <div className="flex h-6 w-6 items-center justify-center border border-border bg-primary">
-              <span className="font-mono text-xs font-bold text-primary-foreground">
-                I
-              </span>
+            <div className="flex h-6 w-6 items-center justify-center border border-border bg-black">
+              <Logo className="h-4.5 w-4.5 text-white" />
             </div>
             <span className="font-mono text-sm font-semibold text-foreground">
               invitely.gg

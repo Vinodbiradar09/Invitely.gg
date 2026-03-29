@@ -1,5 +1,6 @@
 interface CancelEmailProps {
   organizerName: string;
+  organizerEmail: string;
   recipientName: string;
   recipientEmail: string;
   eventName: string;
@@ -9,6 +10,7 @@ interface CancelEmailProps {
 
 export function CancelEmail({
   organizerName,
+  organizerEmail,
   recipientName,
   recipientEmail,
   eventName,
@@ -70,7 +72,7 @@ export function CancelEmail({
                               paddingBottom: "6px",
                             }}
                           >
-                            noreply@invitely.gg
+                            {organizerEmail}
                           </td>
                         </tr>
                         <tr>

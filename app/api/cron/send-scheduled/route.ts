@@ -6,7 +6,7 @@ import { resend } from "@/lib/resend/index";
 import { randomBytes } from "crypto";
 import { db } from "@/lib/db/prisma";
 
-const BATCH_SIZE = 25;
+const BATCH_SIZE = 50;
 
 export async function GET(req: NextRequest) {
   try {

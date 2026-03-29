@@ -69,6 +69,7 @@ export const NotificationService = {
       subject: `Cancelled: ${event.name}`,
       react: CancelEmail({
         organizerName: session.user.name,
+        organizerEmail: session.user.email,
         recipientName: inv.name ?? "",
         recipientEmail: inv.email,
         eventName: event.name,

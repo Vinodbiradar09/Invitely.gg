@@ -54,6 +54,7 @@ export interface CancelNotificationParams {
   session: {
     user: {
       name: string;
+      email: string;
     };
   };
 }

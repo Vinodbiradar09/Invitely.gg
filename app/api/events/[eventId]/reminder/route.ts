@@ -11,7 +11,7 @@ import { resend } from "@/lib/resend/index";
 import { db } from "@/lib/db/prisma";
 import { llm } from "@/lib/llm/llm";
 
-const BATCH_SIZE = 25;
+const BATCH_SIZE = 50;
 
 export async function POST(_req: NextRequest, { params }: EventIdParams) {
   try {

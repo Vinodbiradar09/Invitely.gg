@@ -16,7 +16,7 @@ import { llm } from "@/lib/llm/llm";
 
 type TxClient = Parameters<Parameters<typeof db.$transaction>[0]>[0];
 
-const BATCH_SIZE = 25;
+const BATCH_SIZE = 50;
 
 export async function POST(req: NextRequest, { params }: EventIdParams) {
   try {
