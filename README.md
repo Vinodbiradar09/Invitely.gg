@@ -1,74 +1,157 @@
 # Invitely.gg
+**Send Invitations at Scale On Your Behalf**
 
-Send Invitations At Scale On Your Behalf
+Invitely.gg is a **server-first**, production platform designed to send invitations at scale with high reliability, type safety, and minimal client-side overhead.  
+The system embraces a **engineering philosophy**: simple primitives, explicit data flow, and predictable performance.
+
+---
+
+## Features
+
+- Server-side rendered and streamed UI for instant first paint
+- Fully type-safe authentication and session handling
+- Scalable email delivery with batching support
+- Strict schema validation across API and UI
+- Production-ready database access optimized for serverless
+- Clean, auditable architecture with minimal abstraction leaks
+
+---
 
 ## Tech Stack
 
-Invitely.gg is built with a focus on **Server-First** architecture, utilizing modern primitives for speed, safety, and a "Brutalist" engineering aesthetic.
-
 ### Core Architecture & UI
-- **Framework:** [Next.js 16.2 (App Router)](https://nextjs.org/) — Utilizing **Server-Side Rendering (SSR)** and Streaming for instant page loads.
-- **Development DX:** Powered by **Turbopack** for 400% faster HMR (Hot Module Replacement).
-- **Library:** [React 19.2](https://react.dev/) — Leveraging the new `use` hook and Actions for zero-bundle-size logic.
-- **Styling:** [Tailwind CSS 4.0](https://tailwindcss.com/) — Next-gen styling via the high-performance **Oxide engine**.
-- **Animations:** [Motion 12](https://motion.dev/) — Layout-aware, hardware-accelerated transitions.
+
+- **Framework:** Next.js 16.2 (App Router)  
+  - Server-Side Rendering (SSR)
+  - Streaming responses
+  - Server Actions
+- **Runtime UI:** React 19.2  
+  - `use` hook
+  - Zero-bundle server logic
+- **Styling:** Tailwind CSS 4.0  
+  - Oxide engine for high-performance builds
+- **Animations:** Motion 12  
+  - Layout-aware, hardware-accelerated transitions
+- **Dev Experience:** Turbopack  
+  - Ultra-fast HMR and incremental builds
+
+---
 
 ### Backend & Infrastructure
-- **Database:** [PostgreSQL](https://www.postgresql.org/) — Enterprise-grade relational storage.
-- **ORM:** [Prisma 7.4](https://www.prisma.io/) — Optimized with `@prisma/adapter-pg` for low-latency serverless queries.
-- **Authentication:** [Better Auth 1.5](https://better-auth.com/) — Fully type-safe session management with native Prisma integration.
-- **Email:** [Resend 6.9](https://resend.com/) — Scalable infrastructure for transactional event updates.
 
-### Validation & Intelligence
-- **Type Safety:** [Zod 4.3](https://zod.dev/) — End-to-end schema validation from API to UI.
-- **Icons:** [Lucide React](https://lucide.dev/) & Phosphor Icons.
-- **Runtime:** Node.js 20+ LTS.
+- **Runtime:** Node.js 20+ (LTS)
+- **Database:** PostgreSQL
+- **ORM:** Prisma 7.4  
+  - `@prisma/adapter-pg` for low-latency serverless access
+- **Authentication:** Better Auth 1.5  
+  - Fully type-safe
+  - Native Prisma integration
+- **Email Infrastructure:** Resend 6.9  
+  - Transactional + batch email delivery
+
+---
+
+### Validation & Utilities
+
+- **Schema Validation:** Zod 4.3  
+  - End-to-end type safety
+- **Icons:** Lucide React, Phosphor Icons
 
 ---
 
 ## Installation
 
-### 1. Clone the repository
+### 1. Clone the Repository
 ```bash
-git clone [https://github.com/Vinodbiradar09/Invitely.gg.git](https://github.com/Vinodbiradar09/Invitely.gg.git)
+git clone https://github.com/Vinodbiradar09/Invitely.gg.git
 cd Invitely.gg
-2. Install dependencies
-Bash
-npm install
-3. Environment Setup
-Create a .env file in the root directory and populate the following variables:
+```
 
-Code snippet
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Environment Setup
+
+Create a `.env` file in the root directory and add the following variables:
+```env
+# Authentication
 BETTER_AUTH_SECRET=p0_v3ry_long_r4ndom_str1ng_h3r3_dont_reuse_dev
-BETTER_AUTH_URL="http://localhost:3000"
-GOOGLE_CLIENT_ID="your-google-client-id"
-GOOGLE_CLIENT_SECRET="your-google-client-secret"
-DATABASE_URL="postgresql://Invitely:Invitely@localhost:5433/Invitely?schema=public"
+BETTER_AUTH_URL=http://localhost:3000
+
+# OAuth
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+# Database
+DATABASE_URL=postgresql://Invitely:Invitely@localhost:5433/Invitely?schema=public
+
+# Email
 RESEND_API_KEY=re_prod_AbC123
 FROM="Invitely.gg <noreply@invitely.gg>"
+
+# AI (Optional / Feature-specific)
 GEMINI_API_KEY=your_gemini_api_key
-URL="[https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent](https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent)"
+URL=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
+
+# App URLs
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 APP_URL=http://localhost:3000
-CRON_SECRET=generate_a_complex_uuid_for_cron_security
 VERCEL_URL=invitely-gg.vercel.app
-4. Database Migration
-Bash
+
+# Cron / Security
+CRON_SECRET=generate_a_complex_uuid_for_cron_security
+```
+
+> ⚠️ Never commit `.env` files to version control.
+
+### 4. Database Setup & Migration
+```bash
 npx prisma migrate dev
 npx prisma generate
 npx prisma db push
-5. Run the development server
-Bash
+```
+
+### 5. Run the Development Server
+```bash
 npm run dev
-🤝 Contributing
+```
+
+The app will be available at:
+```
+http://localhost:3000
+```
+
+---
+
+## Architecture Philosophy
+
+- **Server-first by default** — Client components are opt-in, not the norm.
+- **Type safety everywhere** — From database → API → UI.
+- **Minimal abstraction** — No magic, no hidden state.
+- **Predictable performance** — Every query, render, and side-effect is intentional.
+
+---
+
+## 🤝 Contributing
+
 We love contributions! Whether it's fixing a bug, adding a feature, or improving UI:
 
-1. Fork the repo.
+### Workflow
 
-2. Create a Branch (git checkout -b feature/amazing-feature).
-
-3. Commit Changes (Follow Conventional Commits).
-
-4. Push to the branch (git push origin feature/amazing-feature).
-
-5. Open a Pull Request.
+1. Fork the repository
+2. Create a feature branch
+```bash
+   git checkout -b feature/amazing-feature
+```
+3. Make your changes
+4. Commit using Conventional Commits
+```bash
+   git commit -m "feat: add scalable invitation batching"
+```
+5. Push your branch
+```bash
+   git push origin feature/amazing-feature
+```
+6. Open a Pull Request
