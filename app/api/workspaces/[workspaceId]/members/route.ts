@@ -3,7 +3,7 @@ import { WorkspaceService } from "@/lib/validations/validate-workspace";
 import { validateRequest } from "@/lib/validations/validate-request";
 import { requireSession } from "@/lib/auth/server/require-session";
 import { InvitelyError, InvitelyResponse } from "@/lib/shared/api";
-import { ZodWorkspaceMembers } from "@/lib/types";
+import { ZodWorkspaceMembers } from "@/lib/zod/workspace";
 import { WorkspaceIdParams } from "@/lib/utils";
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db/prisma";

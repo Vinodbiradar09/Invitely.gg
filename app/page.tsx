@@ -1,5 +1,5 @@
-import { BrandFooter } from "@/components/landing/brand-footer";
 import { EmailPreview } from "@/components/landing/email-preview";
+import { BrandFooter } from "@/components/landing/brand-footer";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { LandingNav } from "@/components/landing/landing-nav";
 import { Features } from "@/components/landing/features";

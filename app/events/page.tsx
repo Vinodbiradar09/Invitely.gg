@@ -1,14 +1,14 @@
 import { EventList } from "@/components/events/event-list";
+import { getSession } from "@/lib/auth/client/get-session";
 import { EventListSkeleton } from "@/components/skeletons";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Plus, ArrowLeft } from "lucide-react";
 import { EventWithStatus } from "@/lib/types";
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/session";
-import type { Metadata } from "next";
-import { db } from "@/lib/prisma";
+import { db } from "@/lib/db/prisma";
 import { Suspense } from "react";
+import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = { title: "Events | Invitely.gg" };
@@ -66,6 +66,7 @@ async function EventListSection() {
         (i: { status: string }) => i.status === "pending",
       ).length,
     };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { invitations: _, ...rest } = event;
     return { ...rest, summary };
   });

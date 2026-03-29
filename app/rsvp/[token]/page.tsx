@@ -1,15 +1,10 @@
 import { RSVPCard } from "@/components/rsvp/rsvp-card";
 import { notFound } from "next/navigation";
-import type { Metadata } from "next";
-import { db } from "@/lib/prisma";
+import { db } from "@/lib/db/prisma";
+import { Token } from "@/lib/utils";
+import { Metadata } from "next";
 
-interface PageProps {
-  params: Promise<{ token: string }>;
-}
-
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Token): Promise<Metadata> {
   const { token } = await params;
   const invitation = await db.invitation.findUnique({
     where: { token },
@@ -22,13 +17,11 @@ export async function generateMetadata({
   };
 }
 
-export default async function RSVPPage({ params }: PageProps) {
+export default async function RSVPPage({ params }: Token) {
   const { token } = await params;
-
   if (!token || token.length !== 64 || !/^[a-f0-9]+$/.test(token)) {
     notFound();
   }
-
   const invitation = await db.invitation.findUnique({
     where: { token },
     select: {

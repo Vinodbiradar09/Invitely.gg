@@ -6,15 +6,15 @@ import { ReminderButton } from "@/components/dashboard/reminder-button";
 import { SummaryCards } from "@/components/dashboard/summary-cards";
 import { InsightsCard } from "@/components/dashboard/insights-card";
 import { GuestTable } from "@/components/dashboard/guest-table";
+import { getSession } from "@/lib/auth/client/get-session";
 import { Separator } from "@/components/ui/separator";
 import { redirect, notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { getSession } from "@/lib/session";
 import { Invitation } from "@/lib/types";
-import type { Metadata } from "next";
-import { db } from "@/lib/prisma";
+import { db } from "@/lib/db/prisma";
 import { Suspense } from "react";
+import { Metadata } from "next";
 import {
   SummaryCardsSkeleton,
   GuestTableSkeleton,
@@ -29,10 +29,7 @@ import {
   RefreshCw,
   AlertTriangle,
 } from "lucide-react";
-
-interface PageProps {
-  params: Promise<{ eventId: string }>;
-}
+import { EventIdParams } from "@/lib/utils";
 
 const getEvent = cache(async (eventId: string) => {
   return db.event.findUnique({
@@ -54,7 +51,7 @@ const getEvent = cache(async (eventId: string) => {
 
 export async function generateMetadata({
   params,
-}: PageProps): Promise<Metadata> {
+}: EventIdParams): Promise<Metadata> {
   const { eventId } = await params;
   const event = await getEvent(eventId);
   return {
@@ -119,7 +116,7 @@ async function GuestSection({
   );
 }
 
-export default async function EventDashboardPage({ params }: PageProps) {
+export default async function EventDashboardPage({ params }: EventIdParams) {
   const { eventId } = await params;
   const [session, event] = await Promise.all([getSession(), getEvent(eventId)]);
 

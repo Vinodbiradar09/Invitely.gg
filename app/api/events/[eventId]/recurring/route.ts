@@ -2,7 +2,7 @@ import { validateRequest } from "@/lib/validations/validate-request";
 import { InvitelyError, InvitelyResponse } from "@/lib/shared/api";
 import { requireSession } from "@/lib/auth/server/require-session";
 import { EventService } from "@/lib/validations/validate-event";
-import { ZodRecurrence } from "@/lib/types";
+import { ZodRecurrence } from "@/lib/zod/event";
 import { EventIdParams } from "@/lib/utils";
 import { NextRequest } from "next/server";
 

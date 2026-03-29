@@ -1,20 +1,17 @@
 import { SendInvitationsForm } from "@/components/events/send-invitations-form";
 import { Calendar, MapPin, ArrowLeft } from "lucide-react";
+import { getSession } from "@/lib/auth/client/get-session";
 import { Separator } from "@/components/ui/separator";
 import { redirect, notFound } from "next/navigation";
 import { WorkspaceWithMembers } from "@/lib/types";
-import { getSession } from "@/lib/session";
-import type { Metadata } from "next";
-import { db } from "@/lib/prisma";
+import { EventIdParams } from "@/lib/utils";
+import { db } from "@/lib/db/prisma";
+import { Metadata } from "next";
 import Link from "next/link";
-
-interface PageProps {
-  params: Promise<{ eventId: string }>;
-}
 
 export const metadata: Metadata = { title: "Send Invitations | Invitely.gg" };
 
-export default async function SendInvitationsPage({ params }: PageProps) {
+export default async function SendInvitationsPage({ params }: EventIdParams) {
   const { eventId } = await params;
   const [session, event] = await Promise.all([
     getSession(),

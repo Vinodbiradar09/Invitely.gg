@@ -1,14 +1,14 @@
 import { NewEventForm } from "@/components/events/new/new-event-form";
 import { NewEventFormSkeleton } from "@/components/skeletons";
+import { getSession } from "@/lib/auth/client/get-session";
 import { Separator } from "@/components/ui/separator";
 import { WorkspaceWithMembers } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import type { Metadata } from "next";
-import { db } from "@/lib/prisma";
+import { db } from "@/lib/db/prisma";
 import { Suspense } from "react";
+import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {

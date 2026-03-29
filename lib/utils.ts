@@ -53,3 +53,33 @@ export function formatEventDate(
 
   return d.toLocaleString("en-US", options);
 }
+
+export function getNextEventDate(eventAt: Date, recurrence: string): Date {
+  const next = new Date(eventAt);
+  switch (recurrence) {
+    case "weekly":
+      next.setDate(next.getDate() + 7);
+      break;
+    case "monthly":
+      next.setMonth(next.getMonth() + 1);
+      break;
+    case "annually":
+      next.setFullYear(next.getFullYear() + 1);
+      break;
+  }
+  return next;
+}
+
+export function getConfirmationMessage(
+  status: "attending" | "maybe" | "declined",
+  eventName: string,
+): string {
+  switch (status) {
+    case "attending":
+      return `You're in! See you at ${eventName} 🎉`;
+    case "maybe":
+      return `Got it! We'll keep your spot tentative for ${eventName}`;
+    case "declined":
+      return `Sorry you can't make it. You've declined ${eventName}`;
+  }
+}

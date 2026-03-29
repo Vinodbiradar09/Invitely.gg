@@ -3,7 +3,7 @@ import { validateRequest } from "@/lib/validations/validate-request";
 import { requireSession } from "@/lib/auth/server/require-session";
 import { InvitelyError, InvitelyResponse } from "@/lib/shared/api";
 import { EventService } from "@/lib/validations/validate-event";
-import { ZodCreateTemplate } from "@/lib/types";
+import { ZodCreateTemplate } from "@/lib/zod/template";
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db/prisma";
 

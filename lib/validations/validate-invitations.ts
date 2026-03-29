@@ -71,6 +71,20 @@ const InvitationService = {
     });
     return addedNote;
   },
+  async validateInvitationForEmail(eventId: string, email: string) {
+    const invitation = await db.invitation.findUnique({
+      where: {
+        eventId_email: {
+          eventId,
+          email,
+        },
+      },
+    });
+    if (!invitation) {
+      throw new NotFoundError("No invitation found for this email");
+    }
+    return invitation;
+  },
 };
 
 export { InvitationService };

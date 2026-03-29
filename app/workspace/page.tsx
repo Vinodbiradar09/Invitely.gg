@@ -1,15 +1,15 @@
 import { WorkspaceCreateDialog } from "@/components/workspace/workspace-create-dialog";
 import { WorkspaceList } from "@/components/workspace/workspace-list";
 import { WorkspaceListSkeleton } from "@/components/skeletons";
+import { getSession } from "@/lib/auth/client/get-session";
 import { Separator } from "@/components/ui/separator";
 import { WorkspaceWithMembers } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Plus, ArrowRight } from "lucide-react";
-import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
-import type { Metadata } from "next";
-import { db } from "@/lib/prisma";
+import { db } from "@/lib/db/prisma";
 import { Suspense } from "react";
+import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {

@@ -1,10 +1,10 @@
+import { formatEventDate, getNextEventDate } from "@/lib/utils";
 import { InviteEmail } from "@/components/email-template";
 import { NextRequest, NextResponse } from "next/server";
 import { EmailData, ResendResult } from "@/lib/types";
-import { getNextEventDate } from "@/lib/prompt";
-import { resend } from "@/lib/resend";
+import { resend } from "@/lib/resend/index";
 import { randomBytes } from "crypto";
-import { db } from "@/lib/prisma";
+import { db } from "@/lib/db/prisma";
 
 const BATCH_SIZE = 25;
 
@@ -42,14 +42,7 @@ export async function GET(req: NextRequest) {
 
     const scheduleResults = await Promise.allSettled(
       scheduledEvents.map(async (event) => {
-        const eventDate = new Date(event.eventAt).toLocaleDateString("en-US", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        });
+        const eventDate = formatEventDate(event.eventAt, "full");
 
         const batchPayload: EmailData[] = event.invitations.map((inv) => ({
           from: process.env.FROM!,

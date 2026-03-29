@@ -1,71 +1,32 @@
+import { EmailData, ResendResult, InvitationItem } from "@/lib/types/index";
+import { generateGuestOpeningPrompt } from "@/lib/prompts/generation";
+import { validateRequest } from "@/lib/validations/validate-request";
+import { requireSession } from "@/lib/auth/server/require-session";
+import { EventService } from "@/lib/validations/validate-event";
+import { EventIdParams, formatEventDate } from "@/lib/utils";
+import { ZodSendInvitations } from "@/lib/zod/invitation";
 import { InviteEmail } from "@/components/email-template";
-import { buildPersonalisationPrompt } from "@/lib/prompt";
 import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
-import { resend } from "@/lib/resend";
-import { db } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
-import { llm } from "@/lib/llm";
+import { ConflictError } from "@/lib/shared/exceptions";
+import { InvitelyError } from "@/lib/shared/api";
+import { resend } from "@/lib/resend/index";
+import { db } from "@/lib/db/prisma";
 import { randomBytes } from "crypto";
-import {
-  EmailData,
-  InvitationItem,
-  ResendResult,
-  ZodSendInvitations,
-} from "@/lib/types";
+import { llm } from "@/lib/llm/llm";
 
 type TxClient = Parameters<Parameters<typeof db.$transaction>[0]>[0];
 
 const BATCH_SIZE = 25;
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ eventId: string }> },
-) {
+export async function POST(req: NextRequest, { params }: EventIdParams) {
   try {
-    const session = await auth.api.getSession({ headers: await headers() });
-    if (!session || !session.user) {
-      return NextResponse.json(
-        { message: "unauthorized user", success: false },
-        { status: 401 },
-      );
-    }
-
+    const session = await requireSession();
     const { eventId } = await params;
     const body = await req.json();
-
-    const { success, data } = ZodSendInvitations.safeParse(body);
-    if (!success) {
-      return NextResponse.json(
-        { message: "invalid recipients data", success: false },
-        { status: 400 },
-      );
-    }
-
-    const event = await db.event.findUnique({ where: { id: eventId } });
-
-    if (!event) {
-      return NextResponse.json(
-        { message: "event not found", success: false },
-        { status: 404 },
-      );
-    }
-
-    if (event.userId !== session.user.id) {
-      return NextResponse.json(
-        { message: "forbidden you are not owner of event", success: false },
-        { status: 403 },
-      );
-    }
-
+    const data = validateRequest(ZodSendInvitations, body);
+    const event = await EventService.ownedEvent(eventId, session.user.id);
     if (event.status === "cancelled") {
-      return NextResponse.json(
-        {
-          message: "cannot send invitations for a cancelled event",
-          success: false,
-        },
-        { status: 409 },
-      );
+      throw new ConflictError("Cannot send invitaions for a cancelled event");
     }
 
     const incomingEmails = data.recipients.map(
@@ -90,26 +51,16 @@ export async function POST(
     }
 
     const now = new Date();
-
     // calculate how many hours before the event the organizer is sending
     const hoursBeforeEvent = Math.round(
       (new Date(event.eventAt).getTime() - now.getTime()) / (1000 * 60 * 60),
     );
-
-    const eventDate = new Date(event.eventAt).toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
+    const eventDate = formatEventDate(event.eventAt, "full");
     const openings = await Promise.allSettled(
       data.recipients.map(
         async (recipient: { email: string; name?: string | null }) => {
           const raw = await llm(
-            buildPersonalisationPrompt({
+            generateGuestOpeningPrompt({
               recipientName: recipient.name || recipient.email.split("@")[0],
               eventName: event.name,
               eventDate,
@@ -214,10 +165,6 @@ export async function POST(
       { status: 200 },
     );
   } catch (e) {
-    console.error(e);
-    return NextResponse.json(
-      { message: "internal server error", success: false },
-      { status: 500 },
-    );
+    return InvitelyError(e);
   }
 }

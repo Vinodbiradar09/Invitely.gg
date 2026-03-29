@@ -1,6 +1,6 @@
+import { getSession } from "@/lib/auth/client/get-session";
 import { Navbar } from "@/components/layout/navbar";
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/session";
 
 export default async function TemplatesLayout({
   children,

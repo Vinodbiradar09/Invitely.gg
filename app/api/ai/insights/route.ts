@@ -1,9 +1,9 @@
-import { NextRequest } from "next/server";
-import { InvitelyError, InvitelyResponse } from "@/lib/shared/api";
-import { ZodLLMInsights } from "@/lib/zod/llm";
-import { requireSession } from "@/lib/auth/server/require-session";
 import { validateRequest } from "@/lib/validations/validate-request";
+import { InvitelyError, InvitelyResponse } from "@/lib/shared/api";
+import { requireSession } from "@/lib/auth/server/require-session";
 import { LLMService } from "@/lib/validations/validate-llm";
+import { ZodLLMInsights } from "@/lib/zod/llm";
+import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {

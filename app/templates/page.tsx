@@ -1,12 +1,12 @@
 import { TemplateList } from "@/components/templates/template-list";
 import { TemplateListSkeleton } from "@/components/skeletons";
+import { getSession } from "@/lib/auth/client/get-session";
 import { Separator } from "@/components/ui/separator";
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/session";
 import { ArrowLeft } from "lucide-react";
-import type { Metadata } from "next";
-import { db } from "@/lib/prisma";
+import { db } from "@/lib/db/prisma";
 import { Suspense } from "react";
+import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = { title: "Templates | Invitely.gg" };

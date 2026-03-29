@@ -77,6 +77,7 @@ const EventService = {
           stats[inv.status as keyof typeof stats]++;
         }
       });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { invitations, ...eventData } = event;
       return {
         ...eventData,

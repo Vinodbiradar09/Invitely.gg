@@ -1,3 +1,9 @@
+import { ZodLLMInsightsResponse, ZodLLMOptimizeResponse } from "@/lib/zod/llm";
+import { generateRsvpInsightsPrompt } from "../prompts/analytics";
+import { formatEventDate } from "../utils";
+import { InvitationData } from "../types/index";
+import { llm } from "@/lib/llm/llm";
+import { db } from "../db/prisma";
 import {
   BadRequestError,
   ConflictError,
@@ -6,12 +12,6 @@ import {
   NotFoundError,
   TimeoutError,
 } from "@/lib/shared/exceptions";
-import { ZodLLMInsightsResponse, ZodLLMOptimizeResponse } from "@/lib/zod/llm";
-import { llm } from "@/lib/llm/llm";
-import { db } from "../db/prisma";
-import { formatEventDate } from "../utils";
-import { generateRsvpInsightsPrompt } from "../prompts/analytics";
-import { InvitationData } from "../types/index";
 
 export const LLMService = {
   async optimizeInvite(prompt: string) {

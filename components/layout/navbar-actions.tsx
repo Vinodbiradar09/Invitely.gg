@@ -1,6 +1,8 @@
 "use client";
 
+import { signOut } from "@/lib/auth/client/auth-client";
 import { Button } from "@/components/ui/button";
+import { User } from "@/lib/auth/server/auth";
 import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
@@ -9,8 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { User } from "@/lib/auth";
-import { signOut } from "@/lib/client";
 import { useState } from "react";
 import { toast } from "sonner";
 

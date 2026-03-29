@@ -1,87 +1,41 @@
-import { EmailData, pendingInvitation, ResendResult } from "@/lib/types";
-import { buildPersonalisationPrompt } from "@/lib/prompt";
+import { EmailData, pendingInvitation, ResendResult } from "@/lib/types/index";
+import { BadRequestError, ConflictError } from "@/lib/shared/exceptions";
+import { generateGuestOpeningPrompt } from "@/lib/prompts/generation";
+import { requireSession } from "@/lib/auth/server/require-session";
+import { EventService } from "@/lib/validations/validate-event";
+import { EventIdParams, formatEventDate } from "@/lib/utils";
 import { InviteEmail } from "@/components/email-template";
 import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
-import { resend } from "@/lib/resend";
-import { auth } from "@/lib/auth";
-import { db } from "@/lib/prisma";
-import { llm } from "@/lib/llm";
+import { InvitelyError } from "@/lib/shared/api";
+import { resend } from "@/lib/resend/index";
+import { db } from "@/lib/db/prisma";
+import { llm } from "@/lib/llm/llm";
 
 const BATCH_SIZE = 25;
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ eventId: string }> },
-) {
+export async function POST(_req: NextRequest, { params }: EventIdParams) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-    if (!session || !session.user) {
-      return NextResponse.json(
-        { message: "unauthorized user", success: false },
-        { status: 401 },
-      );
-    }
-
+    const session = await requireSession();
     const { eventId } = await params;
-
-    const event = await db.event.findUnique({ where: { id: eventId } });
-
-    if (!event) {
-      return NextResponse.json(
-        { message: "event not found", success: false },
-        { status: 404 },
-      );
-    }
-
-    if (event.userId !== session.user.id) {
-      return NextResponse.json(
-        { message: "forbidden you are not owner", success: false },
-        { status: 403 },
-      );
-    }
-
+    const event = await EventService.ownedEvent(eventId, session.user.id);
     if (event.status === "cancelled") {
-      return NextResponse.json(
-        {
-          message: "cannot send reminders for a cancelled event",
-          success: false,
-        },
-        { status: 409 },
-      );
+      throw new ConflictError("Cannot send reminders for a cancelled event");
     }
-
     const pendingInvitations = await db.invitation.findMany({
       where: { eventId, status: "pending" },
       select: { id: true, email: true, name: true, token: true },
     });
-
     if (pendingInvitations.length === 0) {
-      return NextResponse.json(
-        {
-          message: "no pending invitations everyone has already responded",
-          success: false,
-        },
-        { status: 400 },
+      throw new BadRequestError(
+        "No pending invitations everyone has already responded",
       );
     }
-
-    const eventDate = new Date(event.eventAt).toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
+    const eventDate = formatEventDate(event.eventAt, "full");
     // generate new personalised openings for reminders in parallel
     const openings = await Promise.allSettled(
       pendingInvitations.map(async (inv: pendingInvitation) => {
         const raw = await llm(
-          buildPersonalisationPrompt({
+          generateGuestOpeningPrompt({
             recipientName: inv.name || inv.email.split("@")[0],
             eventName: event.name,
             eventDate,
@@ -155,10 +109,6 @@ export async function POST(
       { status: 200 },
     );
   } catch (e) {
-    console.error(e);
-    return NextResponse.json(
-      { message: "internal server error", success: false },
-      { status: 500 },
-    );
+    return InvitelyError(e);
   }
 }

@@ -1,18 +1,15 @@
 import { EditEventForm } from "@/components/edit/edit-event-form";
 import { EditEventFormSkeleton } from "@/components/skeletons";
+import { getSession } from "@/lib/auth/client/get-session";
 import { Separator } from "@/components/ui/separator";
 import { redirect, notFound } from "next/navigation";
+import { EventIdParams } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
-import { getSession } from "@/lib/session";
-import type { Metadata } from "next";
-import { db } from "@/lib/prisma";
+import { db } from "@/lib/db/prisma";
 import { Suspense } from "react";
+import { Metadata } from "next";
 import { cache } from "react";
 import Link from "next/link";
-
-interface PageProps {
-  params: Promise<{ eventId: string }>;
-}
 
 const getEvent = cache(async (eventId: string) => {
   return db.event.findUnique({ where: { id: eventId } });
@@ -20,7 +17,7 @@ const getEvent = cache(async (eventId: string) => {
 
 export async function generateMetadata({
   params,
-}: PageProps): Promise<Metadata> {
+}: EventIdParams): Promise<Metadata> {
   const { eventId } = await params;
   const event = await getEvent(eventId);
   return {
@@ -37,7 +34,7 @@ async function EditSection({ eventId }: { eventId: string }) {
   return <EditEventForm event={event} />;
 }
 
-export default async function EditEventPage({ params }: PageProps) {
+export default async function EditEventPage({ params }: EventIdParams) {
   const { eventId } = await params;
   const [session, event] = await Promise.all([getSession(), getEvent(eventId)]);
 

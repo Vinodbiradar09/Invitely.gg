@@ -1,8 +1,9 @@
 "use client";
 
+import { signIn } from "@/lib/auth/client/auth-client";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { signIn } from "@/lib/client";
+import { Logo } from "./landing/logo";
 import { useState } from "react";
 import {
   Card,
@@ -35,10 +36,8 @@ export function LoginCard() {
     <Card className="border-border bg-card w-full">
       <CardHeader className="pb-6 text-center">
         <div className="mb-6 flex items-center justify-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center border border-border bg-primary">
-            <span className="font-mono text-sm font-bold text-primary-foreground">
-              I
-            </span>
+          <div className="flex h-8 w-8 items-center justify-center border border-border bg-black">
+            <Logo className="h-5.5 w-5.5 text-white" />
           </div>
           <span className="font-mono text-lg font-semibold tracking-tight text-foreground">
             invitely.gg
