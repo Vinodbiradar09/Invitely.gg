@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Invitely.gg
 
-## Getting Started
+Send Invitations At Scale On Your Behalf
 
-First, run the development server:
+## Tech Stack
 
-```bash
+Invitely.gg is built with a focus on **Server-First** architecture, utilizing modern primitives for speed, safety, and a "Brutalist" engineering aesthetic.
+### Core Architecture & UI
+- **Framework:** [Next.js 16.2 (App Router)](https://nextjs.org/) — Utilizing **Server-Side Rendering (SSR)** and Streaming for instant page loads.
+- **Development DX:** Powered by **Turbopack** for 400% faster HMR (Hot Module Replacement).
+- **Library:** [React 19.2](https://react.dev/) — Leveraging the new `use` hook and Actions for zero-bundle-size logic.
+- **Styling:** [Tailwind CSS 4.0](https://tailwindcss.com/) — Next-gen styling via the high-performance **Oxide engine**.
+- **Animations:** [Motion 12](https://motion.dev/) — Layout-aware, hardware-accelerated transitions.
+
+### Backend & Infrastructure
+- **Database:** [PostgreSQL](https://www.postgresql.org/) — Enterprise-grade relational storage.
+- **ORM:** [Prisma 7.4](https://www.prisma.io/) — Optimized with `@prisma/adapter-pg` for low-latency serverless queries.
+- **Authentication:** [Better Auth 1.5](https://better-auth.com/) — Fully type-safe session management with native Prisma integration.
+- **Email:** [Resend 6.9](https://resend.com/) — Scalable infrastructure for transactional event updates.
+
+### Validation & Intelligence
+- **Type Safety:** [Zod 4.3](https://zod.dev/) — End-to-end schema validation from API to UI.
+- **Icons:** [Lucide React](https://lucide.dev/) & Phosphor Icons.
+- **Runtime:** Node.js 20+ LTS.
+
+installation
+### 1. Clone the repository
+git clone https://github.com/Vinodbiradar09/Invitely.gg.git
+cd Invitely.gg
+### 2. Install dependencies
+npm install
+### 3. Environment Setup
+Create a .env file in the root directory and populate the following variables:
+
+BETTER_AUTH_SECRET=p0_v3ry_long_r4ndom_str1ng_h3r3_dont_reuse_dev
+BETTER_AUTH_URL="http://localhost:3000"
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+DATABASE_URL="postgresql://Invitely:Invitely@localhost:5433/Invitely?schema=public"
+RESEND_API_KEY=re_prod_AbC123...
+FROM="Invitely.gg <noreply@invitely.gg>"
+GEMINI_API_KEY=your_gemini_api_key
+URL="https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+APP_URL=http://localhost:3000
+CRON_SECRET=generate_a_complex_uuid_for_cron_security
+VERCEL_URL=invitely-gg.vercel.app
+### 4. Database Migration
+npx prisma migrate
+npx prisma generate
+npx prisma db push
+### 5. Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+🤝 Contributing
+We love contributions! Whether it's fixing a bug, adding a feature, or improving ui:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Fork the repo.
 
-## Learn More
+Create a Branch (git checkout -b feature/amazing-feature).
 
-To learn more about Next.js, take a look at the following resources:
+Commit Changes (Follow Conventional Commits).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Push to the branch (git push origin feature/amazing-feature).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open a Pull Request.
