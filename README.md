@@ -1,7 +1,7 @@
 <div align="center">
   <a href="https://invitely-gg.vercel.app">
     <img 
-      src="https://github.com/Vinodbiradar09/Invitely.gg/raw/main/logo.svg" 
+      src="https://github.com/Vinodbiradar09/Invitely.gg/raw/main/download.svg" 
       alt="Invitely.gg Logo" 
       width="200" 
       height="200">
