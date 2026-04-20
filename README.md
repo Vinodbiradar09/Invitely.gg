@@ -1,13 +1,86 @@
-# Invitely.gg
+<a href="https://invitely-gg.vercel.app">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="200"
+    height="200"
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <rect
+      width="24"
+      height="24"
+      fill="#0A0A0A"
+      rx="7"
+    />
+    <rect
+      x="2.5"
+      y="2.5"
+      width="19"
+      height="19"
+      rx="5.5"
+      stroke="#FFFFFF"
+      stroke-width="1.1"
+    />
+    <circle
+      cx="12"
+      cy="12"
+      r="6.8"
+      stroke="#FFFFFF"
+      stroke-width="1.25"
+    />
+    <g transform="translate(12 12) rotate(-40)">
+      <rect
+        x="-4.8"
+        y="-5.4"
+        width="1.65"
+        height="10.8"
+        rx="0.3"
+        fill="#FFFFFF"
+        stroke="none"
+      />
+      <rect
+        x="-1.55"
+        y="-5.4"
+        width="1.65"
+        height="10.8"
+        rx="0.3"
+        fill="#FFFFFF"
+        stroke="none"
+      />
+      <rect
+        x="1.7"
+        y="-5.4"
+        width="1.65"
+        height="10.8"
+        rx="0.3"
+        fill="#FFFFFF"
+        stroke="none"
+      />
+    </g>
+  </svg>
+</a>
 
-> Send Invitations at Scale, On Your Behalf.
+<h3 align="center">Invitely.gg</h3>
+<p align="center">
+    Send Invitations at Scale, On Your Behalf.
+    <br />
+    <a href="https://invitely-gg.vercel.app"><strong>Learn more »</strong></a>
+    <br />
+    <br />
+    <a href="#getting-started"><strong>Getting Started</strong></a> ·
+    <a href="#tech-stack"><strong>Tech Stack</strong></a> ·
+    <a href="#architecture"><strong>Architecture</strong></a> ·
+    <a href="#contributing"><strong>Contributing</strong></a>
+</p>
 
+<br/>
+
+## Introduction
 Invitely.gg is a server-first platform for sending invitations at scale built for reliability, type safety, and minimal client-side overhead.
 
 ---
 
 ## Tech Stack
-
 | Layer | Technology |
 |---|---|
 | Framework | Next.js 16.1 (App Router, SSR, Streaming, Server Actions) |
@@ -23,14 +96,11 @@ Invitely.gg is a server-first platform for sending invitations at scale built fo
 ---
 
 ## Getting Started
-
 ### Prerequisites
-
 - Node.js 20+
 - PostgreSQL running locally or remotely
 
 ### 1. Clone the repository
-
 ```bash
 git clone https://github.com/Vinodbiradar09/Invitely.gg.git
 cd Invitely.gg
