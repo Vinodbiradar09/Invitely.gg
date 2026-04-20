@@ -40,7 +40,7 @@ export function LoginCard() {
             <Logo className="h-5.5 w-5.5 text-white" />
           </div>
           <span className="font-mono text-lg font-semibold tracking-tight text-foreground">
-            invitely.gg
+            Invitely.gg
           </span>
         </div>
 

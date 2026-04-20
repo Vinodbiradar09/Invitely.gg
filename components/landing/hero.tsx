@@ -73,7 +73,7 @@ export function Hero() {
                 <div className="h-2.5 w-2.5 bg-muted-foreground/30" />
               </div>
               <span className="font-mono text-xs text-muted-foreground ml-2">
-                invitely.gg [event dashboard]
+                Invitely.gg [event dashboard]
               </span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4">

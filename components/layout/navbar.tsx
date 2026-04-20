@@ -18,7 +18,7 @@ export function Navbar({ user }: NavbarProps) {
               <Logo className="h-3.5 w-3.5 text-white" />
             </div>
             <span className="font-mono text-sm font-semibold tracking-tight text-foreground">
-              invitely.gg
+              Invitely.gg
             </span>
           </Link>
           <NavbarLinks />

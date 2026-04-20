@@ -96,7 +96,7 @@ export default function PrivacyPage() {
               <Logo className="h-4.5 w-4.5 text-white" />
             </div>
             <span className="font-mono text-sm font-semibold text-foreground">
-              invitely.gg
+              Invitely.gg
             </span>
           </div>
           <h1 className="font-mono text-2xl font-bold text-foreground">

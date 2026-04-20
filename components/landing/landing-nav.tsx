@@ -10,7 +10,7 @@ export function LandingNav() {
           <Logo className="h-4 w-4" />
         </div>
         <span className="font-mono text-sm font-semibold tracking-tight">
-          invitely.gg
+          Invitely.gg
         </span>
       </Link>
 
