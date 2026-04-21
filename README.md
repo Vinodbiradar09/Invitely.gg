@@ -3,7 +3,7 @@
 <a href="https://invitely-gg.vercel.app">
   <img
     alt="Invitely.gg | Send Invitations at Scale, On Your Behalf."
-    src="https://github.com/Vinodbiradar09/Invitely.gg/blob/main/public/invitely_gg_banner_v2.svg?raw=true"
+    src="https://github.com/Vinodbiradar09/Invitely.gg/blob/main/public/invitely-banner.png?raw=true"
   >
 </a>
 
