@@ -1,14 +1,11 @@
 <div align="center">
-
 <a href="https://invitely-gg.vercel.app">
   <img
     alt="Invitely.gg | Send Invitations at Scale, On Your Behalf."
     src="https://github.com/Vinodbiradar09/Invitely.gg/blob/main/public/invitely.gg-banner.png?raw=true"
   >
 </a>
-
 <h3>Invitely.gg</h3>
-
 <p>
   Send Invitations at Scale, On Your Behalf.
   <br />
@@ -20,7 +17,6 @@
   <a href="#getting-started"><strong>Getting Started</strong></a> ·
   <a href="#contributing"><strong>Contributing</strong></a>
 </p>
-
 <p>
   <a href="https://github.com/Vinodbiradar09/Invitely.gg/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/Vinodbiradar09/Invitely.gg?label=license&logo=github&color=f80&logoColor=fff" alt="License" />
@@ -29,14 +25,15 @@
     <img src="https://img.shields.io/github/stars/Vinodbiradar09/Invitely.gg?style=flat&logo=github&color=f80&logoColor=fff" alt="Stars" />
   </a>
 </p>
-
 </div>
 
 <br/>
 
 ## Introduction
 
-Invitely.gg is a server-first platform for sending invitations at scale — built for reliability, type safety, and minimal client-side overhead. Give us your list, and we handle the rest. Professional, automated, and sent on your behalf.
+Invitely.gg is a server-first platform that handles invitation delivery at scale so you don't have to. Give us your list and we handle the rest: professional emails sent on your behalf, automatically, without the manual back-and-forth.
+
+Built with a strong emphasis on type safety, minimal client-side overhead, and predictable performance.
 
 ## Tech Stack
 
@@ -44,11 +41,15 @@ Invitely.gg is a server-first platform for sending invitations at scale — buil
 - [React](https://react.dev/) – UI
 - [TypeScript](https://www.typescriptlang.org/) – language
 - [Tailwind CSS](https://tailwindcss.com/) – styling
+- [shadcn/ui](https://ui.shadcn.com/) – component library
+- [Radix UI](https://www.radix-ui.com/) – headless primitives
 - [Motion](https://motion.dev/) – animations
+- [Sonner](https://sonner.emilkowal.ski/) – toast notifications
 - [PostgreSQL](https://www.postgresql.org/) – database
 - [Prisma](https://www.prisma.io/) – ORM
 - [Better Auth](https://better-auth.com/) – authentication
 - [Resend](https://resend.com/) – email delivery
+- [React Email](https://react.email/) – email templates
 - [Zod](https://zod.dev/) – validation
 - [Vercel](https://vercel.com/) – deployments
 
@@ -108,7 +109,6 @@ CRON_SECRET=your_cron_secret_uuid
 
 ```bash
 npx prisma migrate dev
-npx prisma generate
 ```
 
 ### 5. Start the development server
