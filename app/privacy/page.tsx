@@ -92,9 +92,7 @@ export default function PrivacyPage() {
 
         <div className="flex flex-col gap-3 mb-10">
           <div className="flex items-center gap-2 mb-2">
-            <div className="flex h-6 w-6 items-center justify-center border border-border bg-black">
-              <Logo className="h-4.5 w-4.5 text-white" />
-            </div>
+            <Logo size={24} />
             <span className="font-mono text-sm font-semibold text-foreground">
               Invitely.gg
             </span>
