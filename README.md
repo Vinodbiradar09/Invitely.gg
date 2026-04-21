@@ -2,14 +2,10 @@
 
 <a href="https://invitely-gg.vercel.app">
   <img
-    alt="Invitely.gg – Send Invitations at Scale, On Your Behalf."
-    src="https://github.com/Vinodbiradar09/Invitely.gg/blob/main/public/invitely.jpeg?raw=true"
-    width="80"
-    height="80"
+    alt="Invitely.gg | Send Invitations at Scale, On Your Behalf."
+    src="https://github.com/Vinodbiradar09/Invitely.gg/blob/main/public/invitely_gg_banner_v2.svg?raw=true"
   >
 </a>
-
-<h3>Invitely.gg</h3>
 
 <p>
   Send Invitations at Scale, On Your Behalf.
