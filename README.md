@@ -1,29 +1,29 @@
 <div align="center">
-  <a href="https://invitely-gg.vercel.app">
-    <img
-      alt="Invitely.gg – Send Invitations at Scale, On Your Behalf."
-      src="https://github.com/Vinodbiradar09/Invitely.gg/blob/main/public/invitely.jpeg?raw=true"
-      width="120"
-      height="120"
-      style="border-radius: 16px;"
-    >
-  </a>
 
-<h3 align="center">Invitely.gg</h3>
+<a href="https://invitely-gg.vercel.app">
+  <img
+    alt="Invitely.gg – Send Invitations at Scale, On Your Behalf."
+    src="https://github.com/Vinodbiradar09/Invitely.gg/blob/main/public/invitely.jpeg?raw=true"
+    width="80"
+    height="80"
+  >
+</a>
 
-<p align="center">
-    Send Invitations at Scale, On Your Behalf.
-    <br />
-    <a href="https://invitely-gg.vercel.app"><strong>Learn more »</strong></a>
-    <br />
-    <br />
-    <a href="#introduction"><strong>Introduction</strong></a> ·
-    <a href="#tech-stack"><strong>Tech Stack</strong></a> ·
-    <a href="#getting-started"><strong>Getting Started</strong></a> ·
-    <a href="#contributing"><strong>Contributing</strong></a>
+<h3>Invitely.gg</h3>
+
+<p>
+  Send Invitations at Scale, On Your Behalf.
+  <br />
+  <a href="https://invitely-gg.vercel.app"><strong>Learn more »</strong></a>
+  <br />
+  <br />
+  <a href="#introduction"><strong>Introduction</strong></a> ·
+  <a href="#tech-stack"><strong>Tech Stack</strong></a> ·
+  <a href="#getting-started"><strong>Getting Started</strong></a> ·
+  <a href="#contributing"><strong>Contributing</strong></a>
 </p>
 
-<p align="center">
+<p>
   <a href="https://github.com/Vinodbiradar09/Invitely.gg/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/Vinodbiradar09/Invitely.gg?label=license&logo=github&color=f80&logoColor=fff" alt="License" />
   </a>
