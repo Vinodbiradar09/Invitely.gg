@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   description:
     "Create and send beautiful event invitations to everyone in one go.",
   icons: {
-    icon: "/download.svg",
+    icon: "/invitely-cropped.jpeg",
   },
 };
 
