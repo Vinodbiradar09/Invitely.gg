@@ -7,6 +7,8 @@
   >
 </a>
 
+<h3>Invitely.gg</h3>
+
 <p>
   Send Invitations at Scale, On Your Behalf.
   <br />
@@ -26,8 +28,6 @@
   <a href="https://github.com/Vinodbiradar09/Invitely.gg/stargazers">
     <img src="https://img.shields.io/github/stars/Vinodbiradar09/Invitely.gg?style=flat&logo=github&color=f80&logoColor=fff" alt="Stars" />
   </a>
-  <img src="https://img.shields.io/badge/Next.js-16.1-black?logo=next.js&logoColor=fff" alt="Next.js" />
-  <img src="https://img.shields.io/badge/TypeScript-5-blue?logo=typescript&logoColor=fff" alt="TypeScript" />
 </p>
 
 </div>
