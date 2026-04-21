@@ -36,9 +36,7 @@ export function LoginCard() {
     <Card className="border-border bg-card w-full">
       <CardHeader className="pb-6 text-center">
         <div className="mb-6 flex items-center justify-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center border border-border bg-black">
-            <Logo className="h-5.5 w-5.5 text-white" />
-          </div>
+          <Logo size={32} />
           <span className="font-mono text-lg font-semibold tracking-tight text-foreground">
             Invitely.gg
           </span>

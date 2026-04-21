@@ -8,26 +8,19 @@ type LogoProps = {
 export function Logo({ className, size = 32 }: LogoProps) {
   return (
     <div
-      style={{
-        width: size,
-        height: size,
-        overflow: "hidden",
-        borderRadius: 6,
-        position: "relative",
-      }}
-      className={className}
+      style={{ width: size, height: size }}
+      className={`overflow-hidden border border-border bg-black shrink-0 ${className ?? ""}`}
     >
       <Image
         src="/invitely.jpeg"
         alt="Invitely logo"
-        width={size * 2}
-        height={size * 2}
+        width={size}
+        height={size}
         style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%) scale(1.5)",
-          transformOrigin: "center",
+          objectFit: "cover",
+          objectPosition: "center",
+          width: "100%",
+          height: "100%",
         }}
         priority
       />

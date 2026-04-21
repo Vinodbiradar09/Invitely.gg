@@ -14,9 +14,7 @@ export function Navbar({ user }: NavbarProps) {
       <div className="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/workspace" className="flex items-center gap-2 shrink-0">
-            <div className="flex h-6 w-6 items-center justify-center border border-border bg-black">
-              <Logo className="h-3.5 w-3.5 text-white" />
-            </div>
+            <Logo size={24} />
             <span className="font-mono text-sm font-semibold tracking-tight text-foreground">
               Invitely.gg
             </span>
