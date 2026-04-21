@@ -10,6 +10,9 @@
     "lint": "eslint",
     "prepare": "husky"
   },
+  "lint-staged": {
+    "*.{js,ts,tsx}": "eslint --fix"
+  },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
     "@prisma/adapter-pg": "^7.4.2",
@@ -44,6 +47,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
     "prisma": "^7.4.2",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
