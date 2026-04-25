@@ -6,9 +6,10 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function OgImage() {
-  const logoSrc = await fetch(
-    new URL("https://invitely-gg.vercel.app/invitely.jpeg"),
-  ).then((res) => res.arrayBuffer());
+  const logoRes = await fetch("https://invitely-gg.vercel.app/invitely.jpeg");
+  const logoBuffer = await logoRes.arrayBuffer();
+  const logoBase64 = Buffer.from(logoBuffer).toString("base64");
+  const logoSrc = `data:image/jpeg;base64,${logoBase64}`;
 
   return new ImageResponse(
     <div
@@ -48,15 +49,13 @@ export default async function OgImage() {
         }}
       >
         <img
-          src={logoSrc as unknown as string}
+          src={logoSrc}
           width={80}
           height={80}
           alt="Invitely.gg logo"
           style={{
-            borderRadius: "0px",
             border: "1px solid #222",
             objectFit: "cover",
-            objectPosition: "center",
           }}
         />
 
