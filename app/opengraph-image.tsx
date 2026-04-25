@@ -5,7 +5,11 @@ export const alt = "Invitely.gg | Send Invitations at Scale, On Your Behalf";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OgImage() {
+export default async function OgImage() {
+  const logoSrc = await fetch(
+    new URL("https://invitely-gg.vercel.app/invitely.jpeg"),
+  ).then((res) => res.arrayBuffer());
+
   return new ImageResponse(
     <div
       style={{
@@ -16,7 +20,7 @@ export default function OgImage() {
         alignItems: "center",
         justifyContent: "center",
         position: "relative",
-        fontFamily: "sans-serif",
+        fontFamily: "monospace",
       }}
     >
       <div
@@ -38,39 +42,44 @@ export default function OgImage() {
           background: "#000",
           border: "1px solid #222",
           borderRadius: "24px",
-          padding: "64px 80px",
-          gap: "16px",
+          padding: "72px 96px",
+          gap: "20px",
           zIndex: 1,
         }}
       >
-        <div
+        <img
+          src={logoSrc as unknown as string}
+          width={80}
+          height={80}
+          alt="Invitely.gg logo"
           style={{
-            width: 64,
-            height: 64,
-            background: "#f80",
-            borderRadius: "16px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 32,
-            marginBottom: 8,
+            borderRadius: "0px",
+            border: "1px solid #222",
+            objectFit: "cover",
+            objectPosition: "center",
           }}
-        >
-          ✉
-        </div>
+        />
 
         <div
           style={{
-            color: "#fff",
-            fontSize: 56,
+            color: "#ffffff",
+            fontSize: 60,
             fontWeight: 700,
             letterSpacing: "-1px",
+            marginTop: 8,
           }}
         >
           Invitely.gg
         </div>
 
-        <div style={{ color: "#888", fontSize: 26, marginTop: 4 }}>
+        <div
+          style={{
+            color: "#666666",
+            fontSize: 24,
+            letterSpacing: "0.5px",
+            marginTop: -4,
+          }}
+        >
           Send Invitations at Scale, On Your Behalf.
         </div>
       </div>
