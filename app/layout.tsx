@@ -37,13 +37,11 @@ export const metadata: Metadata = {
   authors: [{ name: "Invitely.gg", url: "https://invitely-gg.vercel.app" }],
   creator: "Invitely.gg",
   applicationName: "Invitely.gg",
-
   icons: {
     icon: "/invitely-cropped.jpeg",
     shortcut: "/invitely-cropped.jpeg",
     apple: "/invitely-cropped.jpeg",
   },
-
   alternates: {
     canonical: "https://invitely-gg.vercel.app",
   },
@@ -57,7 +55,7 @@ export const metadata: Metadata = {
       "Stop manual emailing. Give us your list and we'll handle the rest. Professional, automated invitations sent on your behalf.",
     images: [
       {
-        url: "/og-banner.png",
+        url: "https://invitely-gg.vercel.app/og-banner.png",
         width: 1200,
         height: 630,
         alt: "Invitely.gg — Send Invitations at Scale, On Your Behalf",
@@ -65,7 +63,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-
   twitter: {
     card: "summary_large_image",
     site: "@invitelygg",
@@ -75,14 +72,13 @@ export const metadata: Metadata = {
       "Stop manual emailing. Give us your list and we'll handle the rest.",
     images: [
       {
-        url: "/og-banner.png",
+        url: "https://invitely-gg.vercel.app/og-banner.png",
         width: 1200,
         height: 630,
         alt: "Invitely.gg — Send Invitations at Scale, On Your Behalf",
       },
     ],
   },
-
   robots: {
     index: true,
     follow: true,
@@ -94,7 +90,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-
   manifest: "/site.webmanifest",
 };
 
