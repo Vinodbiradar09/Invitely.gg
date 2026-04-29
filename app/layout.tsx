@@ -55,7 +55,7 @@ export const metadata: Metadata = {
       "Stop manual emailing. Give us your list and we'll handle the rest. Professional, automated invitations sent on your behalf.",
     images: [
       {
-        url: "https://invitely-gg.vercel.app/og-banner.png",
+        url: "https://invitely-gg.vercel.app/og.png",
         width: 1200,
         height: 630,
         alt: "Invitely.gg — Send Invitations at Scale, On Your Behalf",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
       "Stop manual emailing. Give us your list and we'll handle the rest.",
     images: [
       {
-        url: "https://invitely-gg.vercel.app/og-banner.png",
+        url: "https://invitely-gg.vercel.app/og.png",
         width: 1200,
         height: 630,
         alt: "Invitely.gg — Send Invitations at Scale, On Your Behalf",
