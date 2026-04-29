@@ -210,7 +210,7 @@ export function StepPreviewSend({
               type="button"
               variant="outline"
               size="sm"
-              className="font-mono text-xs gap-2 shrink-0"
+              className="font-mono text-xs gap-2 shrink-0 cursor-pointer"
               onClick={handleGetSuggestion}
               disabled={isLoadingSuggestion}
             >
@@ -238,7 +238,7 @@ export function StepPreviewSend({
                 type="button"
                 variant="outline"
                 size="sm"
-                className="font-mono text-xs gap-2"
+                className="font-mono text-xs gap-2 cursor-pointer"
                 onClick={handleSchedule}
                 disabled={isScheduling || state.isSending}
               >
@@ -251,7 +251,7 @@ export function StepPreviewSend({
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="font-mono text-xs text-muted-foreground"
+                className="font-mono text-xs text-muted-foreground cursor-pointer"
                 onClick={handleGetSuggestion}
                 disabled={isLoadingSuggestion}
               >

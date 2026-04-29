@@ -1,5 +1,4 @@
 "use client";
-
 import { Sparkles, FileText, ChevronDown, BookmarkPlus } from "lucide-react";
 import { EventCreationState } from "@/app/hooks/use-event-creation";
 import { Separator } from "@/components/ui/separator";
@@ -142,7 +141,7 @@ export function StepWriteInvite({
                 type="button"
                 variant="outline"
                 size="sm"
-                className="font-mono text-xs gap-2 shrink-0"
+                className="font-mono text-xs gap-2 shrink-0 cursor-pointer"
               >
                 <FileText className="h-3 w-3" />
                 Use template
@@ -203,11 +202,11 @@ export function StepWriteInvite({
           type="button"
           variant="outline"
           size="sm"
-          className="font-mono text-xs gap-2 self-start"
+          className="font-mono text-xs gap-2 self-start cursor-pointer"
           onClick={handlePolish}
           disabled={!casualText.trim() || state.isPolishing}
         >
-          <Sparkles className="h-3 w-3" />
+          <Sparkles className="h-3 w-3 cursor-pointer" />
           {state.isPolishing ? "Optimizing..." : "Optimize"}
         </Button>
       </div>
@@ -259,7 +258,7 @@ export function StepWriteInvite({
             type="button"
             variant="outline"
             size="sm"
-            className="font-mono text-xs gap-2"
+            className="font-mono text-xs gap-2 cursor-pointer"
             onClick={() => setSaveDialogOpen(true)}
           >
             <BookmarkPlus className="h-3 w-3" />
@@ -273,7 +272,7 @@ export function StepWriteInvite({
           type="button"
           variant="outline"
           size="sm"
-          className="font-mono text-xs"
+          className="font-mono text-xs cursor-pointer"
           onClick={onBack}
         >
           ← Back
@@ -281,7 +280,7 @@ export function StepWriteInvite({
         <Button
           type="button"
           size="sm"
-          className="font-mono text-xs"
+          className="font-mono text-xs cursor-pointer"
           onClick={onNext}
           disabled={!isValid}
         >
@@ -327,7 +326,7 @@ export function StepWriteInvite({
               <Button
                 variant="outline"
                 size="sm"
-                className="font-mono text-xs"
+                className="font-mono text-xs cursor-pointer"
                 onClick={() => setSaveDialogOpen(false)}
                 disabled={isSaving}
               >
@@ -335,7 +334,7 @@ export function StepWriteInvite({
               </Button>
               <Button
                 size="sm"
-                className="font-mono text-xs"
+                className="font-mono text-xs cursor-pointer"
                 onClick={handleSaveTemplate}
                 disabled={!templateName.trim() || isSaving}
               >

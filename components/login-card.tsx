@@ -1,10 +1,10 @@
 "use client";
-
 import { signIn } from "@/lib/auth/client/auth-client";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Logo } from "./landing/logo";
 import { useState } from "react";
+import { toast } from "sonner";
 import {
   Card,
   CardContent,
@@ -12,7 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { toast } from "sonner";
 import Link from "next/link";
 
 export function LoginCard() {

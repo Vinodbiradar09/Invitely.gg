@@ -92,7 +92,7 @@ export function EditEmailContent({
           type="button"
           variant="outline"
           size="sm"
-          className="font-mono text-xs gap-2 self-start"
+          className="font-mono text-xs gap-2 self-start cursor-pointer"
           onClick={handlePolish}
           disabled={!casualText.trim() || isPolishing}
         >
@@ -144,7 +144,7 @@ export function EditEmailContent({
           type="button"
           variant="outline"
           size="sm"
-          className="font-mono text-xs"
+          className="font-mono text-xs cursor-pointer"
           onClick={onBack}
           disabled={isSaving}
         >
@@ -153,7 +153,7 @@ export function EditEmailContent({
         <Button
           type="button"
           size="sm"
-          className="font-mono text-xs"
+          className="font-mono text-xs cursor-pointer"
           onClick={() => onSave({ emailSubject, emailBody })}
           disabled={!isValid || isSaving}
         >

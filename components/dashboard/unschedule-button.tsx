@@ -62,7 +62,7 @@ export function UnscheduleButton({
         <Button
           variant="outline"
           size="sm"
-          className="font-mono text-xs h-8 gap-2 text-blue-500 border-blue-500/30 hover:border-blue-500/60 hover:text-blue-400"
+          className="cursor-pointer font-mono text-xs h-8 gap-2 text-blue-500 border-blue-500/30 hover:border-blue-500/60 hover:text-blue-400"
         >
           <CalendarX className="h-3 w-3" />
           Unschedule
@@ -83,13 +83,13 @@ export function UnscheduleButton({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="font-mono text-xs h-8">
+          <AlertDialogCancel className="font-mono text-xs h-8 cursor-pointer">
             Keep schedule
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleUnschedule}
             disabled={isLoading}
-            className="font-mono text-xs h-8 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className="cursor-pointer font-mono text-xs h-8 bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
             {isLoading ? "Cancelling..." : "Cancel schedule"}
           </AlertDialogAction>

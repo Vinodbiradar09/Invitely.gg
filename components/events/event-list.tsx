@@ -39,7 +39,7 @@ export function EventList({ events }: EventListProps) {
           </p>
         </div>
         <Link href="/events/new">
-          <Button size="sm" className="font-mono text-xs gap-2">
+          <Button size="sm" className="font-mono text-xs gap-2 cursor-pointer">
             <Plus className="h-3 w-3" />
             Create event
           </Button>

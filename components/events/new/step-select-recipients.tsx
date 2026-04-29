@@ -107,13 +107,13 @@ export function StepSelectRecipients({
                     disabled={members.length === 0}
                     className={
                       selectionState === "some"
-                        ? "data-[state=checked]:bg-foreground/50"
-                        : ""
+                        ? "data-[state=checked]:bg-foreground/50 cursor-pointer"
+                        : "cursor-pointer"
                     }
                   />
                   <button
                     type="button"
-                    className="flex flex-1 items-center justify-between gap-3 text-left"
+                    className="flex flex-1 items-center justify-between gap-3 text-left cursor-pointer"
                     onClick={() => toggleExpanded(workspace.id)}
                   >
                     <div className="flex items-center gap-2">
@@ -164,6 +164,7 @@ export function StepSelectRecipients({
                           }
                         >
                           <Checkbox
+                            className="cursor-pointer"
                             checked={isSelected}
                             onCheckedChange={() =>
                               onToggleRecipient({
@@ -205,7 +206,7 @@ export function StepSelectRecipients({
           type="button"
           variant="outline"
           size="sm"
-          className="font-mono text-xs"
+          className="font-mono text-xs cursor-pointer"
           onClick={onBack}
         >
           ← Back
@@ -213,7 +214,7 @@ export function StepSelectRecipients({
         <Button
           type="button"
           size="sm"
-          className="font-mono text-xs"
+          className="font-mono text-xs cursor-pointer"
           onClick={onNext}
           disabled={selectedCount === 0}
         >

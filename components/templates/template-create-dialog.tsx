@@ -63,7 +63,7 @@ export function TemplateCreateDialog({ onCreated }: TemplateCreateDialogProps) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button size="sm" className="font-mono text-xs gap-2">
+        <Button size="sm" className="font-mono text-xs gap-2 cursor-pointer">
           <Plus className="h-3 w-3" />
           New template
         </Button>

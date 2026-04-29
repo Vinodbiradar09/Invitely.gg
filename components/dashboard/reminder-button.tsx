@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 import { useState } from "react";
@@ -37,7 +36,7 @@ export function ReminderButton({ eventId, pendingCount }: ReminderButtonProps) {
     <Button
       variant="outline"
       size="sm"
-      className="font-mono text-xs gap-2"
+      className="font-mono text-xs gap-2 cursor-pointer"
       onClick={handleReminder}
       disabled={isLoading}
     >

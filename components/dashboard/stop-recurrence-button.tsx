@@ -61,7 +61,7 @@ export function StopRecurrenceButton({
         <Button
           variant="outline"
           size="sm"
-          className="font-mono text-xs h-8 gap-2 text-muted-foreground hover:text-foreground"
+          className="font-mono text-xs h-8 gap-2 text-muted-foreground hover:text-foreground cursor-pointer"
         >
           <RefreshCw className="h-3 w-3" />
           Stop repeating
@@ -129,13 +129,13 @@ export function StopRecurrenceButton({
         )}
 
         <AlertDialogFooter>
-          <AlertDialogCancel className="font-mono text-xs h-8">
+          <AlertDialogCancel className="font-mono text-xs h-8 cursor-pointer">
             Keep repeating
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleStop}
             disabled={isLoading}
-            className={`font-mono text-xs h-8 ${
+            className={`font-mono text-xs h-8 cursor-pointer ${
               cancelFuture
                 ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 : ""

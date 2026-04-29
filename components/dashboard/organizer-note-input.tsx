@@ -62,7 +62,7 @@ export function OrganizerNoteInput({
         <Button
           variant="ghost"
           size="sm"
-          className="h-5 w-5 p-0 opacity-0 group-hover/note:opacity-100 transition-opacity shrink-0"
+          className="h-5 w-5 p-0 opacity-0 group-hover/note:opacity-100 transition-opacity shrink-0 cursor-pointer"
           onClick={() => setIsEditing(true)}
         >
           <Pencil className="h-3 w-3" />
@@ -85,7 +85,7 @@ export function OrganizerNoteInput({
         <Button
           variant="ghost"
           size="sm"
-          className="h-6 w-6 p-0 text-green-500 hover:text-green-400"
+          className="h-6 w-6 p-0 text-green-500 hover:text-green-400 cursor-pointer"
           onClick={handleSave}
           disabled={isLoading}
         >
@@ -94,7 +94,7 @@ export function OrganizerNoteInput({
         <Button
           variant="ghost"
           size="sm"
-          className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+          className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground cursor-pointer"
           onClick={handleCancel}
           disabled={isLoading}
         >

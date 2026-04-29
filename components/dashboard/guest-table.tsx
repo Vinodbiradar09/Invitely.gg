@@ -1,5 +1,4 @@
 "use client";
-
 import { OrganizerNoteInput } from "@/components/dashboard/organizer-note-input";
 import { ResendLinkButton } from "@/components/dashboard/resend-link-button";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -11,6 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -19,7 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
 
 type InvitationStatus = "pending" | "attending" | "maybe" | "declined";
 
@@ -152,7 +151,7 @@ function GuestRow({
             <Button
               variant="ghost"
               size="sm"
-              className={`h-7 w-7 p-0 transition-colors ${
+              className={`h-7 w-7 p-0 transition-colors cursor-pointer ${
                 hasNotes
                   ? "text-foreground"
                   : "text-muted-foreground hover:text-foreground"

@@ -122,20 +122,32 @@ export function StepEventDetails({
             if (!newRecurrence) setField("autoInvite", false);
           }}
         >
-          <SelectTrigger className="font-mono text-xs h-9 w-full sm:w-48">
+          <SelectTrigger className="font-mono text-xs h-9 w-full sm:w-48 cursor-pointer">
             <SelectValue placeholder="Does not repeat" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="none" className="font-mono text-xs">
+            <SelectItem
+              value="none"
+              className="font-mono text-xs cursor-pointer"
+            >
               Does not repeat
             </SelectItem>
-            <SelectItem value="weekly" className="font-mono text-xs">
+            <SelectItem
+              value="weekly"
+              className="font-mono text-xs cursor-pointer"
+            >
               Weekly
             </SelectItem>
-            <SelectItem value="monthly" className="font-mono text-xs">
+            <SelectItem
+              value="monthly"
+              className="font-mono text-xs cursor-pointer"
+            >
               Monthly
             </SelectItem>
-            <SelectItem value="annually" className="font-mono text-xs">
+            <SelectItem
+              value="annually"
+              className="font-mono text-xs cursor-pointer"
+            >
               Annually
             </SelectItem>
           </SelectContent>
@@ -155,12 +167,12 @@ export function StepEventDetails({
                 onCheckedChange={(checked) =>
                   setField("autoInvite", checked === true)
                 }
-                className="mt-0.5"
+                className="mt-0.5 cursor-pointer"
               />
               <div className="flex flex-col gap-1">
                 <label
                   htmlFor="auto-invite"
-                  className="font-mono text-xs text-foreground font-semibold cursor-pointer"
+                  className="font-mono text-xs text-foreground font-semibold"
                 >
                   Automatically invite same guests each time
                 </label>
@@ -179,7 +191,7 @@ export function StepEventDetails({
         <Button
           type="submit"
           size="sm"
-          className="font-mono text-xs"
+          className="font-mono text-xs cursor-pointer"
           disabled={!isValid}
         >
           Next →

@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { redirect, notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { EventIdParams } from "@/lib/utils";
 import { Invitation } from "@/lib/types";
 import { db } from "@/lib/db/prisma";
 import { Suspense } from "react";
@@ -29,7 +30,6 @@ import {
   RefreshCw,
   AlertTriangle,
 } from "lucide-react";
-import { EventIdParams } from "@/lib/utils";
 
 const getEvent = cache(async (eventId: string) => {
   return db.event.findUnique({

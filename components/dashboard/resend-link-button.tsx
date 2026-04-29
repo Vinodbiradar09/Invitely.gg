@@ -37,7 +37,7 @@ export function ResendLinkButton({ eventId, email }: ResendLinkButtonProps) {
     <Button
       variant="ghost"
       size="sm"
-      className="font-mono text-xs h-7 px-2 text-muted-foreground hover:text-foreground"
+      className="font-mono text-xs h-7 px-2 text-muted-foreground hover:text-foreground cursor-pointer"
       onClick={handleResend}
       disabled={isLoading}
     >

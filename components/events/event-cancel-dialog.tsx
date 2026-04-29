@@ -56,7 +56,7 @@ export function EventCancelDialog({
         <Button
           variant="outline"
           size="sm"
-          className="font-mono text-xs h-8 gap-2 text-muted-foreground hover:text-destructive hover:border-destructive/50"
+          className="cursor-pointer font-mono text-xs h-8 gap-2 text-muted-foreground hover:text-destructive hover:border-destructive/50"
         >
           <XCircle className="h-3 w-3" />
           Cancel event
@@ -84,13 +84,13 @@ export function EventCancelDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="font-mono text-xs h-8">
+          <AlertDialogCancel className="font-mono text-xs h-8 cursor-pointer">
             Keep event
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleCancel}
             disabled={isLoading}
-            className="font-mono text-xs h-8 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className="font-mono text-xs h-8 bg-destructive text-destructive-foreground hover:bg-destructive/90 cursor-pointer"
           >
             {isLoading ? "Cancelling..." : "Cancel event"}
           </AlertDialogAction>

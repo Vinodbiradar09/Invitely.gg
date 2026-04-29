@@ -53,7 +53,7 @@ export function AppSidebar({ user }: { user: User }) {
             Invitely.gg
           </span>
         </Link>
-        <SidebarTrigger className="h-6 w-6 shrink-0 rounded-none text-muted-foreground hover:text-foreground hover:bg-muted/50" />
+        <SidebarTrigger className="cursor-pointer h-6 w-6 shrink-0 rounded-none text-muted-foreground hover:text-foreground hover:bg-muted/50" />
       </SidebarHeader>
       <SidebarContent className="px-2 py-2">
         <SidebarMenu className="gap-0.5">
@@ -96,7 +96,7 @@ export function AppSidebar({ user }: { user: User }) {
               onClick={handleSignOut}
               disabled={isSigningOut}
               tooltip="Sign out"
-              className="h-8 rounded-none font-mono text-xs gap-3 text-muted-foreground hover:text-foreground hover:bg-muted/50 disabled:opacity-50"
+              className="h-8 rounded-none font-mono text-xs gap-3 text-muted-foreground hover:text-foreground hover:bg-muted/50 disabled:opacity-50 cursor-pointer"
             >
               <LogOut className="h-3.5 w-3.5 shrink-0" />
               <span>{isSigningOut ? "Signing out..." : "Sign out"}</span>

@@ -61,7 +61,7 @@ export function NewEventForm({
         <Button
           variant="ghost"
           size="sm"
-          className="font-mono text-xs text-muted-foreground hover:text-foreground shrink-0"
+          className="font-mono text-xs text-muted-foreground hover:text-foreground shrink-0 cursor-pointer"
           onClick={() => router.push("/events")}
           disabled={state.isSending}
         >

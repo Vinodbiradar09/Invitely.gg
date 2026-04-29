@@ -80,7 +80,7 @@ export function InsightsCard({ eventId }: InsightsCardProps) {
             <Button
               variant="outline"
               size="sm"
-              className="font-mono text-xs h-7 gap-2"
+              className="font-mono text-xs h-7 gap-2 cursor-pointer"
               onClick={handleGenerate}
               disabled={isLoading}
             >
@@ -92,7 +92,7 @@ export function InsightsCard({ eventId }: InsightsCardProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="font-mono text-xs h-7 gap-2 text-muted-foreground"
+              className="font-mono text-xs h-7 gap-2 text-muted-foreground cursor-pointer"
               onClick={handleGenerate}
               disabled={isLoading}
             >

@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import {
@@ -55,7 +54,7 @@ export function EventDeleteDialog({
         <Button
           variant="ghost"
           size="sm"
-          className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+          className="cursor-pointer h-7 w-7 p-0 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
         >
           <Trash2 className="h-3 w-3" />
         </Button>
@@ -74,13 +73,13 @@ export function EventDeleteDialog({
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel className="font-mono text-xs h-8">
+          <AlertDialogCancel className="font-mono text-xs h-8 cursor-pointer">
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isLoading}
-            className="font-mono text-xs h-8 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className="cursor-pointer font-mono text-xs h-8 bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
             {isLoading ? "Deleting..." : "Delete event"}
           </AlertDialogAction>
