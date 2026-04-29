@@ -23,13 +23,13 @@ export const dynamic = "force-static";
 export default function LandingPage() {
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto max-w-5xl border border-border rounded-3xl bg-background overflow-hidden">
+      <div className="mx-auto max-w-5xl border border-white/8 bg-background overflow-hidden">
         <LandingNav />
         <Hero />
         <Features />
         <HowItWorks />
         <EmailPreview />
-        <div className="-mt-14">
+        <div className="border-t border-white/8">
           <BrandFooter />
         </div>
       </div>

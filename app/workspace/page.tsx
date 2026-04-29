@@ -5,9 +5,9 @@ import { getSession } from "@/lib/auth/client/get-session";
 import { Separator } from "@/components/ui/separator";
 import { WorkspaceWithMembers } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { Plus, ArrowRight } from "lucide-react";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db/prisma";
+import { Plus } from "lucide-react";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -18,12 +18,10 @@ export const metadata: Metadata = {
 
 function PageHeader() {
   return (
-    <div className="flex items-start justify-between gap-4">
-      <div className="flex flex-col gap-1">
-        <h1 className="font-mono text-base font-semibold text-foreground">
-          Workspaces
-        </h1>
-      </div>
+    <div className="flex items-center justify-between gap-4">
+      <h1 className="font-mono text-base font-semibold text-foreground">
+        Workspaces
+      </h1>
     </div>
   );
 }
@@ -45,22 +43,22 @@ async function WorkspaceSection() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-start justify-between gap-4 -mt-6">
+      <div className="flex items-center justify-between gap-4">
         <p className="font-mono text-xs text-muted-foreground">
           {workspaces.length === 0
-            ? "Create a workspace to start organising your contacts."
-            : `${workspaces.length}/5 workspaces · ${totalMembers} total contacts`}
+            ? "Create a workspace to start organising contacts."
+            : `${workspaces.length}/5 workspaces · ${totalMembers} contact${totalMembers === 1 ? "" : "s"}`}
         </p>
         <div className="flex items-center gap-2 shrink-0">
           {totalMembers > 0 && (
-            <Link href="/events">
+            <Link href="/events/new">
               <Button
                 variant="outline"
                 size="sm"
-                className="font-mono text-xs gap-2"
+                className="font-mono text-xs gap-2 rounded-none"
               >
-                Go to Events
-                <ArrowRight className="h-3 w-3" />
+                <Plus className="h-3 w-3" />
+                New event
               </Button>
             </Link>
           )}
@@ -69,26 +67,6 @@ async function WorkspaceSection() {
       </div>
 
       <WorkspaceList workspaces={workspaces} />
-
-      {totalMembers > 0 && workspaces.length > 0 && (
-        <div className="border border-dashed border-border px-5 py-4 flex items-center justify-between gap-4">
-          <div className="flex flex-col gap-0.5">
-            <p className="font-mono text-xs text-foreground font-semibold">
-              Ready to send invitations?
-            </p>
-            <p className="font-mono text-xs text-muted-foreground">
-              You have {totalMembers} contact
-              {totalMembers === 1 ? "" : "s"} ready to invite.
-            </p>
-          </div>
-          <Link href="/events/new">
-            <Button size="sm" className="font-mono text-xs gap-2 shrink-0">
-              <Plus className="h-3 w-3" />
-              Create event
-            </Button>
-          </Link>
-        </div>
-      )}
     </div>
   );
 }

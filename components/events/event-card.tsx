@@ -72,14 +72,6 @@ export function EventCard({ event }: EventCardProps) {
     minute: "2-digit",
   });
 
-  const badgeClass = isCancelled
-    ? "bg-red-500/10 text-red-500 border-red-500/20"
-    : isScheduled
-      ? "bg-blue-500/10 text-blue-500 border-blue-500/20"
-      : isPast
-        ? "bg-muted text-muted-foreground"
-        : "bg-green-500/10 text-green-500 border-green-500/20";
-
   const badgeLabel = isCancelled
     ? "cancelled"
     : isScheduled
@@ -88,91 +80,87 @@ export function EventCard({ event }: EventCardProps) {
         ? "past"
         : "upcoming";
 
+  const badgeClass = isCancelled
+    ? "bg-destructive/10 text-destructive border-destructive/20"
+    : "bg-muted text-muted-foreground border-border";
+
   return (
     <Card
-      className={`border-border bg-card group transition-colors relative ${
+      className={`border-border bg-card group transition-colors relative rounded-none shadow-none ${
         isCancelled
-          ? "opacity-60"
+          ? "opacity-50"
           : isUrgent
-            ? "border-red-500/30 hover:border-red-500/50"
+            ? "border-destructive/40 hover:border-destructive/60"
             : "hover:border-foreground/20"
       }`}
     >
-      {isUrgent && (
-        <div className="absolute top-3 right-10 flex items-center gap-1">
-          <AlertTriangle className="h-3 w-3 text-red-500 animate-pulse" />
-        </div>
-      )}
-
       <CardHeader className="pb-3 px-4 pt-4">
         <div className="flex items-start justify-between gap-2">
-          <div className="flex flex-col gap-1.5 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex flex-col gap-1.5 min-w-0 flex-1">
+            <div className="flex items-center gap-1.5 flex-wrap">
               <Badge
-                variant="secondary"
-                className={`font-mono text-xs px-1.5 py-0 h-4 ${badgeClass}`}
+                variant="outline"
+                className={`font-mono text-[10px] px-1.5 py-0 h-4 rounded-none ${badgeClass}`}
               >
                 {badgeLabel}
               </Badge>
+
               {isRecurring && (
                 <Badge
-                  variant="secondary"
-                  className="font-mono text-xs px-1.5 py-0 h-4 bg-purple-500/10 text-purple-500 border-purple-500/20 flex items-center gap-1"
+                  variant="outline"
+                  className="font-mono text-[10px] px-1.5 py-0 h-4 rounded-none bg-muted text-muted-foreground border-border flex items-center gap-1"
                 >
-                  <RefreshCw className="h-2.5 w-2.5" />
+                  <RefreshCw className="h-2 w-2" />
                   {event.recurrence}
                 </Badge>
               )}
+
               {isUrgent && (
                 <Badge
-                  variant="secondary"
-                  className="font-mono text-xs px-1.5 py-0 h-4 bg-red-500/10 text-red-500 border-red-500/20"
+                  variant="outline"
+                  className="font-mono text-[10px] px-1.5 py-0 h-4 rounded-none bg-destructive/10 text-destructive border-destructive/20 flex items-center gap-1"
                 >
-                  invite urgent
+                  <AlertTriangle className="h-2 w-2" />
+                  urgent
                 </Badge>
               )}
-              {isInvitePending && (
+
+              {isInvitePending && !isUrgent && (
                 <Badge
-                  variant="secondary"
-                  className="font-mono text-xs px-1.5 py-0 h-4 bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
+                  variant="outline"
+                  className="font-mono text-[10px] px-1.5 py-0 h-4 rounded-none bg-muted text-muted-foreground border-border"
                 >
                   invite pending
                 </Badge>
               )}
             </div>
+
             <Link href={`/events/${event.id}`}>
               <h3 className="font-mono text-sm font-semibold text-foreground truncate hover:underline underline-offset-4">
                 {event.name}
               </h3>
             </Link>
           </div>
+
           <EventDeleteDialog eventId={event.id} eventName={event.name} />
         </div>
       </CardHeader>
 
       <Link href={`/events/${event.id}`} className="block">
         <CardContent className="px-4 pb-4 flex flex-col gap-3">
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
               <Calendar className="h-3 w-3 text-muted-foreground shrink-0" />
               <span
-                className={`font-mono text-xs ${
-                  isCancelled
-                    ? "text-muted-foreground line-through"
-                    : "text-muted-foreground"
-                }`}
+                className={`font-mono text-xs text-muted-foreground ${isCancelled ? "line-through" : ""}`}
               >
-                {formattedDate} at {formattedTime}
+                {formattedDate} · {formattedTime}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <MapPin className="h-3 w-3 text-muted-foreground shrink-0" />
               <span
-                className={`font-mono text-xs truncate ${
-                  isCancelled
-                    ? "text-muted-foreground line-through"
-                    : "text-muted-foreground"
-                }`}
+                className={`font-mono text-xs text-muted-foreground truncate ${isCancelled ? "line-through" : ""}`}
               >
                 {event.location}
               </span>
@@ -193,50 +181,22 @@ export function EventCard({ event }: EventCardProps) {
               </span>
             </div>
           ) : (
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-3">
               {[
-                {
-                  label: "going",
-                  value: event.summary.attending,
-                  color: "text-green-500",
-                },
-                {
-                  label: "maybe",
-                  value: event.summary.maybe,
-                  color: "text-yellow-500",
-                },
-                {
-                  label: "no",
-                  value: event.summary.declined,
-                  color: "text-destructive",
-                },
-                {
-                  label: "pending",
-                  value: event.summary.pending,
-                  color: "text-muted-foreground",
-                },
-              ].map(
-                ({
-                  label,
-                  value,
-                  color,
-                }: {
-                  label: string;
-                  value: number;
-                  color: string;
-                }) => (
-                  <div key={label} className="flex flex-col gap-0.5">
-                    <span
-                      className={`font-mono text-sm font-semibold ${color}`}
-                    >
-                      {value}
-                    </span>
-                    <span className="font-mono text-xs text-muted-foreground">
-                      {label}
-                    </span>
-                  </div>
-                ),
-              )}
+                { label: "going", value: event.summary.attending },
+                { label: "maybe", value: event.summary.maybe },
+                { label: "no", value: event.summary.declined },
+                { label: "pending", value: event.summary.pending },
+              ].map(({ label, value }) => (
+                <div key={label} className="flex flex-col gap-0.5">
+                  <span className="font-mono text-sm font-semibold text-foreground tabular-nums">
+                    {value}
+                  </span>
+                  <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wide">
+                    {label}
+                  </span>
+                </div>
+              ))}
             </div>
           )}
         </CardContent>

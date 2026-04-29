@@ -3,36 +3,20 @@ import { TemplateListSkeleton } from "@/components/skeletons";
 import { getSession } from "@/lib/auth/client/get-session";
 import { Separator } from "@/components/ui/separator";
 import { redirect } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { db } from "@/lib/db/prisma";
 import { Suspense } from "react";
 import { Metadata } from "next";
-import Link from "next/link";
 
 export const metadata: Metadata = { title: "Templates | Invitely.gg" };
 
 function PageHeader() {
   return (
-    <>
-      <Link
-        href="/events"
-        className="flex items-center gap-2 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors w-fit"
-      >
-        <ArrowLeft className="h-3 w-3" />
-        Back to events
-      </Link>
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <h1 className="font-mono text-base font-semibold text-foreground">
-            Templates
-          </h1>
-          <p className="font-mono text-xs text-muted-foreground">
-            Reusable email templates for your events.
-          </p>
-        </div>
-      </div>
+    <div className="flex flex-col gap-6">
+      <h1 className="font-mono text-base font-semibold text-foreground">
+        Templates
+      </h1>
       <Separator className="bg-border" />
-    </>
+    </div>
   );
 }
 
@@ -58,9 +42,9 @@ async function TemplateSection() {
 
   return (
     <div className="flex flex-col gap-6">
-      <p className="font-mono text-xs text-muted-foreground -mt-4">
+      <p className="font-mono text-xs text-muted-foreground -mt-2">
         {templates.length === 0
-          ? "No templates yet."
+          ? "Save reusable email templates for your events."
           : `${templates.length}/20 templates`}
       </p>
       <TemplateList templates={templates} />

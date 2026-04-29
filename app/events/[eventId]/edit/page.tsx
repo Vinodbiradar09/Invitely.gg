@@ -3,6 +3,7 @@ import { EditEventFormSkeleton } from "@/components/skeletons";
 import { getSession } from "@/lib/auth/client/get-session";
 import { Separator } from "@/components/ui/separator";
 import { redirect, notFound } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import { EventIdParams } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
 import { db } from "@/lib/db/prisma";
@@ -30,7 +31,6 @@ export async function generateMetadata({
 async function EditSection({ eventId }: { eventId: string }) {
   const event = await getEvent(eventId);
   if (!event) notFound();
-
   return <EditEventForm event={event} />;
 }
 
@@ -41,22 +41,23 @@ export default async function EditEventPage({ params }: EventIdParams) {
   if (!session) redirect("/login");
   if (!event) notFound();
   if (event.userId !== session.user.id) notFound();
-
-  if (event.status === "cancelled") {
-    redirect(`/events/${eventId}`);
-  }
+  if (event.status === "cancelled") redirect(`/events/${eventId}`);
 
   return (
     <div className="flex flex-col gap-6 max-w-2xl mx-auto">
-      <Link
-        href={`/events/${eventId}`}
-        className="flex items-center gap-2 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors w-fit"
+      <Button
+        variant="ghost"
+        size="sm"
+        asChild
+        className="font-mono text-xs gap-1.5 -ml-2 h-7 w-fit text-muted-foreground hover:text-foreground rounded-none"
       >
-        <ArrowLeft className="h-3 w-3" />
-        Back to event
-      </Link>
+        <Link href={`/events/${eventId}`}>
+          <ArrowLeft className="h-3 w-3" />
+          Back to event
+        </Link>
+      </Button>
 
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-0.5">
         <h1 className="font-mono text-base font-semibold text-foreground">
           Edit event
         </h1>

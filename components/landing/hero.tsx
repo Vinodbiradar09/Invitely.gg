@@ -1,6 +1,11 @@
+"use client";
+
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
+import { CanvasRevealEffect } from "@/components/ui/canvas-reveal-effect";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 function GitHubIcon() {
   return (
@@ -17,39 +22,63 @@ function GitHubIcon() {
 }
 
 export function Hero() {
-  return (
-    <section className="relative pt-22 pb-20 px-6">
-      <div className="pointer-events-none absolute top-0 left-0 right-0 h-32 bg-linear-to-b from-background to-transparent" />
-      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-background to-transparent" />
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [hovered, setHovered] = useState(false);
 
-      <div className="relative z-10 mx-auto max-w-5xl">
+  return (
+    <section className="relative pt-24 pb-16 px-6 overflow-hidden">
+      <div
+        className="absolute inset-0 z-0"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        <CanvasRevealEffect
+          animationSpeed={5}
+          containerClassName="bg-transparent"
+          colors={[
+            [59, 130, 246],
+            [139, 92, 246],
+          ]}
+          opacities={[0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.4, 0.4, 0.4, 1]}
+          dotSize={2}
+          showGradient={true}
+        />
+      </div>
+
+      <div className="absolute top-0 right-0 w-125 h-125 bg-white/2 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-100 h-100 bg-blue-500/2 rounded-full blur-[130px] pointer-events-none" />
+
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-size-[64px_64px] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
+
+      <div className="relative z-10 mx-auto max-w-4xl">
         <div className="flex flex-col items-center text-center gap-8">
-          <span className="inline-flex items-center gap-1.5 font-mono text-[10px] tracking-widest text-muted-foreground/60 uppercase">
-            <span className="h-1.25 w-1.25 rounded-full bg-current animate-[pulse_2.4s_ease-in-out_infinite]" />
+          <span className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] text-muted-foreground font-bold uppercase px-3 py-1.5 border border-white/8 bg-white/2">
             AI powered invitation platform
           </span>
 
-          <h1 className="font-mono text-4xl sm:text-5xl md:text-6xl font-bold text-foreground leading-[1.1] tracking-tight text-balance">
+          <h1 className="font-mono text-4xl sm:text-5xl md:text-6xl font-bold text-foreground leading-[1.05] tracking-tight text-balance max-w-3xl">
             Send <span className="text-muted-foreground">Invitations</span> At
             Scale
             <br />
-            On Your
-            <span className="text-muted-foreground"> Behalf.</span>
+            On Your <span className="text-muted-foreground">Behalf.</span>
           </h1>
 
-          <p className="font-mono text-sm sm:text-base text-muted-foreground max-w-xl leading-relaxed">
-            Stop manual emailing. Give us your list, and we’ll handle the rest.
-            Professional, automated, and sent on your behalf.
+          <p className="font-mono text-sm sm:text-base text-muted-foreground max-w-lg leading-relaxed">
+            Stop manual emailing. Give us your list, and we&apos;ll handle the
+            rest. Professional, automated, and sent on your behalf.
           </p>
 
           <div className="flex items-center gap-3">
             <Link href="/login">
-              <Button className="font-mono text-sm px-6 h-10 gap-2">
+              <HoverBorderGradient
+                containerClassName="rounded-none"
+                className="rounded-none font-mono text-sm px-7 h-11 gap-2 bg-black text-white flex items-center cursor-pointer"
+                as="button"
+                duration={1.5}
+              >
                 Get Started
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+              </HoverBorderGradient>
             </Link>
-
             <Link
               href="https://github.com/Vinodbiradar09/Invitely.gg"
               target="_blank"
@@ -57,7 +86,7 @@ export function Hero() {
             >
               <Button
                 variant="outline"
-                className="font-mono text-sm px-6 h-10 gap-2 text-muted-foreground hover:text-foreground"
+                className="font-mono text-sm px-6 h-11 gap-2 rounded-none text-muted-foreground hover:text-foreground border-white/8 hover:border-white/15 hover:bg-white/3 transition-all duration-300 cursor-pointer"
               >
                 <GitHubIcon />
                 Open Source
@@ -65,36 +94,17 @@ export function Hero() {
             </Link>
           </div>
 
-          <div className="w-full max-w-2xl border border-border bg-card mt-8">
-            <div className="border-b border-border px-4 py-2.5 flex items-center gap-2">
-              <div className="flex gap-1.5">
-                <div className="h-2.5 w-2.5 bg-muted-foreground/30" />
-                <div className="h-2.5 w-2.5 bg-muted-foreground/30" />
-                <div className="h-2.5 w-2.5 bg-muted-foreground/30" />
-              </div>
-              <span className="font-mono text-xs text-muted-foreground ml-2">
-                Invitely.gg [event dashboard]
-              </span>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4">
-              {[
-                { label: "Invited", value: "47" },
-                { label: "Attending", value: "23" },
-                { label: "Maybe", value: "8" },
-                { label: "Pending", value: "16" },
-              ].map(({ label, value }, index) => (
-                <div
-                  key={label}
-                  className={`flex flex-col gap-1 p-4 sm:p-5 ${index % 2 !== 0 ? "border-l border-border" : ""} ${index >= 2 ? "border-t sm:border-t-0 border-border" : ""} ${index >= 1 ? "sm:border-l" : ""}`}
-                >
-                  <span className="font-mono text-xl sm:text-2xl font-semibold text-foreground">
-                    {value}
-                  </span>
-                  <span className="font-mono text-xs text-muted-foreground">
-                    {label}
-                  </span>
-                </div>
-              ))}
+          <div className="w-full max-w-4xl mt-16 relative group">
+            <div className="absolute -inset-4 bg-linear-to-b from-white/5 to-transparent blur-2xl opacity-40 group-hover:opacity-60 transition-opacity duration-700" />
+            <div className="relative border border-white/8 bg-[#050505]">
+              <Image
+                src="/img_2.jpeg"
+                alt="Invitely.gg Dashboard"
+                width={1600}
+                height={900}
+                className="w-full h-auto"
+                priority
+              />
             </div>
           </div>
         </div>

@@ -100,7 +100,7 @@ async function GuestSection({
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <h2 className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
-            Guest list {summary.total}
+            Guest list · {summary.total}
           </h2>
           {!isScheduled && (
             <ReminderButton eventId={eventId} pendingCount={summary.pending} />
@@ -165,12 +165,10 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
       : `${Math.round(hoursUntilEvent)} hour${Math.round(hoursUntilEvent) === 1 ? "" : "s"}`;
 
   const badgeClass = isCancelled
-    ? "bg-red-500/10 text-red-500 border-red-500/20"
-    : isScheduled
-      ? "bg-blue-500/10 text-blue-500 border-blue-500/20"
-      : isPast
-        ? "bg-muted text-muted-foreground"
-        : "bg-green-500/10 text-green-500 border-green-500/20";
+    ? "bg-destructive/10 text-destructive border-destructive/20"
+    : isPast
+      ? "bg-muted text-muted-foreground border-border"
+      : "bg-muted text-foreground border-border";
 
   const badgeLabel = isCancelled
     ? "cancelled"
@@ -196,21 +194,24 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
 
   return (
     <div className="flex flex-col gap-6">
-      <Link
-        href="/events"
-        className="flex items-center gap-2 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors w-fit"
+      <Button
+        variant="ghost"
+        size="sm"
+        asChild
+        className="font-mono text-xs gap-1.5 -ml-2 h-7 w-fit text-muted-foreground hover:text-foreground rounded-none"
       >
-        <ArrowLeft className="h-3 w-3" />
-        All events
-      </Link>
-
+        <Link href="/events">
+          <ArrowLeft className="h-3 w-3" />
+          All events
+        </Link>
+      </Button>
       {showUrgentBanner && (
-        <div className="border border-red-500/30 bg-red-500/5 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="border border-destructive/30 bg-destructive/5 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="h-4 w-4 text-red-500 shrink-0 mt-0.5 animate-pulse" />
+            <AlertTriangle className="h-4 w-4 text-destructive shrink-0 mt-0.5 animate-pulse" />
             <div className="flex flex-col gap-0.5">
-              <p className="font-mono text-xs font-semibold text-red-500">
-                Event starts in {hoursLabel} — no invitations sent
+              <p className="font-mono text-xs font-semibold text-destructive">
+                Event in {hoursLabel} — no invitations sent
               </p>
               <p className="font-mono text-xs text-muted-foreground">
                 Your guests don&apos;t know about this recurring event yet.
@@ -221,10 +222,7 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
             href={`/events/${eventId}/send-invitations`}
             className="shrink-0"
           >
-            <Button
-              size="sm"
-              className="font-mono text-xs h-8 bg-red-500 hover:bg-red-600 text-white border-0"
-            >
+            <Button size="sm" className="font-mono text-xs h-8 rounded-none">
               Send invitations now
             </Button>
           </Link>
@@ -232,16 +230,16 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
       )}
 
       {showInvitePendingBanner && (
-        <div className="border border-yellow-500/30 bg-yellow-500/5 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="border border-border bg-muted/20 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-start gap-3">
-            <RefreshCw className="h-4 w-4 text-yellow-500 shrink-0 mt-0.5" />
+            <RefreshCw className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
             <div className="flex flex-col gap-0.5">
-              <p className="font-mono text-xs font-semibold text-yellow-500">
-                Event in {hoursLabel} send invitations soon
+              <p className="font-mono text-xs font-semibold text-foreground">
+                Event in {hoursLabel} — send invitations soon
               </p>
               <p className="font-mono text-xs text-muted-foreground">
                 This occurrence was created automatically. Select guests and
-                send invitations.
+                send.
               </p>
             </div>
           </div>
@@ -252,7 +250,7 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
             <Button
               variant="outline"
               size="sm"
-              className="font-mono text-xs h-8 border-yellow-500/30 text-yellow-500 hover:border-yellow-500/60"
+              className="font-mono text-xs h-8 rounded-none"
             >
               Send invitations
             </Button>
@@ -261,12 +259,12 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
       )}
 
       {showYellowBanner && (
-        <div className="border border-yellow-500/20 bg-yellow-500/5 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="border border-border bg-muted/10 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-start gap-3">
-            <RefreshCw className="h-4 w-4 text-yellow-500/60 shrink-0 mt-0.5" />
+            <RefreshCw className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
             <div className="flex flex-col gap-0.5">
-              <p className="font-mono text-xs font-semibold text-yellow-500/80">
-                Recurring event no invitations sent yet
+              <p className="font-mono text-xs font-semibold text-foreground">
+                Recurring event — no invitations sent yet
               </p>
               <p className="font-mono text-xs text-muted-foreground">
                 This occurrence was created automatically. Select guests when
@@ -281,7 +279,7 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
             <Button
               variant="outline"
               size="sm"
-              className="font-mono text-xs h-8 border-yellow-500/20 text-yellow-500/80 hover:border-yellow-500/40"
+              className="font-mono text-xs h-8 rounded-none"
             >
               Send invitations
             </Button>
@@ -293,15 +291,15 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2 flex-wrap">
             <Badge
-              variant="secondary"
-              className={`font-mono text-xs px-1.5 py-0 h-4 w-fit ${badgeClass}`}
+              variant="outline"
+              className={`font-mono text-[10px] px-1.5 py-0 h-4 rounded-none ${badgeClass}`}
             >
               {badgeLabel}
             </Badge>
             {isRecurring && (
               <Badge
-                variant="secondary"
-                className="font-mono text-xs px-1.5 py-0 h-4 w-fit bg-purple-500/10 text-purple-500 border-purple-500/20 flex items-center gap-1"
+                variant="outline"
+                className="font-mono text-[10px] px-1.5 py-0 h-4 rounded-none bg-muted text-muted-foreground border-border flex items-center gap-1"
               >
                 <RefreshCw className="h-2.5 w-2.5" />
                 {event.recurrence}
@@ -309,16 +307,18 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
             )}
             {isChildEvent && noInvitationsSent && !isCancelled && !isPast && (
               <Badge
-                variant="secondary"
-                className="font-mono text-xs px-1.5 py-0 h-4 w-fit bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
+                variant="outline"
+                className="font-mono text-[10px] px-1.5 py-0 h-4 rounded-none bg-muted text-muted-foreground border-border"
               >
                 invite pending
               </Badge>
             )}
           </div>
+
           <h1 className="font-mono text-base font-semibold text-foreground">
             {event.name}
           </h1>
+
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center gap-2">
               <Calendar className="h-3 w-3 text-muted-foreground shrink-0" />
@@ -337,8 +337,9 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
               </span>
             </div>
           </div>
+
           {isScheduled && event.scheduledAt && (
-            <p className="font-mono text-xs text-blue-500">
+            <p className="font-mono text-xs text-muted-foreground">
               Sends{" "}
               {new Date(event.scheduledAt).toLocaleDateString("en-US", {
                 weekday: "short",
@@ -366,16 +367,17 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
             />
           )}
           {!isCancelled && !isScheduled && (
-            <Link href={`/events/${eventId}/edit`}>
-              <Button
-                variant="outline"
-                size="sm"
-                className="font-mono text-xs h-8 gap-2"
-              >
+            <Button
+              variant="outline"
+              size="sm"
+              className="font-mono text-xs h-8 gap-2 rounded-none"
+              asChild
+            >
+              <Link href={`/events/${eventId}/edit`}>
                 <Pencil className="h-3 w-3" />
                 Edit
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           )}
           {!isCancelled && !isScheduled && (
             <EventCancelDialog
@@ -389,7 +391,9 @@ export default async function EventDashboardPage({ params }: EventIdParams) {
       </div>
 
       <Separator className="bg-border" />
+
       <InsightsCard eventId={eventId} />
+
       <Suspense
         fallback={
           <>

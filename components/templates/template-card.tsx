@@ -16,26 +16,24 @@ interface TemplateCardProps {
 
 export function TemplateCard({ template, onDeleted }: TemplateCardProps) {
   const preview =
-    template.emailBody.length > 120
-      ? template.emailBody.slice(0, 120) + "..."
+    template.emailBody.length > 100
+      ? template.emailBody.slice(0, 100) + "..."
       : template.emailBody;
 
   return (
-    <div className="border border-border bg-card group hover:border-foreground/20 transition-colors px-4 py-4 flex flex-col gap-3">
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex flex-col gap-1.5 min-w-0">
-          <div className="flex items-center gap-2">
-            <FileText className="h-3 w-3 text-muted-foreground shrink-0" />
-            <h3 className="font-mono text-sm font-semibold text-foreground truncate">
-              {template.name}
-            </h3>
-          </div>
+    <div className="border border-border bg-card hover:border-foreground/20 transition-colors">
+      <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-border">
+        <div className="flex items-center gap-2 min-w-0">
+          <FileText className="h-3 w-3 text-muted-foreground shrink-0" />
+          <h3 className="font-mono text-xs font-semibold text-foreground truncate">
+            {template.name}
+          </h3>
           {template.event && (
             <Badge
-              variant="secondary"
-              className="font-mono text-xs px-1.5 py-0 h-4 w-fit bg-muted text-muted-foreground"
+              variant="outline"
+              className="font-mono text-[10px] px-1.5 py-0 h-4 rounded-none border-border text-muted-foreground shrink-0"
             >
-              from: {template.event.name}
+              {template.event.name}
             </Badge>
           )}
         </div>
@@ -46,11 +44,11 @@ export function TemplateCard({ template, onDeleted }: TemplateCardProps) {
         />
       </div>
 
-      <div className="flex flex-col gap-1">
-        <p className="font-mono text-xs text-foreground">
+      <div className="px-4 py-3 flex flex-col gap-1">
+        <p className="font-mono text-xs text-foreground truncate">
           {template.emailSubject}
         </p>
-        <p className="font-mono text-xs text-muted-foreground leading-relaxed">
+        <p className="font-mono text-[11px] text-muted-foreground leading-relaxed line-clamp-2">
           {preview}
         </p>
       </div>

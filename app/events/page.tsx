@@ -3,40 +3,32 @@ import { getSession } from "@/lib/auth/client/get-session";
 import { EventListSkeleton } from "@/components/skeletons";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Plus, ArrowLeft } from "lucide-react";
 import { EventWithStatus } from "@/lib/types";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db/prisma";
+import { Plus } from "lucide-react";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = { title: "Events | Invitely.gg" };
+
 function PageHeader() {
   return (
-    <>
-      <Link
-        href="/workspace"
-        className="flex items-center gap-2 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors w-fit"
-      >
-        <ArrowLeft className="h-3 w-3" />
-        Back to workspaces
-      </Link>
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <h1 className="font-mono text-base font-semibold text-foreground">
-            Events
-          </h1>
-        </div>
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="font-mono text-base font-semibold text-foreground">
+          Events
+        </h1>
         <Link href="/events/new">
-          <Button size="sm" className="font-mono text-xs gap-2 shrink-0">
+          <Button size="sm" className="font-mono text-xs gap-2 rounded-none">
             <Plus className="h-3 w-3" />
             New event
           </Button>
         </Link>
       </div>
       <Separator className="bg-border" />
-    </>
+    </div>
   );
 }
 
@@ -73,7 +65,7 @@ async function EventListSection() {
 
   return (
     <div className="flex flex-col gap-6">
-      <p className="font-mono text-xs text-muted-foreground -mt-4">
+      <p className="font-mono text-xs text-muted-foreground -mt-2">
         {events.length === 0
           ? "Create your first event to start sending invitations."
           : `${events.length} event${events.length === 1 ? "" : "s"} total`}
