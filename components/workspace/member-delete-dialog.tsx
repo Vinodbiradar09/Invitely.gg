@@ -38,7 +38,7 @@ export function MemberDeleteDialog({
         <Button
           variant="ghost"
           size="sm"
-          className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
+          className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive cursor-pointer"
         >
           <Trash2 className="h-3 w-3" />
         </Button>
@@ -57,13 +57,13 @@ export function MemberDeleteDialog({
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel className="font-mono text-xs h-8">
+          <AlertDialogCancel className="font-mono text-xs h-8 cursor-pointer">
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isLoading}
-            className="font-mono text-xs h-8 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className="font-mono text-xs h-8 bg-destructive text-destructive-foreground hover:bg-destructive/90 cursor-pointer"
           >
             {isLoading ? "Removing..." : "Remove"}
           </AlertDialogAction>

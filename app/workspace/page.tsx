@@ -55,7 +55,7 @@ async function WorkspaceSection() {
               <Button
                 variant="outline"
                 size="sm"
-                className="font-mono text-xs gap-2 rounded-none"
+                className="font-mono text-xs gap-2 rounded-none cursor-pointer"
               >
                 <Plus className="h-3 w-3" />
                 New event

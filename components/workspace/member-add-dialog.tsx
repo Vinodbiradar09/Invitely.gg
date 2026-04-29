@@ -109,7 +109,7 @@ export function MemberAddDialog({
         <Button
           variant="outline"
           size="sm"
-          className="font-mono text-xs gap-2 h-7"
+          className="font-mono text-xs gap-2 h-7 cursor-pointer"
           disabled={isAtLimit}
           title={isAtLimit ? "workspace is full (25/25)" : undefined}
         >
@@ -165,7 +165,7 @@ export function MemberAddDialog({
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-7 w-6 p-0 text-muted-foreground hover:text-destructive"
+                  className="h-7 w-6 p-0 text-muted-foreground hover:text-destructive cursor-pointer"
                   onClick={() => removeRow(row.id)}
                   disabled={rows.length === 1}
                 >
@@ -180,7 +180,7 @@ export function MemberAddDialog({
               type="button"
               variant="ghost"
               size="sm"
-              className="font-mono text-xs gap-2 self-start h-7 text-muted-foreground"
+              className="font-mono text-xs gap-2 self-start h-7 text-muted-foreground cursor-pointer"
               onClick={addRow}
             >
               <Plus className="h-3 w-3" />
@@ -193,7 +193,7 @@ export function MemberAddDialog({
               type="button"
               variant="outline"
               size="sm"
-              className="font-mono text-xs"
+              className="font-mono text-xs cursor-pointer"
               onClick={handleClose}
               disabled={isLoading}
             >
@@ -202,7 +202,7 @@ export function MemberAddDialog({
             <Button
               type="submit"
               size="sm"
-              className="font-mono text-xs"
+              className="font-mono text-xs cursor-pointer"
               disabled={isLoading}
             >
               {isLoading

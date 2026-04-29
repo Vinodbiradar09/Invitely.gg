@@ -45,7 +45,7 @@ export function WorkspaceCreateDialog({
       <DialogTrigger asChild>
         <Button
           size="sm"
-          className="font-mono text-xs gap-2"
+          className="font-mono text-xs gap-2 cursor-pointer"
           disabled={isAtLimit}
           title={isAtLimit ? "Maximum 5 workspaces allowed" : undefined}
         >
@@ -89,7 +89,7 @@ export function WorkspaceCreateDialog({
               type="button"
               variant="outline"
               size="sm"
-              className="font-mono text-xs"
+              className="font-mono text-xs cursor-pointer"
               onClick={() => setOpen(false)}
               disabled={isLoading}
             >
@@ -98,7 +98,7 @@ export function WorkspaceCreateDialog({
             <Button
               type="submit"
               size="sm"
-              className="font-mono text-xs"
+              className="font-mono text-xs cursor-pointer"
               disabled={isLoading || !name.trim()}
             >
               {isLoading ? "Creating..." : "Create"}

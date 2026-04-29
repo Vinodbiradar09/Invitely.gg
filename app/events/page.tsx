@@ -21,7 +21,10 @@ function PageHeader() {
           Events
         </h1>
         <Link href="/events/new">
-          <Button size="sm" className="font-mono text-xs gap-2 rounded-none">
+          <Button
+            size="sm"
+            className="font-mono text-xs gap-2 rounded-none cursor-pointer"
+          >
             <Plus className="h-3 w-3" />
             New event
           </Button>
