@@ -1,6 +1,7 @@
+import { GrainBackdrop } from "@/components/landing/grain-backdrop";
 import { EmailPreview } from "@/components/landing/email-preview";
 import { BrandFooter } from "@/components/landing/brand-footer";
-import { HowItWorks } from "@/components/landing/how-it-works";
+// import { HowItWorks } from "@/components/landing/how-it-works";
 import { LandingNav } from "@/components/landing/landing-nav";
 import { Features } from "@/components/landing/features";
 import { Hero } from "@/components/landing/hero";
@@ -22,12 +23,14 @@ export const dynamic = "force-static";
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-background">
-      <div className="mx-auto max-w-5xl border border-white/8 bg-background overflow-hidden">
+    <main className="relative min-h-screen overflow-hidden">
+      <GrainBackdrop />
+
+      <div className="relative mx-auto max-w-5xl border border-white/10 overflow-hidden">
         <LandingNav />
         <Hero />
         <Features />
-        <HowItWorks />
+        {/*<HowItWorks />*/}
         <EmailPreview />
         <div className="border-t border-white/8">
           <BrandFooter />

@@ -33,14 +33,6 @@ export function EmailPreview() {
               />
             </div>
           </div>
-
-          <div className="flex items-center gap-4">
-            <div className="h-px flex-1 bg-linear-to-r from-transparent via-white/8 to-transparent" />
-            <span className="font-mono text-[11px] text-muted-foreground/30 px-3 tracking-wide">
-              You always review before sending
-            </span>
-            <div className="h-px flex-1 bg-linear-to-r from-transparent via-white/8 to-transparent" />
-          </div>
         </div>
       </div>
     </section>

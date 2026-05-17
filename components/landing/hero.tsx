@@ -1,9 +1,7 @@
 "use client";
 
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
-import { CanvasRevealEffect } from "@/components/ui/canvas-reveal-effect";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -22,39 +20,13 @@ function GitHubIcon() {
 }
 
 export function Hero() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [hovered, setHovered] = useState(false);
-
   return (
     <section className="relative pt-24 pb-16 px-6 overflow-hidden">
-      <div
-        className="absolute inset-0 z-0"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
-        <CanvasRevealEffect
-          animationSpeed={5}
-          containerClassName="bg-transparent"
-          colors={[
-            [59, 130, 246],
-            [139, 92, 246],
-          ]}
-          opacities={[0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.4, 0.4, 0.4, 1]}
-          dotSize={2}
-          showGradient={true}
-        />
-      </div>
-
-      <div className="absolute top-0 right-0 w-125 h-125 bg-white/2 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-100 h-100 bg-blue-500/2 rounded-full blur-[130px] pointer-events-none" />
-
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-size-[64px_64px] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
-
       <div className="relative z-10 mx-auto max-w-4xl">
         <div className="flex flex-col items-center text-center gap-8">
-          <span className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] text-muted-foreground font-bold uppercase px-3 py-1.5 border border-white/8 bg-white/2">
+          {/*<span className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] text-muted-foreground font-bold uppercase px-3 py-1.5 border border-white/8 bg-white/2">
             AI powered invitation platform
-          </span>
+          </span>*/}
 
           <h1 className="font-mono text-4xl sm:text-5xl md:text-6xl font-bold text-foreground leading-[1.05] tracking-tight text-balance max-w-3xl">
             Send <span className="text-muted-foreground">Invitations</span> At

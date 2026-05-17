@@ -93,21 +93,22 @@ const BrandFooter = () => {
         viewBox="-18 0 932 213"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        className="cursor-pointer"
       >
-        <g stroke="#2C2C2C" strokeLinejoin="round">
+        <g stroke="rgba(255,255,255,0.05)" strokeLinejoin="round">
           <g transform="translate(-1.0625, 0)">
             <path
               d="M33.375 43V171H14.0625V43H33.375Z"
-              fill="url(#text-gradient)"
-              stroke="#2C2C2C"
+              fill="none"
+              stroke="rgba(255,255,255,0.05)"
             />
             <path d="M40 36H21L13.5 42.5H34M40 36L34 42.5M40 36V164L34 171.5V42.5" />
           </g>
           <g transform="translate(10.696, 0)">
             <path
               d="M164.813 43V171H147.062L82 77.125H80.8125V171H61.5V43H79.375L144.5 137H145.687V43H164.813Z"
-              fill="url(#text-gradient)"
-              stroke="#2C2C2C"
+              fill="none"
+              stroke="rgba(255,255,255,0.05)"
             />
             <path d="M87 35H68L61 42.5H79.5L87 35ZM87 35L145.5 121" />
             <path d="M81 171.5L89 165V88" />
@@ -116,24 +117,24 @@ const BrandFooter = () => {
           <g transform="translate(32.096, 0)">
             <path
               d="M204.172 43L239.797 147.25H241.234L276.859 43H297.734L251.672 171H229.359L183.297 43H204.172Z"
-              fill="url(#text-gradient)"
-              stroke="#2C2C2C"
+              fill="none"
+              stroke="rgba(255,255,255,0.05)"
             />
             <path d="M182.5 42.5L189 35H211.5M211.5 35L204.5 42.5M211.5 35L245.5 134M276.5 42.5L283 35H307.5M307.5 35L298.5 42.5M307.5 35L261 166L252 171.5" />
           </g>
           <g transform="translate(-75.411, 0)">
             <path
               d="M464.438 43V171H445.125V43H464.438Z"
-              fill="url(#text-gradient)"
-              stroke="#2C2C2C"
+              fill="none"
+              stroke="rgba(255,255,255,0.05)"
             />
             <path d="M470.5 36H451.5L444.618 42.5H465M470.5 36L465 42.5M470.5 36V164L465 171.5V42.5" />
           </g>
           <g transform="translate(74.911, 0)">
             <path
               d="M354 43H454V59.625H413.656V171H394.344V59.625H354Z"
-              fill="url(#text-gradient)"
-              stroke="#2C2C2C"
+              fill="none"
+              stroke="rgba(255,255,255,0.05)"
             />
             <path d="M461.266 35.5H360.516L353.516 42.5H454.266M461.266 35.5L454.266 42.5M461.266 35.5V53L454.266 59.625V42.5" />
             <path d="M420.281 59.625V164L413.656 171.5" />
@@ -141,24 +142,24 @@ const BrandFooter = () => {
           <g transform="translate(-53.19, 0)">
             <path
               d="M621.984 171V43H702.234V59.625H641.297V98.625H698.047V115.187H641.297V154.375H702.984V171H621.984Z"
-              fill="url(#text-gradient)"
-              stroke="#2C2C2C"
+              fill="none"
+              stroke="rgba(255,255,255,0.05)"
             />
             <path d="M709.5 35.5H628.5L621.5 42.5H702.5M709.5 35.5L702.5 42.5M709.5 35.5V53L702.5 60V42.5M649 115.5V147M649 147H710.5M649 147L642 154M710.5 147L703.5 154M710.5 147V164.5L703.5 172M649 60V91M649 91L641.5 98.5M649 91H705.5M705.5 91L698.5 98.5M705.5 91V108.5L698.5 116" />
           </g>
           <g transform="translate(-38.353, 0)">
             <path
               d="M728.031 171V43H747.344V154.375H805.344V171H728.031Z"
-              fill="url(#text-gradient)"
-              stroke="#2C2C2C"
+              fill="none"
+              stroke="rgba(255,255,255,0.05)"
             />
             <path d="M727.5 42.5L734.5 35.5H755M755 35.5L748 42.5M755 35.5V147M755 147L748 154M755 147H813M813 147L805.5 154.5M813 147V164.5L806 171.5" />
           </g>
           <g transform="translate(-35, 0)">
             <path
               d="M808.047 43H829.984L863.422 101.187H864.797L898.234 43H920.172L873.734 120.75V171H854.484V120.75L808.047 43Z"
-              fill="url(#text-gradient)"
-              stroke="#2C2C2C"
+              fill="none"
+              stroke="rgba(255,255,255,0.05)"
             />
             <path d="M807 42.5L814 35.5H837M837 35.5L830 42.5M837 35.5L869.5 91.5M898 42.5L907.5 35.5H931.5M931.5 35.5L921 42.5M931.5 35.5L881.5 120.5V164.5L874.5 171.5" />
           </g>
