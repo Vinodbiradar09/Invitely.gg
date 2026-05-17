@@ -3,7 +3,7 @@ export function GrainBackdrop() {
     <div
       aria-hidden
       className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
-      style={{ backgroundColor: "#0d0d0d" }}
+      style={{ backgroundColor: "#080808" }}
     >
       {/*<div
         className="absolute"
