@@ -9,10 +9,10 @@ export function Logo({ className, size = 32 }: LogoProps) {
   return (
     <div
       style={{ width: size, height: size }}
-      className={`overflow-hidden border border-border bg-black shrink-0 ${className ?? ""}`}
+      className={`overflow-hidden bg-black shrink-0 ${className ?? ""}`}
     >
       <Image
-        src="/invitely.jpeg"
+        src="/paper.jpeg"
         alt="Invitely logo"
         width={size}
         height={size}

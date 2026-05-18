@@ -38,9 +38,9 @@ export const metadata: Metadata = {
   creator: "Invitely.gg",
   applicationName: "Invitely.gg",
   icons: {
-    icon: "/invitely-cropped.jpeg",
-    shortcut: "/invitely-cropped.jpeg",
-    apple: "/invitely-cropped.jpeg",
+    icon: "/paper.jpeg",
+    shortcut: "/paper.jpeg",
+    apple: "/paper.jpeg",
   },
   alternates: {
     canonical: "https://invitely-gg.vercel.app",
